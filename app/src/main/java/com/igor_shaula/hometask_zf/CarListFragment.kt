@@ -48,6 +48,9 @@ class CarListFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         Timber.v("onAttach - 3")
+        // java.lang.IllegalStateException: Can't access ViewModels from detached fragment
+        viewModel = ViewModelProvider(this)[CarListViewModel::class.java]
+        // TODO: Use the ViewModel
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,8 +59,7 @@ class CarListFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         Timber.v("onCreateView - 5")
         binding = FragmentCarListBinding.inflate(inflater, container, false)
@@ -69,15 +71,13 @@ class CarListFragment : Fragment() {
         Timber.v("onViewCreated - 6")
         binding.actvHeader.text = "the text"
         prepareCarListUI()
+        showDataInTheList(listOf(CarItemRecord("1", CarStatus.CLOSE)))
     }
 
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         Timber.v("onActivityCreated - 7 deprecated")
-        viewModel = ViewModelProvider(this)[CarListViewModel::class.java]
-        // TODO: Use the ViewModel
-        showDataInTheList(listOf(CarItemRecord("1", CarStatus.CLOSE)))
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
