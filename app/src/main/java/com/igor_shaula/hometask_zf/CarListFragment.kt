@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.igor_shaula.hometask_zf.databinding.FragmentCarListBinding
 import timber.log.Timber
 
@@ -22,6 +23,8 @@ class CarListFragment : Fragment() {
     private lateinit var binding: FragmentCarListBinding
 
     private lateinit var viewModel: CarListViewModel
+
+    private lateinit var rvAdapter: CarListAdapter
 
     // region standard lifecycle androidx.fragment.app.Fragment callbacks
 
@@ -65,6 +68,12 @@ class CarListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Timber.v("onViewCreated - 6")
         binding.actvHeader.text = "the text"
+
+        rvAdapter = CarListAdapter { carItemRecord, position ->
+            Timber.d("click function: carItemRecord = $carItemRecord, position = $position")
+        }
+        binding.rvCarList.adapter = rvAdapter
+        binding.rvCarList.layoutManager = LinearLayoutManager(context)
     }
 
     @Deprecated("Deprecated in Java")
@@ -73,6 +82,8 @@ class CarListFragment : Fragment() {
         Timber.v("onActivityCreated - 7 deprecated")
         viewModel = ViewModelProvider(this)[CarListViewModel::class.java]
         // TODO: Use the ViewModel
+
+        rvAdapter.setItems(mutableListOf(CarItemRecord("1", CarStatus.CLOSE)))
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
