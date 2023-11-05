@@ -55,14 +55,16 @@ class CarListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         Timber.v("onCreateView - 5")
-        return inflater.inflate(R.layout.fragment_car_list, container, false)
+        binding = FragmentCarListBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Timber.v("onViewCreated - 6")
+        binding.actvHeader.text = "the text"
     }
 
     @Deprecated("Deprecated in Java")
