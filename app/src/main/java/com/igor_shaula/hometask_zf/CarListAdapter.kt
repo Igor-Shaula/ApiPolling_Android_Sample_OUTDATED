@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 class CarListAdapter(private val onClickFunction: (CarItemRecord, Int) -> Unit) :
     RecyclerView.Adapter<CarItemViewHolder>() {
 
-    private var items: MutableList<CarItemRecord> = mutableListOf()
+    private var items: List<CarItemRecord> = listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CarItemViewHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -23,7 +23,7 @@ class CarListAdapter(private val onClickFunction: (CarItemRecord, Int) -> Unit) 
         holder.bind(items[position], position)
     }
 
-    fun setItems(items: MutableList<CarItemRecord>) {
+    fun setItems(items: List<CarItemRecord>) {
         this.items = items
         notifyDataSetChanged() // todo remove this warning by providing the position somehow
     }
