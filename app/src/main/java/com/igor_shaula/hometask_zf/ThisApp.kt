@@ -8,7 +8,9 @@ class ThisApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        Timber.plant(Timber.tag("shaula"))
-//        Timber.plant(Timber.DebugTree())
+//        Timber.plant(Timber.tag("shaula"))
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
     }
 }
