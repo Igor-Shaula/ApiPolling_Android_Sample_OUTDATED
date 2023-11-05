@@ -68,12 +68,7 @@ class CarListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Timber.v("onViewCreated - 6")
         binding.actvHeader.text = "the text"
-
-        rvAdapter = CarListAdapter { carItemRecord, position ->
-            Timber.d("click function: carItemRecord = $carItemRecord, position = $position")
-        }
-        binding.rvCarList.adapter = rvAdapter
-        binding.rvCarList.layoutManager = LinearLayoutManager(context)
+        prepareCarListUI()
     }
 
     @Deprecated("Deprecated in Java")
@@ -82,8 +77,7 @@ class CarListFragment : Fragment() {
         Timber.v("onActivityCreated - 7 deprecated")
         viewModel = ViewModelProvider(this)[CarListViewModel::class.java]
         // TODO: Use the ViewModel
-
-        rvAdapter.setItems(mutableListOf(CarItemRecord("1", CarStatus.CLOSE)))
+        showDataInTheList(listOf(CarItemRecord("1", CarStatus.CLOSE)))
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -132,4 +126,19 @@ class CarListFragment : Fragment() {
 
     // endregion other standard androidx.fragment.app.Fragment callbacks
 
+    // region work with the List
+
+    private fun prepareCarListUI() {
+        rvAdapter = CarListAdapter { carItemRecord, position ->
+            Timber.d("click function: carItemRecord = $carItemRecord, position = $position")
+        }
+        binding.rvCarList.adapter = rvAdapter
+        binding.rvCarList.layoutManager = LinearLayoutManager(context)
+    }
+
+    private fun showDataInTheList(theData: List<CarItemRecord>) {
+        rvAdapter.setItems(theData)
+    }
+
+    // endregion work with the List
 }
