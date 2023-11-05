@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.igor_shaula.hometask_zf.databinding.FragmentCarListBinding
 import timber.log.Timber
 
 class CarListFragment : Fragment() {
@@ -17,6 +18,8 @@ class CarListFragment : Fragment() {
     companion object {
         fun newInstance() = CarListFragment()
     }
+
+    private lateinit var binding: FragmentCarListBinding
 
     private lateinit var viewModel: CarListViewModel
 
@@ -66,7 +69,7 @@ class CarListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         Timber.v("onActivityCreated - 7 deprecated")
-        viewModel = ViewModelProvider(this).get(CarListViewModel::class.java)
+        viewModel = ViewModelProvider(this)[CarListViewModel::class.java]
         // TODO: Use the ViewModel
     }
 
