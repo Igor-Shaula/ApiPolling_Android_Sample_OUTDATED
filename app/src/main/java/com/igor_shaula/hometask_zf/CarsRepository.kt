@@ -1,12 +1,21 @@
 package com.igor_shaula.hometask_zf
 
+import com.igor_shaula.hometask_zf.network.CarDataNetworksServiceImpl
+import com.igor_shaula.hometask_zf.network.CarModel
+
 class CarsRepository {
 
-    fun readTheData(): List<CarItemRecord> {
-        val result = mutableListOf<CarItemRecord>()
-        result.add(CarItemRecord("1", CarStatus.CLOSE))
-        result.add(CarItemRecord("2", CarStatus.FAR_AWAY))
-        result.add(CarItemRecord("3", CarStatus.FAR_AWAY))
-        return result
+    suspend fun readTheData(): List<CarItemRecord> {
+        val carDataNetworksService = CarDataNetworksServiceImpl()
+        val carList = carDataNetworksService.getCarList()
+        return carList.body().toCarItemRecords()
     }
+}
+
+private fun List<CarModel>?.toCarItemRecords(): List<CarItemRecord> {
+    val result = mutableListOf<CarItemRecord>()
+    this?.forEach {
+        result.add(CarItemRecord(carId = it.vehicleId, carStatus = CarStatus.FAR_AWAY))
+    }
+    return result
 }
