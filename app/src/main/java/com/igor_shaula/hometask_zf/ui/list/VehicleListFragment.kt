@@ -15,17 +15,17 @@ import com.igor_shaula.hometask_zf.data.CarItemRecord
 import com.igor_shaula.hometask_zf.databinding.FragmentCarListBinding
 import timber.log.Timber
 
-class CarListFragment : Fragment() {
+class VehicleListFragment : Fragment() {
 
     companion object {
-        fun newInstance() = CarListFragment()
+        fun newInstance() = VehicleListFragment()
     }
 
     private lateinit var binding: FragmentCarListBinding
 
-    private lateinit var viewModel: CarListViewModel
+    private lateinit var viewModel: VehicleListViewModel
 
-    private lateinit var rvAdapter: CarListAdapter
+    private lateinit var rvAdapter: VehicleListAdapter
 
     // region standard lifecycle androidx.fragment.app.Fragment callbacks
 
@@ -50,7 +50,7 @@ class CarListFragment : Fragment() {
         super.onAttach(context)
         Timber.v("onAttach - 3")
         // java.lang.IllegalStateException: Can't access ViewModels from detached fragment
-        viewModel = ViewModelProvider(this)[CarListViewModel::class.java]
+        viewModel = ViewModelProvider(this)[VehicleListViewModel::class.java]
         // TODO: Use the ViewModel
     }
 
@@ -130,7 +130,7 @@ class CarListFragment : Fragment() {
     // region work with the List
 
     private fun prepareCarListUI() {
-        rvAdapter = CarListAdapter { carItemRecord, position ->
+        rvAdapter = VehicleListAdapter { carItemRecord, position ->
             Timber.d("click function: carItemRecord = $carItemRecord, position = $position")
         }
         binding.rvCarList.adapter = rvAdapter

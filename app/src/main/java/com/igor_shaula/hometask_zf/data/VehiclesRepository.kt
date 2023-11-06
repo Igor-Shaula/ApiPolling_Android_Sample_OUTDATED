@@ -3,7 +3,7 @@ package com.igor_shaula.hometask_zf.data
 import com.igor_shaula.hometask_zf.network.CarDataNetworksServiceImpl
 import com.igor_shaula.hometask_zf.network.CarModel
 
-class CarsRepository {
+class VehiclesRepository {
 
     suspend fun readTheData(): List<CarItemRecord> {
         val carDataNetworksService = CarDataNetworksServiceImpl()

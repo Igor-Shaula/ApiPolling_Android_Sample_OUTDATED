@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.igor_shaula.hometask_zf.R
 import com.igor_shaula.hometask_zf.data.CarItemRecord
 
-class CarItemViewHolder(
+class VehicleItemViewHolder(
     itemView: View, private val onClickFunction: (CarItemRecord, Int) -> Unit
 ) : RecyclerView.ViewHolder(itemView) {
 

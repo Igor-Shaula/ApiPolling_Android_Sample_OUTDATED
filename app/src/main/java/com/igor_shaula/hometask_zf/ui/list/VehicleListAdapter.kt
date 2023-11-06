@@ -6,22 +6,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.igor_shaula.hometask_zf.R
 import com.igor_shaula.hometask_zf.data.CarItemRecord
 
-class CarListAdapter(private val onClickFunction: (CarItemRecord, Int) -> Unit) :
-    RecyclerView.Adapter<CarItemViewHolder>() {
+class VehicleListAdapter(private val onClickFunction: (CarItemRecord, Int) -> Unit) :
+    RecyclerView.Adapter<VehicleItemViewHolder>() {
 
     private var items: List<CarItemRecord> = listOf()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CarItemViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VehicleItemViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_car, parent, false)
-        return CarItemViewHolder(itemView, onClickFunction)
+        return VehicleItemViewHolder(itemView, onClickFunction)
     }
 
     override fun getItemCount(): Int {
         return items.size
     }
 
-    override fun onBindViewHolder(holder: CarItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: VehicleItemViewHolder, position: Int) {
         holder.bind(items[position], position)
     }
 
