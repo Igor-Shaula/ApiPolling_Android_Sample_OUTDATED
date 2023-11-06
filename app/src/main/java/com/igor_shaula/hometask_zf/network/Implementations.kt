@@ -8,7 +8,7 @@ class CarDataNetworksServiceImpl : CarDataNetworksService {
 
     override suspend fun getCarList(): Response<List<CarModel>> {
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://5w53f1x8oa.execute-api.eu-west-1.amazonaws.com/dev/")
+            .baseUrl(API_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val service = retrofit.create(CarDataNetworksService::class.java)
