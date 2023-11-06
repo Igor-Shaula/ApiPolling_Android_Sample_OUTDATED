@@ -71,7 +71,6 @@ class CarListFragment : Fragment() {
         Timber.v("onViewCreated - 6")
         binding.actvHeader.text = "the text"
         prepareCarListUI()
-        showDataInTheList(listOf(CarItemRecord("1", CarStatus.CLOSE)))
     }
 
     @Deprecated("Deprecated in Java")
@@ -88,6 +87,7 @@ class CarListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         Timber.v("onStart - 9")
+        viewModel.carListData.observe(viewLifecycleOwner) { showDataInTheList(it) }
     }
 
     override fun onResume() {
