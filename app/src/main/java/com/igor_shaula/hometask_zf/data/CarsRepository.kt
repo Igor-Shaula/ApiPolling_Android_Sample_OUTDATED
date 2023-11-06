@@ -1,4 +1,4 @@
-package com.igor_shaula.hometask_zf
+package com.igor_shaula.hometask_zf.data
 
 import com.igor_shaula.hometask_zf.network.CarDataNetworksServiceImpl
 import com.igor_shaula.hometask_zf.network.CarModel

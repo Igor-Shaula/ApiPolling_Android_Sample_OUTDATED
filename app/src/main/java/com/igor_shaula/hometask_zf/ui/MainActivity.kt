@@ -1,7 +1,8 @@
-package com.igor_shaula.hometask_zf
+package com.igor_shaula.hometask_zf.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.igor_shaula.hometask_zf.R
 
 class MainActivity : AppCompatActivity() {
 

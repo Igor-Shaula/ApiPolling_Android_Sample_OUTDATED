@@ -1,4 +1,4 @@
-package com.igor_shaula.hometask_zf
+package com.igor_shaula.hometask_zf.ui.list
 
 import android.app.Activity
 import android.content.Context
@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.igor_shaula.hometask_zf.data.CarItemRecord
 import com.igor_shaula.hometask_zf.databinding.FragmentCarListBinding
 import timber.log.Timber
 

@@ -1,8 +1,10 @@
-package com.igor_shaula.hometask_zf
+package com.igor_shaula.hometask_zf.ui.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.igor_shaula.hometask_zf.R
+import com.igor_shaula.hometask_zf.data.CarItemRecord
 
 class CarListAdapter(private val onClickFunction: (CarItemRecord, Int) -> Unit) :
     RecyclerView.Adapter<CarItemViewHolder>() {

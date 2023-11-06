@@ -1,4 +1,4 @@
-package com.igor_shaula.hometask_zf
+package com.igor_shaula.hometask_zf.data
 
 data class CarItemRecord(
     val carId: String,
