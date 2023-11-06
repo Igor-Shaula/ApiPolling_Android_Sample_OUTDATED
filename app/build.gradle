@@ -22,6 +22,13 @@ android {
         versionName "0.01"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        def secretProperties = new Properties()
+        def secretPropertiesFile = rootProject.file("secret.properties")
+        if (secretPropertiesFile.exists()) {
+            secretProperties.load(new FileInputStream(secretPropertiesFile))
+            buildConfigField "String", "API_KEY", secretProperties.getProperty("api-key")
+        }
     }
 
     buildTypes {
