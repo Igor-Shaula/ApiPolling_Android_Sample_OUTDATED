@@ -3,15 +3,18 @@ package com.igor_shaula.hometask_zf.ui.list
 import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.igor_shaula.hometask_zf.data.VehicleRecord
+import com.igor_shaula.hometask_zf.data.VehicleStatus
 import com.igor_shaula.hometask_zf.databinding.FragmentVehiclesListBinding
 import timber.log.Timber
 
@@ -85,13 +88,14 @@ class VehicleListFragment : Fragment() {
         Timber.v("onViewStateRestored - 8")
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onStart() {
         super.onStart()
         Timber.v("onStart - 9")
-        viewModel.vehiclesListMLD.observe(viewLifecycleOwner) { list ->
-            showDataInTheList(list)
-            list.forEach { item ->
-                getDataForEveryVehicle(item.vehicleId)
+        viewModel.vehiclesMapMLD.observe(viewLifecycleOwner) { thisMap ->
+            showDataInTheList(thisMap.toList())
+            thisMap.forEach { (key, _) ->
+                getDataForEveryVehicle(key)
             }
         }
     }
@@ -142,8 +146,8 @@ class VehicleListFragment : Fragment() {
         binding.rvVehiclesList.layoutManager = LinearLayoutManager(context)
     }
 
-    private fun showDataInTheList(theData: List<VehicleRecord>) {
-        rvAdapter.setItems(theData)
+    private fun showDataInTheList(pairs: List<Pair<String, VehicleStatus>>) {
+        rvAdapter.setItems(pairs.toVehicleRecordList())
     }
 
     private fun getDataForEveryVehicle(vehicleId: String) {
@@ -151,4 +155,12 @@ class VehicleListFragment : Fragment() {
     }
 
     // endregion work with the List
+}
+
+private fun List<Pair<String, VehicleStatus>>.toVehicleRecordList(): List<VehicleRecord> {
+    val result = mutableListOf<VehicleRecord>()
+    this.forEach {
+        result.add(VehicleRecord(it.first, it.second))
+    }
+    return result
 }
