@@ -13,6 +13,8 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.igor_shaula.hometask_zf.R
+import com.igor_shaula.hometask_zf.data.VehicleRecord
 import com.igor_shaula.hometask_zf.data.VehicleStatus
 import com.igor_shaula.hometask_zf.data.toVehicleRecordList
 import com.igor_shaula.hometask_zf.databinding.FragmentVehiclesListBinding
@@ -73,7 +75,7 @@ class VehicleListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Timber.v("onViewCreated - 6")
-        binding.actvHeader.text = "the text"
+        showNearVehiclesNumber(0)
         prepareVehiclesListUI()
     }
 
@@ -111,6 +113,7 @@ class VehicleListFragment : Fragment() {
         super.onStop()
         viewModel.stopGettingVehiclesDetails()
     }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         Timber.v("onSaveInstanceState - 11")
@@ -153,12 +156,22 @@ class VehicleListFragment : Fragment() {
     }
 
     private fun showDataInTheList(pairs: List<Pair<String, VehicleStatus>>) {
-        rvAdapter.setItems(pairs.toVehicleRecordList())
+        val vehicleRecordsList = pairs.toVehicleRecordList()
+        rvAdapter.setItems(vehicleRecordsList)
+        updateHeader(vehicleRecordsList)
     }
 
-//    private fun getDataForEveryVehicle(vehicleId: String) {
-//        viewModel.getAllDetailsForOneVehicle(vehicleId)
-//    }
+    private fun updateHeader(vehicleRecordsList: List<VehicleRecord>) {
+        val howManyVehiclesAreNear = vehicleRecordsList.filter {
+            it.vehicleStatus == VehicleStatus.IN_PLACE || it.vehicleStatus == VehicleStatus.NEAR
+        }.size
+        showNearVehiclesNumber(howManyVehiclesAreNear)
+    }
+
+    private fun showNearVehiclesNumber(howManyVehiclesAreNear: Int) {
+        binding.actvHeader.text =
+            getString(R.string.close_distance_counter_text_base, howManyVehiclesAreNear)
+    }
 
     // endregion work with the List
 }
