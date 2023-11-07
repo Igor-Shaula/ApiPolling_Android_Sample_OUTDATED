@@ -94,9 +94,7 @@ class VehicleListFragment : Fragment() {
         Timber.v("onStart - 9")
         viewModel.vehiclesMapMLD.observe(viewLifecycleOwner) { thisMap ->
             showDataInTheList(thisMap.toList())
-            thisMap.forEach { (key, _) ->
-                getDataForEveryVehicle(key)
-            }
+            viewModel.startPollingForDetails(thisMap.size)
         }
         viewModel.timeToUpdateVehicleStatus.observe(viewLifecycleOwner) {
             viewModel.vehiclesMapMLD.value?.toList()?.let { showDataInTheList(it) }
@@ -106,6 +104,7 @@ class VehicleListFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         Timber.v("onResume - 10")
+        viewModel.getAllVehiclesIds() // first data fetch which is one-time due to the requirements
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -153,9 +152,9 @@ class VehicleListFragment : Fragment() {
         rvAdapter.setItems(pairs.toVehicleRecordList())
     }
 
-    private fun getDataForEveryVehicle(vehicleId: String) {
-        viewModel.timeToGetAllDetails(vehicleId)
-    }
+//    private fun getDataForEveryVehicle(vehicleId: String) {
+//        viewModel.getAllDetailsForOneVehicle(vehicleId)
+//    }
 
     // endregion work with the List
 }

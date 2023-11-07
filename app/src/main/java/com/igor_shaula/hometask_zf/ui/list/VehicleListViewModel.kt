@@ -8,6 +8,8 @@ import com.igor_shaula.hometask_zf.data.detectVehicleStatus
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.concurrent.ScheduledThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 
 class VehicleListViewModel : ViewModel() {
 
@@ -17,7 +19,7 @@ class VehicleListViewModel : ViewModel() {
 
     private var repository: VehiclesRepository = VehiclesRepository()
 
-    init {
+    fun getAllVehiclesIds() {
         MainScope().launch {
             vehiclesMapMLD.value = repository.readVehiclesList()
                 .associateBy({ it.vehicleId }, { it.vehicleStatus }).toMutableMap()
@@ -25,7 +27,17 @@ class VehicleListViewModel : ViewModel() {
         }
     }
 
-    fun timeToGetAllDetails(vehicleId: String) {
+    fun startPollingForDetails(size: Int) {
+        if (vehiclesMapMLD.value == null) return
+        val scheduledThreadPoolExecutor = ScheduledThreadPoolExecutor(size)
+        vehiclesMapMLD.value?.forEach { (key, _) ->
+            scheduledThreadPoolExecutor.scheduleAtFixedRate(
+                { getAllDetailsForOneVehicle(key) }, 0, 5, TimeUnit.SECONDS
+            )
+        }
+    }
+
+    private fun getAllDetailsForOneVehicle(vehicleId: String) {
         MainScope().launch {
             val vehicleDetails = repository.readVehicleDetails(vehicleId)
             Timber.d("vehicleDetails = $vehicleDetails")
