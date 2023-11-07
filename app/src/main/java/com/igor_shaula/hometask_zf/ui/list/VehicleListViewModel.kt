@@ -19,6 +19,8 @@ class VehicleListViewModel : ViewModel() {
 
     private var repository: VehiclesRepository = VehiclesRepository()
 
+    private var scheduledThreadPoolExecutor: ScheduledThreadPoolExecutor? = null
+
     fun getAllVehiclesIds() {
         MainScope().launch {
             vehiclesMapMLD.value = repository.readVehiclesList()
@@ -27,13 +29,23 @@ class VehicleListViewModel : ViewModel() {
         }
     }
 
-    fun startPollingForDetails(size: Int) {
+    fun startGettingVehiclesDetails(size: Int) {
         if (vehiclesMapMLD.value == null) return
-        val scheduledThreadPoolExecutor = ScheduledThreadPoolExecutor(size)
+        prepareThreadPoolExecutor(size)
         vehiclesMapMLD.value?.forEach { (key, _) ->
-            scheduledThreadPoolExecutor.scheduleAtFixedRate(
+            scheduledThreadPoolExecutor?.scheduleAtFixedRate(
                 { getAllDetailsForOneVehicle(key) }, 0, 5, TimeUnit.SECONDS
             )
+        }
+    }
+
+//    fun stopGettingVehiclesDetails() {
+//        scheduledThreadPoolExecutor?.shutdown()
+//    }
+
+    private fun prepareThreadPoolExecutor(size: Int) {
+        if (scheduledThreadPoolExecutor == null || scheduledThreadPoolExecutor?.isShutdown == true) {
+            scheduledThreadPoolExecutor = ScheduledThreadPoolExecutor(size)
         }
     }
 

@@ -94,17 +94,17 @@ class VehicleListFragment : Fragment() {
         Timber.v("onStart - 9")
         viewModel.vehiclesMapMLD.observe(viewLifecycleOwner) { thisMap ->
             showDataInTheList(thisMap.toList())
-            viewModel.startPollingForDetails(thisMap.size)
+            viewModel.startGettingVehiclesDetails(thisMap.size)
         }
         viewModel.timeToUpdateVehicleStatus.observe(viewLifecycleOwner) {
             viewModel.vehiclesMapMLD.value?.toList()?.let { showDataInTheList(it) }
         }
+        viewModel.getAllVehiclesIds() // first data fetch which is one-time due to the requirements
     }
 
     override fun onResume() {
         super.onResume()
         Timber.v("onResume - 10")
-        viewModel.getAllVehiclesIds() // first data fetch which is one-time due to the requirements
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
