@@ -98,6 +98,9 @@ class VehicleListFragment : Fragment() {
                 getDataForEveryVehicle(key)
             }
         }
+        viewModel.timeToUpdateVehicleStatus.observe(viewLifecycleOwner) {
+            viewModel.vehiclesMapMLD.value?.toList()?.let { showDataInTheList(it) }
+        }
     }
 
     override fun onResume() {
