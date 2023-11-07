@@ -22,10 +22,6 @@ import timber.log.Timber
 
 class VehicleListFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = VehicleListFragment()
-    }
-
     private lateinit var binding: FragmentVehiclesListBinding
 
     private lateinit var viewModel: VehicleListViewModel
