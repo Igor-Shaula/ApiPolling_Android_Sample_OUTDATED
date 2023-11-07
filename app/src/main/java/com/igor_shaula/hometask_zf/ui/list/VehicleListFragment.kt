@@ -88,7 +88,10 @@ class VehicleListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         Timber.v("onStart - 9")
-        viewModel.vehiclesListMLD.observe(viewLifecycleOwner) { showDataInTheList(it) }
+        viewModel.vehiclesListMLD.observe(viewLifecycleOwner) {
+            showDataInTheList(it)
+            getDataForEveryVehicle(it[0].vehicleId)
+        }
     }
 
     override fun onResume() {
@@ -139,6 +142,10 @@ class VehicleListFragment : Fragment() {
 
     private fun showDataInTheList(theData: List<VehicleRecord>) {
         rvAdapter.setItems(theData)
+    }
+
+    private fun getDataForEveryVehicle(vehicleId: String) {
+        viewModel.timeToGetAllDetails(vehicleId)
     }
 
     // endregion work with the List
