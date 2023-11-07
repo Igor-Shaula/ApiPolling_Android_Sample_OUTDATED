@@ -13,8 +13,8 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.igor_shaula.hometask_zf.data.VehicleRecord
 import com.igor_shaula.hometask_zf.data.VehicleStatus
+import com.igor_shaula.hometask_zf.data.toVehicleRecordList
 import com.igor_shaula.hometask_zf.databinding.FragmentVehiclesListBinding
 import timber.log.Timber
 
@@ -155,12 +155,4 @@ class VehicleListFragment : Fragment() {
     }
 
     // endregion work with the List
-}
-
-private fun List<Pair<String, VehicleStatus>>.toVehicleRecordList(): List<VehicleRecord> {
-    val result = mutableListOf<VehicleRecord>()
-    this.forEach {
-        result.add(VehicleRecord(it.first, it.second))
-    }
-    return result
 }
