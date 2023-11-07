@@ -88,9 +88,11 @@ class VehicleListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         Timber.v("onStart - 9")
-        viewModel.vehiclesListMLD.observe(viewLifecycleOwner) {
-            showDataInTheList(it)
-            getDataForEveryVehicle(it[0].vehicleId)
+        viewModel.vehiclesListMLD.observe(viewLifecycleOwner) { list ->
+            showDataInTheList(list)
+            list.forEach { item ->
+                getDataForEveryVehicle(item.vehicleId)
+            }
         }
     }
 
