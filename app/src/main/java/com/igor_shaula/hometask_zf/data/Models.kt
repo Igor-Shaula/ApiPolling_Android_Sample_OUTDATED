@@ -1,10 +1,10 @@
 package com.igor_shaula.hometask_zf.data
 
-data class CarItemRecord(
-    val carId: String,
-    val carStatus: CarStatus
+data class VehicleRecord(
+    val vehicleId: String,
+    val vehicleStatus: VehicleStatus
 )
 
-enum class CarStatus {
+enum class VehicleStatus {
     CLOSE, FAR_AWAY
 }

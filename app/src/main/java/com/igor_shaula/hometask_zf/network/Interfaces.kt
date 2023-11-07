@@ -5,8 +5,8 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Headers
 
-interface CarDataNetworksService {
+interface VehiclesNetworkService {
     @Headers("$API_KEY_HEADER: ${BuildConfig.API_KEY}")
     @GET(API_ENDPOINT_VEHICLES)
-    suspend fun getCarList(): Response<List<CarModel>>
+    suspend fun getVehiclesList(): Response<List<VehicleModel>>
 }

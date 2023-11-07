@@ -4,14 +4,14 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class CarDataNetworksServiceImpl : CarDataNetworksService {
+class VehicleNetworkServiceImpl : VehiclesNetworkService {
 
-    override suspend fun getCarList(): Response<List<CarModel>> {
+    override suspend fun getVehiclesList(): Response<List<VehicleModel>> {
         val retrofit = Retrofit.Builder()
             .baseUrl(API_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-        val service = retrofit.create(CarDataNetworksService::class.java)
-        return service.getCarList()
+        val service = retrofit.create(VehiclesNetworkService::class.java)
+        return service.getVehiclesList()
     }
 }

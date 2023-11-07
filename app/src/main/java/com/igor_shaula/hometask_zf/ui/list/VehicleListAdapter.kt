@@ -4,16 +4,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.igor_shaula.hometask_zf.R
-import com.igor_shaula.hometask_zf.data.CarItemRecord
+import com.igor_shaula.hometask_zf.data.VehicleRecord
 
-class VehicleListAdapter(private val onClickFunction: (CarItemRecord, Int) -> Unit) :
+class VehicleListAdapter(private val onClickFunction: (VehicleRecord, Int) -> Unit) :
     RecyclerView.Adapter<VehicleItemViewHolder>() {
 
-    private var items: List<CarItemRecord> = listOf()
+    private var items: List<VehicleRecord> = listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VehicleItemViewHolder {
         val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_car, parent, false)
+            .inflate(R.layout.item_vehicle, parent, false)
         return VehicleItemViewHolder(itemView, onClickFunction)
     }
 
@@ -25,7 +25,7 @@ class VehicleListAdapter(private val onClickFunction: (CarItemRecord, Int) -> Un
         holder.bind(items[position], position)
     }
 
-    fun setItems(items: List<CarItemRecord>) {
+    fun setItems(items: List<VehicleRecord>) {
         this.items = items
         notifyDataSetChanged() // todo remove this warning by providing the position somehow
     }

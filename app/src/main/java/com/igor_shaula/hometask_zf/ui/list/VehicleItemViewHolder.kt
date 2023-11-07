@@ -4,23 +4,23 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import com.igor_shaula.hometask_zf.R
-import com.igor_shaula.hometask_zf.data.CarItemRecord
+import com.igor_shaula.hometask_zf.data.VehicleRecord
 
 class VehicleItemViewHolder(
-    itemView: View, private val onClickFunction: (CarItemRecord, Int) -> Unit
+    itemView: View, private val onClickFunction: (VehicleRecord, Int) -> Unit
 ) : RecyclerView.ViewHolder(itemView) {
 
-    private val actvCarId: AppCompatTextView
-    private val actvCarStatus: AppCompatTextView
+    private val actvVehicleId: AppCompatTextView
+    private val actvVehicleStatus: AppCompatTextView
 
     init {
-        actvCarId = itemView.findViewById(R.id.actvCarId)
-        actvCarStatus = itemView.findViewById(R.id.actvCarStatus)
+        actvVehicleId = itemView.findViewById(R.id.actvVehicleId)
+        actvVehicleStatus = itemView.findViewById(R.id.actvVehicleStatus)
     }
 
-    fun bind(item: CarItemRecord, position: Int) {
+    fun bind(item: VehicleRecord, position: Int) {
         itemView.setOnClickListener { onClickFunction(item, position) }
-        actvCarId.text = item.carId
-        actvCarStatus.text = item.carStatus.name
+        actvVehicleId.text = item.vehicleId
+        actvVehicleStatus.text = item.vehicleStatus.name
     }
 }

@@ -11,8 +11,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.igor_shaula.hometask_zf.data.CarItemRecord
-import com.igor_shaula.hometask_zf.databinding.FragmentCarListBinding
+import com.igor_shaula.hometask_zf.data.VehicleRecord
+import com.igor_shaula.hometask_zf.databinding.FragmentVehiclesListBinding
 import timber.log.Timber
 
 class VehicleListFragment : Fragment() {
@@ -21,7 +21,7 @@ class VehicleListFragment : Fragment() {
         fun newInstance() = VehicleListFragment()
     }
 
-    private lateinit var binding: FragmentCarListBinding
+    private lateinit var binding: FragmentVehiclesListBinding
 
     private lateinit var viewModel: VehicleListViewModel
 
@@ -63,7 +63,7 @@ class VehicleListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         Timber.v("onCreateView - 5")
-        binding = FragmentCarListBinding.inflate(inflater, container, false)
+        binding = FragmentVehiclesListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -71,7 +71,7 @@ class VehicleListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Timber.v("onViewCreated - 6")
         binding.actvHeader.text = "the text"
-        prepareCarListUI()
+        prepareVehiclesListUI()
     }
 
     @Deprecated("Deprecated in Java")
@@ -88,7 +88,7 @@ class VehicleListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         Timber.v("onStart - 9")
-        viewModel.carListData.observe(viewLifecycleOwner) { showDataInTheList(it) }
+        viewModel.vehiclesListMLD.observe(viewLifecycleOwner) { showDataInTheList(it) }
     }
 
     override fun onResume() {
@@ -129,15 +129,15 @@ class VehicleListFragment : Fragment() {
 
     // region work with the List
 
-    private fun prepareCarListUI() {
-        rvAdapter = VehicleListAdapter { carItemRecord, position ->
-            Timber.d("click function: carItemRecord = $carItemRecord, position = $position")
+    private fun prepareVehiclesListUI() {
+        rvAdapter = VehicleListAdapter { vehicleItemRecord, position ->
+            Timber.d("click function: vehicleItemRecord = $vehicleItemRecord, position = $position")
         }
-        binding.rvCarList.adapter = rvAdapter
-        binding.rvCarList.layoutManager = LinearLayoutManager(context)
+        binding.rvVehiclesList.adapter = rvAdapter
+        binding.rvVehiclesList.layoutManager = LinearLayoutManager(context)
     }
 
-    private fun showDataInTheList(theData: List<CarItemRecord>) {
+    private fun showDataInTheList(theData: List<VehicleRecord>) {
         rvAdapter.setItems(theData)
     }
 
