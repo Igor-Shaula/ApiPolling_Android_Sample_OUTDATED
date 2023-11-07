@@ -39,9 +39,9 @@ class VehicleListViewModel : ViewModel() {
         }
     }
 
-//    fun stopGettingVehiclesDetails() {
-//        scheduledThreadPoolExecutor?.shutdown()
-//    }
+    fun stopGettingVehiclesDetails() {
+        scheduledThreadPoolExecutor?.shutdown()
+    }
 
     private fun prepareThreadPoolExecutor(size: Int) {
         if (scheduledThreadPoolExecutor == null || scheduledThreadPoolExecutor?.isShutdown == true) {

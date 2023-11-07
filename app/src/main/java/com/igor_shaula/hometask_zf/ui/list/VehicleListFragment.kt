@@ -107,6 +107,10 @@ class VehicleListFragment : Fragment() {
         Timber.v("onResume - 10")
     }
 
+    override fun onStop() {
+        super.onStop()
+        viewModel.stopGettingVehiclesDetails()
+    }
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         Timber.v("onSaveInstanceState - 11")
