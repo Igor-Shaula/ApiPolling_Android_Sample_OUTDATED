@@ -4,12 +4,17 @@ import android.location.Location
 import timber.log.Timber
 
 fun detectVehicleStatus(vehicleDetails: VehicleDetailsRecord): VehicleStatus {
-    val floatArrayResult = FloatArray(1)
+    val resultHolder = FloatArray(1)
     Location.distanceBetween(
         vehicleDetails.latitude, vehicleDetails.longitude,
-        TARGET_LATITUDE, TARGET_LONGITUDE, floatArrayResult
+        TARGET_LATITUDE, TARGET_LONGITUDE, resultHolder
     )
-    Timber.d("distanceBetween for ${vehicleDetails.vehicleId} is: ${floatArrayResult[0]} meters")
-    val isNear = floatArrayResult[0] < DISTANCE_LIMIT
-    return if (isNear) VehicleStatus.NEAR else VehicleStatus.AFAR
+    Timber.d("distanceBetween for ${vehicleDetails.vehicleId} is: ${resultHolder[0]} meters")
+    return if (resultHolder[0] == 0F) {
+        VehicleStatus.IN_PLACE
+    } else if (resultHolder[0] < DISTANCE_LIMIT) {
+        VehicleStatus.NEAR
+    } else {
+        VehicleStatus.AFAR
+    }
 }
