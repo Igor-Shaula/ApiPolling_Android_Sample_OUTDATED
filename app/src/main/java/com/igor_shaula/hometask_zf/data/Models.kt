@@ -8,3 +8,9 @@ data class VehicleRecord(
 enum class VehicleStatus {
     CLOSE, FAR_AWAY
 }
+
+data class VehicleDetailsRecord(
+    val vehicleId: String,
+    val latitude: Double,
+    val longitude: Double
+)
