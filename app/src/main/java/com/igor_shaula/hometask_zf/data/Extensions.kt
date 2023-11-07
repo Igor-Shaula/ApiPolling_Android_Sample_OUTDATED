@@ -14,7 +14,7 @@ fun List<Pair<String, VehicleStatus>>.toVehicleRecordList(): List<VehicleRecord>
 fun List<VehicleModel>?.toVehicleItemRecords(): List<VehicleRecord> {
     val result = mutableListOf<VehicleRecord>()
     this?.forEach {
-        result.add(VehicleRecord(vehicleId = it.vehicleId, vehicleStatus = VehicleStatus.FAR_AWAY))
+        result.add(VehicleRecord(vehicleId = it.vehicleId, vehicleStatus = VehicleStatus.UNKNOWN))
     }
     return result
 }

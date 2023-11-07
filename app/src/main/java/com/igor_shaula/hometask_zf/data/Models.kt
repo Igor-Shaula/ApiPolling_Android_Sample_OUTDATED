@@ -6,7 +6,7 @@ data class VehicleRecord(
 )
 
 enum class VehicleStatus {
-    CLOSE, FAR_AWAY
+    UNKNOWN, NEAR, AFAR
 }
 
 data class VehicleDetailsRecord(
