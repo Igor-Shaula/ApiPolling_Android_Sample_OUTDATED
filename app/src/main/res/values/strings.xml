@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">HomeTask_ZF</string>
+    <string name="close_distance_counter_text_base">number of vehicles which are close to the target:\n %1$d</string>
 </resources>
