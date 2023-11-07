@@ -20,4 +20,11 @@ class VehicleListViewModel : ViewModel() {
             Timber.d("vehiclesListMLD = ${vehiclesListMLD.value}")
         }
     }
+
+    fun timeToGetAllDetails(vehicleId: String) {
+        MainScope().launch {
+            val vehicleDetails = repository.readVehicleDetails(vehicleId)
+            Timber.d("vehicleDetails = $vehicleDetails")
+        }
+    }
 }
