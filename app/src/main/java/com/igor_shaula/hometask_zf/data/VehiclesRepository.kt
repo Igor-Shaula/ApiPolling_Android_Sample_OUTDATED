@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit
 class VehiclesRepository {
 
     val vehiclesMapMLD = MutableLiveData<MutableMap<String, VehicleStatus>>()
+    val vehicleDetailsMapMLD = MutableLiveData<MutableMap<String, VehicleDetailsRecord>>()
 
     private var scheduledThreadPoolExecutor: ScheduledThreadPoolExecutor? = null
 
@@ -49,6 +50,7 @@ class VehiclesRepository {
             val vehicleDetails = readVehicleDetails(vehicleId)
             Timber.d("vehicleDetails = $vehicleDetails")
             if (vehicleDetails != null) {
+                updateVehicleDetailsMap(vehicleId, vehicleDetails)
                 vehiclesMapMLD.value?.put(
                     vehicleDetails.vehicleId, detectVehicleStatus(vehicleDetails)
                 )
@@ -61,6 +63,16 @@ class VehiclesRepository {
         val vehicleDataNetworkService = VehicleNetworkServiceImpl()
         val vehicleDetails = vehicleDataNetworkService.getVehicleDetails(vehicleId)
         return vehicleDetails.body()?.toVehicleItemRecords()
+    }
+
+    private fun updateVehicleDetailsMap(key: String, value: VehicleDetailsRecord) {
+        if (vehicleDetailsMapMLD.value == null) {
+            // we need this preparation for value?.put() to work as the value is nullable
+            vehicleDetailsMapMLD.value = mutableMapOf()
+        }
+        vehicleDetailsMapMLD.value?.put(key, value)
+        vehicleDetailsMapMLD.value = vehicleDetailsMapMLD.value
+        Timber.d("vehicleDetailsMapMLD.value = ${vehicleDetailsMapMLD.value}")
     }
 
     fun stopGettingVehiclesDetails() {
