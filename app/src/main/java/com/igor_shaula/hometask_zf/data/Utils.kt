@@ -18,3 +18,12 @@ fun detectVehicleStatus(vehicleDetails: VehicleDetailsRecord): VehicleStatus {
         VehicleStatus.AFAR
     }
 }
+
+fun detectNumberOfNearVehicles(vehicleRecordsList: List<VehicleRecord>?): Int {
+    if (vehicleRecordsList.isNullOrEmpty()) {
+        return -42
+    }
+    return vehicleRecordsList.filter {
+        it.vehicleStatus == VehicleStatus.IN_PLACE || it.vehicleStatus == VehicleStatus.NEAR
+    }.size
+}
