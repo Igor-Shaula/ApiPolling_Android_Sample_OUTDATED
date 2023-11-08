@@ -25,6 +25,8 @@ class VehicleListViewModel : ViewModel() {
         repository.stopGettingVehiclesDetails()
     }
 
+    fun getNumberOfNearVehicles() = repository.getNumberOfNearVehicles()
+
     private fun updateTheViewModel() {
         timeToUpdateVehicleStatus.value = Unit // just to show new statuses on UI
     }

@@ -78,4 +78,9 @@ class VehiclesRepository {
     fun stopGettingVehiclesDetails() {
         scheduledThreadPoolExecutor?.shutdown()
     }
+
+    fun getNumberOfNearVehicles(): Int {
+        val vehicleRecordsList = vehiclesMapMLD.value?.toList()?.toVehicleRecordList()
+        return detectNumberOfNearVehicles(vehicleRecordsList)
+    }
 }

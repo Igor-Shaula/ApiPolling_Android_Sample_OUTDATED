@@ -11,4 +11,6 @@ class DetailViewModel : ViewModel() {
     val vehiclesDetailsMap = repository.vehicleDetailsMapMLD
 
     val vehiclesMap = repository.vehiclesMapMLD
+
+    fun getNumberOfNearVehicles() = repository.getNumberOfNearVehicles()
 }
