@@ -16,7 +16,7 @@
         android:gravity="center_vertical|start"
         android:hint="vehicle id"
         android:maxLines="1"
-        android:textStyle="bold"
+        android:textStyle="italic"
         app:layout_constraintEnd_toStartOf="@+id/actvVehicleStatus"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,6 +27,8 @@
         android:layout_height="20dp"
         android:gravity="center_vertical|end"
         android:hint="42"
+        android:textColor="@color/black"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
