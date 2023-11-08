@@ -41,6 +41,24 @@ class DetailFragment : DialogFragment() {
         return binding.root
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.vehiclesDetailsMap.observe(viewLifecycleOwner) {
+            updateUI(it[vehicleId])
+        }
+    }
+
+    private fun updateUI(vehicleDetailsRecord: VehicleDetailsRecord?) {
+        binding.apply {
+            actvCounterOfNearVehicles.text =
+                getString(R.string.close_distance_counter_text_base, -1) // todo the counter
+            actvVehicleId.text = vehicleId
+            actvLiveStatus.text = viewModel.vehiclesMap.value?.get(vehicleId).toString()
+            actvLiveCoordinates.text =
+                "" + vehicleDetailsRecord?.latitude + " / " + vehicleDetailsRecord?.longitude
+        }
+    }
+
     companion object {
 
         private const val DETAILS_FRAGMENT_TAG = "DetailFragment"
