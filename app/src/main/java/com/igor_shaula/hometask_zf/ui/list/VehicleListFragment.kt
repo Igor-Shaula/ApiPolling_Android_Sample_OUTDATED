@@ -52,7 +52,6 @@ class VehicleListFragment : Fragment() {
         Timber.v("onAttach - 3")
         // java.lang.IllegalStateException: Can't access ViewModels from detached fragment
         viewModel = ViewModelProvider(this)[VehicleListViewModel::class.java]
-        // TODO: Use the ViewModel
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
