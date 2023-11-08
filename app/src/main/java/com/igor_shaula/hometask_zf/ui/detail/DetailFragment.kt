@@ -53,10 +53,17 @@ class DetailFragment : DialogFragment() {
             actvCounterOfNearVehicles.text = getString(
                 R.string.close_distance_counter_text_base, viewModel.getNumberOfNearVehicles()
             )
-            actvVehicleId.text = vehicleId
-            actvLiveStatus.text = viewModel.vehiclesMap.value?.get(vehicleId).toString()
-            actvLiveCoordinates.text =
-                "" + vehicleDetailsRecord?.latitude + " / " + vehicleDetailsRecord?.longitude
+            actvVehicleId.text = getString(
+                R.string.vehicleId, vehicleId
+            )
+            actvLiveStatus.text = getString(
+                R.string.vehicleStatus, viewModel.vehiclesMap.value?.get(vehicleId).toString()
+            )
+            actvLiveCoordinates.text = getString(
+                R.string.location_text_base,
+                vehicleDetailsRecord?.latitude,
+                vehicleDetailsRecord?.longitude
+            )
         }
     }
 
