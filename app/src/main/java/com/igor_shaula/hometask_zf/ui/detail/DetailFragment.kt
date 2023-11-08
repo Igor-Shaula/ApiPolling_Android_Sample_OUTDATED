@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.igor_shaula.hometask_zf.databinding.FragmentDetailBinding
 
@@ -27,4 +28,14 @@ class DetailFragment : DialogFragment() {
         return binding.root
     }
 
+    companion object {
+
+        private const val DETAILS_FRAGMENT_TAG = "DetailFragment"
+
+        fun show(fragmentManager: FragmentManager) {
+            if (fragmentManager.findFragmentByTag(DETAILS_FRAGMENT_TAG) == null) {
+                DetailFragment().show(fragmentManager, DETAILS_FRAGMENT_TAG)
+            }
+        }
+    }
 }

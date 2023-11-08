@@ -18,6 +18,7 @@ import com.igor_shaula.hometask_zf.data.VehicleRecord
 import com.igor_shaula.hometask_zf.data.VehicleStatus
 import com.igor_shaula.hometask_zf.data.toVehicleRecordList
 import com.igor_shaula.hometask_zf.databinding.FragmentVehiclesListBinding
+import com.igor_shaula.hometask_zf.ui.detail.DetailFragment
 import timber.log.Timber
 
 class VehicleListFragment : Fragment() {
@@ -145,6 +146,7 @@ class VehicleListFragment : Fragment() {
     private fun prepareVehiclesListUI() {
         rvAdapter = VehicleListAdapter { vehicleItemRecord, position ->
             Timber.d("click function: vehicleItemRecord = $vehicleItemRecord, position = $position")
+            DetailFragment.show(childFragmentManager)
         }
         binding.rvVehiclesList.adapter = rvAdapter
         binding.rvVehiclesList.layoutManager = LinearLayoutManager(context)
