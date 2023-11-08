@@ -146,7 +146,7 @@ class VehicleListFragment : Fragment() {
     private fun prepareVehiclesListUI() {
         rvAdapter = VehicleListAdapter { vehicleItemRecord, position ->
             Timber.d("click function: vehicleItemRecord = $vehicleItemRecord, position = $position")
-            DetailFragment.show(childFragmentManager)
+            DetailFragment.show(childFragmentManager, vehicleItemRecord.vehicleId)
         }
         binding.rvVehiclesList.adapter = rvAdapter
         binding.rvVehiclesList.layoutManager = LinearLayoutManager(context)
