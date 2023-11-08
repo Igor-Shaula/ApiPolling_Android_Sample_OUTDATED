@@ -2,6 +2,7 @@ package com.igor_shaula.hometask_zf.ui.list
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.igor_shaula.hometask_zf.ThisApp
 import com.igor_shaula.hometask_zf.data.VehicleStatus
 import com.igor_shaula.hometask_zf.data.VehiclesRepository
 import com.igor_shaula.hometask_zf.data.detectVehicleStatus
@@ -17,7 +18,7 @@ class VehicleListViewModel : ViewModel() {
 
     val timeToUpdateVehicleStatus = MutableLiveData<Unit>()
 
-    private var repository: VehiclesRepository = VehiclesRepository()
+    private var repository: VehiclesRepository = ThisApp.getVehiclesRepository()
 
     private var scheduledThreadPoolExecutor: ScheduledThreadPoolExecutor? = null
 
