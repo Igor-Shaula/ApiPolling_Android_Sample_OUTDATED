@@ -50,8 +50,9 @@ class DetailFragment : DialogFragment() {
 
     private fun updateUI(vehicleDetailsRecord: VehicleDetailsRecord?) {
         binding.apply {
-            actvCounterOfNearVehicles.text =
-                getString(R.string.close_distance_counter_text_base, -1) // todo the counter
+            actvCounterOfNearVehicles.text = getString(
+                R.string.close_distance_counter_text_base, viewModel.getNumberOfNearVehicles()
+            )
             actvVehicleId.text = vehicleId
             actvLiveStatus.text = viewModel.vehiclesMap.value?.get(vehicleId).toString()
             actvLiveCoordinates.text =
