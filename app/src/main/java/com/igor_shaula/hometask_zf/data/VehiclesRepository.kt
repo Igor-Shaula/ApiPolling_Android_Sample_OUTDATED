@@ -1,7 +1,7 @@
 package com.igor_shaula.hometask_zf.data
 
 import androidx.lifecycle.MutableLiveData
-import com.igor_shaula.hometask_zf.network.VehicleNetworkServiceImpl
+import com.igor_shaula.hometask_zf.data.network.VehicleNetworkServiceImpl
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import timber.log.Timber

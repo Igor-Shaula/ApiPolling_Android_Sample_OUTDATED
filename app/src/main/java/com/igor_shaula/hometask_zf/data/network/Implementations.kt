@@ -1,4 +1,4 @@
-package com.igor_shaula.hometask_zf.network
+package com.igor_shaula.hometask_zf.data.network
 
 import retrofit2.Response
 import retrofit2.Retrofit
