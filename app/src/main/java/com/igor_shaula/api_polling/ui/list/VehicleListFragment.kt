@@ -1,4 +1,4 @@
-package com.igor_shaula.hometask_zf.ui.list
+package com.igor_shaula.api_polling.ui.list
 
 import android.app.Activity
 import android.content.Context
@@ -13,11 +13,11 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.igor_shaula.hometask_zf.R
-import com.igor_shaula.hometask_zf.data.VehicleStatus
-import com.igor_shaula.hometask_zf.data.toVehicleRecordList
-import com.igor_shaula.hometask_zf.databinding.FragmentVehiclesListBinding
-import com.igor_shaula.hometask_zf.ui.detail.DetailFragment
+import com.igor_shaula.api_polling.R
+import com.igor_shaula.api_polling.data.VehicleStatus
+import com.igor_shaula.api_polling.data.toVehicleRecordList
+import com.igor_shaula.api_polling.databinding.FragmentVehiclesListBinding
+import com.igor_shaula.api_polling.ui.detail.DetailFragment
 import timber.log.Timber
 
 class VehicleListFragment : Fragment() {

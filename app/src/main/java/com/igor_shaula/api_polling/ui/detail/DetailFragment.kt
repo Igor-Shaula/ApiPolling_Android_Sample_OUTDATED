@@ -1,4 +1,4 @@
-package com.igor_shaula.hometask_zf.ui.detail
+package com.igor_shaula.api_polling.ui.detail
 
 import android.content.Context
 import android.os.Bundle
@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
-import com.igor_shaula.hometask_zf.R
-import com.igor_shaula.hometask_zf.data.VehicleDetailsRecord
-import com.igor_shaula.hometask_zf.databinding.FragmentDetailBinding
+import com.igor_shaula.api_polling.R
+import com.igor_shaula.api_polling.data.VehicleDetailsRecord
+import com.igor_shaula.api_polling.databinding.FragmentDetailBinding
 import timber.log.Timber
 
 class DetailFragment : DialogFragment() {

@@ -1,7 +1,7 @@
-package com.igor_shaula.hometask_zf
+package com.igor_shaula.api_polling
 
 import android.app.Application
-import com.igor_shaula.hometask_zf.data.VehiclesRepository
+import com.igor_shaula.api_polling.data.VehiclesRepository
 import timber.log.Timber
 
 class ThisApp : Application() {

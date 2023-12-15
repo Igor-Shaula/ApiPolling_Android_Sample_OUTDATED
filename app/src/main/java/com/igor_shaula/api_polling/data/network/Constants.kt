@@ -1,4 +1,4 @@
-package com.igor_shaula.hometask_zf.data.network
+package com.igor_shaula.api_polling.data.network
 
 const val API_BASE_URL = "https://5w53f1x8oa.execute-api.eu-west-1.amazonaws.com/dev/"
 

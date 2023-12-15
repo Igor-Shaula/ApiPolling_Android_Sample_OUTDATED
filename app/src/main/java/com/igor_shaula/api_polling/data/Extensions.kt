@@ -1,7 +1,7 @@
-package com.igor_shaula.hometask_zf.data
+package com.igor_shaula.api_polling.data
 
-import com.igor_shaula.hometask_zf.data.network.VehicleDetailsModel
-import com.igor_shaula.hometask_zf.data.network.VehicleModel
+import com.igor_shaula.api_polling.data.network.VehicleDetailsModel
+import com.igor_shaula.api_polling.data.network.VehicleModel
 
 fun List<Pair<String, VehicleStatus>>.toVehicleRecordList(): List<VehicleRecord> {
     val result = mutableListOf<VehicleRecord>()

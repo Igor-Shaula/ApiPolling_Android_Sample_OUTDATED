@@ -1,4 +1,4 @@
-package com.igor_shaula.hometask_zf.data
+package com.igor_shaula.api_polling.data
 
 import android.location.Location
 import timber.log.Timber

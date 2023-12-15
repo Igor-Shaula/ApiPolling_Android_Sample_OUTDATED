@@ -1,8 +1,8 @@
-package com.igor_shaula.hometask_zf.ui.detail
+package com.igor_shaula.api_polling.ui.detail
 
 import androidx.lifecycle.ViewModel
-import com.igor_shaula.hometask_zf.ThisApp
-import com.igor_shaula.hometask_zf.data.VehiclesRepository
+import com.igor_shaula.api_polling.ThisApp
+import com.igor_shaula.api_polling.data.VehiclesRepository
 
 class DetailViewModel : ViewModel() {
 

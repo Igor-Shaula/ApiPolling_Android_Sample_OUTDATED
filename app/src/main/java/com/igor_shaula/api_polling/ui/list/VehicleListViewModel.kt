@@ -1,9 +1,9 @@
-package com.igor_shaula.hometask_zf.ui.list
+package com.igor_shaula.api_polling.ui.list
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.igor_shaula.hometask_zf.ThisApp
-import com.igor_shaula.hometask_zf.data.VehiclesRepository
+import com.igor_shaula.api_polling.ThisApp
+import com.igor_shaula.api_polling.data.VehiclesRepository
 
 class VehicleListViewModel : ViewModel() {
 

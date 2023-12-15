@@ -9,7 +9,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fcvMain"
-        android:name="com.igor_shaula.hometask_zf.ui.list.VehicleListFragment"
+        android:name="com.igor_shaula.api_polling.ui.list.VehicleListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

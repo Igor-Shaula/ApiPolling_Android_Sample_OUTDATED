@@ -1,8 +1,8 @@
-package com.igor_shaula.hometask_zf.ui
+package com.igor_shaula.api_polling.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.igor_shaula.hometask_zf.R
+import com.igor_shaula.api_polling.R
 
 class MainActivity : AppCompatActivity() {
 

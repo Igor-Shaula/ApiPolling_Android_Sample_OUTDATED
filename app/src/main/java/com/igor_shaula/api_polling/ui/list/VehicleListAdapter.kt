@@ -1,10 +1,10 @@
-package com.igor_shaula.hometask_zf.ui.list
+package com.igor_shaula.api_polling.ui.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.igor_shaula.hometask_zf.R
-import com.igor_shaula.hometask_zf.data.VehicleRecord
+import com.igor_shaula.api_polling.R
+import com.igor_shaula.api_polling.data.VehicleRecord
 
 class VehicleListAdapter(private val onClickFunction: (VehicleRecord, Int) -> Unit) :
     RecyclerView.Adapter<VehicleItemViewHolder>() {

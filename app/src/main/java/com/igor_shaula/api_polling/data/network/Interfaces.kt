@@ -1,6 +1,6 @@
-package com.igor_shaula.hometask_zf.data.network
+package com.igor_shaula.api_polling.data.network
 
-import com.igor_shaula.hometask_zf.BuildConfig
+import com.igor_shaula.api_polling.BuildConfig
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Headers
