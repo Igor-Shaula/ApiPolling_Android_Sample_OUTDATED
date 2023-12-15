@@ -1,9 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.HomeTask_ZF" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.HomeTask_BaseGreen" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.HomeTask_ZF" parent="Base.Theme.HomeTask_ZF" />
+    <style name="Theme.HomeTask_SomeGreen" parent="Base.Theme.HomeTask_BaseGreen" />
 </resources>
