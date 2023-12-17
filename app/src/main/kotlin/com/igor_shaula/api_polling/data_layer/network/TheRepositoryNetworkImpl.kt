@@ -1,9 +1,11 @@
 package com.igor_shaula.api_polling.data_layer.network
 
+import com.igor_shaula.api_polling.data_layer.JavaTPEBasedPollingEngine
 import com.igor_shaula.api_polling.data_layer.PollingEngine
 import com.igor_shaula.api_polling.data_layer.TheRepository
 import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
+import com.igor_shaula.api_polling.data_layer.VehicleStatus
 import com.igor_shaula.api_polling.data_layer.detectNumberOfNearVehicles
 import com.igor_shaula.api_polling.data_layer.detectVehicleStatus
 import com.igor_shaula.api_polling.data_layer.network.retrofit.VehicleNetworkServiceImpl
@@ -17,13 +19,10 @@ class TheRepositoryNetworkImpl : TheRepository {
 
     private var pollingEngine: PollingEngine? = null
 
-    override fun getAllVehiclesIds() {
-        MainScope().launch {
-            vehiclesMapMLD.value = readVehiclesList()
-                .associateBy({ it.vehicleId }, { it.vehicleStatus }).toMutableMap()
-            Timber.d("vehiclesMapMLD = ${vehiclesMapMLD.value}")
-        }
-    }
+    override suspend fun getAllVehiclesIds(): MutableMap<String, VehicleStatus> =
+        readVehiclesList()
+            .associateBy({ it.vehicleId }, { it.vehicleStatus })
+            .toMutableMap()
 
     override fun startGettingVehiclesDetails(size: Int, updateViewModel: () -> Unit) {
 //        if (vehiclesMapMLD.value == null) return

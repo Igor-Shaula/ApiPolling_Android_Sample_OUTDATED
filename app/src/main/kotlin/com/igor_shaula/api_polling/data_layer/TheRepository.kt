@@ -8,7 +8,7 @@ interface TheRepository {
     val vehiclesMapMLD get() = MutableLiveData<MutableMap<String, VehicleStatus>>()
     val vehicleDetailsMapMLD get() = MutableLiveData<MutableMap<String, VehicleDetailsRecord>>()
 
-    fun getAllVehiclesIds()
+    suspend fun getAllVehiclesIds():MutableMap<String, VehicleStatus>
 
     fun startGettingVehiclesDetails(size: Int, updateViewModel: () -> Unit)
 
