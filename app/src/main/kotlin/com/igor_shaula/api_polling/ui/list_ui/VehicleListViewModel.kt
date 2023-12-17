@@ -3,11 +3,11 @@ package com.igor_shaula.api_polling.ui.list_ui
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.igor_shaula.api_polling.ThisApp
-import com.igor_shaula.api_polling.data.TheRepositoryImpl
+import com.igor_shaula.api_polling.data.TheRepository
 
 class VehicleListViewModel : ViewModel() {
 
-    private var repository: TheRepositoryImpl = ThisApp.getVehiclesRepository()
+    private var repository: TheRepository = ThisApp.getVehiclesRepository()
 
     val vehiclesMap = repository.vehiclesMapMLD
 

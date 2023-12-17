@@ -1,6 +1,5 @@
 package com.igor_shaula.api_polling.data
 
-import androidx.lifecycle.MutableLiveData
 import com.igor_shaula.api_polling.data.network.VehicleNetworkServiceImpl
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -8,14 +7,11 @@ import timber.log.Timber
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 
-class TheRepositoryImpl {
-
-    val vehiclesMapMLD = MutableLiveData<MutableMap<String, VehicleStatus>>()
-    val vehicleDetailsMapMLD = MutableLiveData<MutableMap<String, VehicleDetailsRecord>>()
+class TheRepositoryImpl : TheRepository {
 
     private var scheduledThreadPoolExecutor: ScheduledThreadPoolExecutor? = null
 
-    fun getAllVehiclesIds() {
+    override fun getAllVehiclesIds() {
         MainScope().launch {
             vehiclesMapMLD.value = readVehiclesList()
                 .associateBy({ it.vehicleId }, { it.vehicleStatus }).toMutableMap()
@@ -29,7 +25,7 @@ class TheRepositoryImpl {
         return vehicleList.body().toVehicleItemRecords()
     }
 
-    fun startGettingVehiclesDetails(size: Int, updateViewModel: () -> Unit) {
+    override fun startGettingVehiclesDetails(size: Int, updateViewModel: () -> Unit) {
 //        if (vehiclesMapMLD.value == null) return
         prepareThreadPoolExecutor(size)
         vehiclesMapMLD.value?.forEach { (key, _) ->
@@ -75,11 +71,11 @@ class TheRepositoryImpl {
         Timber.d("vehicleDetailsMapMLD.value = ${vehicleDetailsMapMLD.value}")
     }
 
-    fun stopGettingVehiclesDetails() {
+    override fun stopGettingVehiclesDetails() {
         scheduledThreadPoolExecutor?.shutdown()
     }
 
-    fun getNumberOfNearVehicles(): Int {
+    override fun getNumberOfNearVehicles(): Int {
         val vehicleRecordsList = vehiclesMapMLD.value?.toList()?.toVehicleRecordList()
         return detectNumberOfNearVehicles(vehicleRecordsList)
     }
