@@ -13,14 +13,15 @@ class VehicleListViewModel : ViewModel() {
 
     private var repository: TheRepository = ThisApp.getVehiclesRepository()
 
-    val vehiclesMap by lazy { MutableLiveData<MutableMap<String, VehicleStatus>>() }
+    // MLD = MutableLiveData
+    val vehiclesMapMLD by lazy { MutableLiveData<MutableMap<String, VehicleStatus>>() }
 
     val timeToUpdateVehicleStatus = MutableLiveData<Unit>()
 
     fun getAllVehiclesIds() {
         MainScope().launch {
-            vehiclesMap.value = repository.getAllVehiclesIds()
-            Timber.i("vehiclesMap.value = ${vehiclesMap.value}")
+            vehiclesMapMLD.value = repository.getAllVehiclesIds()
+            Timber.i("vehiclesMap.value = ${vehiclesMapMLD.value}")
         }
     }
 
