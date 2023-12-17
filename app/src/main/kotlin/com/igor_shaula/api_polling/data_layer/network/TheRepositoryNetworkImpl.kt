@@ -49,7 +49,7 @@ class TheRepositoryNetworkImpl : TheRepository {
     }
 
     private fun prepareThreadPoolExecutor(size: Int) {
-        pollingEngine?.prepare(size)
+        pollingEngine = JavaTPEBasedPollingEngine.prepare(size)
     }
 
     private fun getAllDetailsForOneVehicle(vehicleId: String, updateViewModel: () -> Unit) {

@@ -29,4 +29,17 @@ class JavaTPEBasedPollingEngine : PollingEngine {
     override fun stopAndClearItself() {
         scheduledThreadPoolExecutor?.shutdown()
     }
+
+    companion object {
+
+        private var thisPollingEngine: JavaTPEBasedPollingEngine? = null
+
+        fun prepare(size: Int): JavaTPEBasedPollingEngine {
+            if (thisPollingEngine == null) {
+                thisPollingEngine = JavaTPEBasedPollingEngine()
+                thisPollingEngine?.prepare(size)
+            }
+            return thisPollingEngine as JavaTPEBasedPollingEngine
+        }
+    }
 }
