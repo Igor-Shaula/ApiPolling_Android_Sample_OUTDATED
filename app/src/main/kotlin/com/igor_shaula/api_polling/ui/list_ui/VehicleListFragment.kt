@@ -1,4 +1,4 @@
-package com.igor_shaula.api_polling.ui.list
+package com.igor_shaula.api_polling.ui.list_ui
 
 import android.app.Activity
 import android.content.Context
@@ -17,7 +17,8 @@ import com.igor_shaula.api_polling.R
 import com.igor_shaula.api_polling.data.VehicleStatus
 import com.igor_shaula.api_polling.data.toVehicleRecordList
 import com.igor_shaula.api_polling.databinding.FragmentVehiclesListBinding
-import com.igor_shaula.api_polling.ui.detail.DetailFragment
+import com.igor_shaula.api_polling.ui.detail_ui.DetailFragment
+import com.igor_shaula.api_polling.ui.list_ui.all_for_list.VehicleListAdapter
 import timber.log.Timber
 
 class VehicleListFragment : Fragment() {

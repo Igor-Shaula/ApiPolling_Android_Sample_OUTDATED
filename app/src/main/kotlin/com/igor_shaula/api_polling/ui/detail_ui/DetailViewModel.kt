@@ -1,4 +1,4 @@
-package com.igor_shaula.api_polling.ui.detail
+package com.igor_shaula.api_polling.ui.detail_ui
 
 import androidx.lifecycle.ViewModel
 import com.igor_shaula.api_polling.ThisApp

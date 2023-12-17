@@ -1,4 +1,4 @@
-package com.igor_shaula.api_polling.ui.list
+package com.igor_shaula.api_polling.ui.list_ui.all_for_list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

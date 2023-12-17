@@ -1,4 +1,4 @@
-package com.igor_shaula.api_polling.ui.list
+package com.igor_shaula.api_polling.ui.list_ui
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
