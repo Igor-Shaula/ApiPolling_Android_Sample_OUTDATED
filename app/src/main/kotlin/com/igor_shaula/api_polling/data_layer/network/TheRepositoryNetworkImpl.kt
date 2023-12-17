@@ -1,5 +1,6 @@
 package com.igor_shaula.api_polling.data_layer.network
 
+import com.igor_shaula.api_polling.data_layer.PollingEngine
 import com.igor_shaula.api_polling.data_layer.TheRepository
 import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
@@ -11,12 +12,10 @@ import com.igor_shaula.api_polling.data_layer.toVehicleRecordList
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.util.concurrent.ScheduledThreadPoolExecutor
-import java.util.concurrent.TimeUnit
 
 class TheRepositoryNetworkImpl : TheRepository {
 
-    private var scheduledThreadPoolExecutor: ScheduledThreadPoolExecutor? = null
+    private var pollingEngine: PollingEngine? = null
 
     override fun getAllVehiclesIds() {
         MainScope().launch {
@@ -30,14 +29,12 @@ class TheRepositoryNetworkImpl : TheRepository {
 //        if (vehiclesMapMLD.value == null) return
         prepareThreadPoolExecutor(size)
         vehiclesMapMLD.value?.forEach { (key, _) ->
-            scheduledThreadPoolExecutor?.scheduleAtFixedRate(
-                { getAllDetailsForOneVehicle(key, updateViewModel) }, 0, 5, TimeUnit.SECONDS
-            )
+            pollingEngine?.launch({ getAllDetailsForOneVehicle(key, updateViewModel) }, 5)
         }
     }
 
     override fun stopGettingVehiclesDetails() {
-        scheduledThreadPoolExecutor?.shutdown()
+        pollingEngine?.stopAndClearItself()
     }
 
     override fun getNumberOfNearVehicles(): Int {
@@ -52,9 +49,7 @@ class TheRepositoryNetworkImpl : TheRepository {
     }
 
     private fun prepareThreadPoolExecutor(size: Int) {
-        if (scheduledThreadPoolExecutor == null || scheduledThreadPoolExecutor?.isShutdown == true) {
-            scheduledThreadPoolExecutor = ScheduledThreadPoolExecutor(size)
-        }
+        pollingEngine?.prepare(size)
     }
 
     private fun getAllDetailsForOneVehicle(vehicleId: String, updateViewModel: () -> Unit) {
