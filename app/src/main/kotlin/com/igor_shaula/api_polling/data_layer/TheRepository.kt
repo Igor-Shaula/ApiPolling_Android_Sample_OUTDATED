@@ -5,14 +5,16 @@ import androidx.lifecycle.MutableLiveData
 interface TheRepository {
 
     // MLD = MutableLiveData
-    val vehiclesMapMLD get() = MutableLiveData<MutableMap<String, VehicleStatus>>()
     val vehicleDetailsMapMLD get() = MutableLiveData<MutableMap<String, VehicleDetailsRecord>>()
 
-    suspend fun getAllVehiclesIds():MutableMap<String, VehicleStatus>
+    suspend fun getAllVehiclesIds(): MutableMap<String, VehicleStatus>
 
-    fun startGettingVehiclesDetails(size: Int, updateViewModel: () -> Unit)
+    fun startGettingVehiclesDetails(
+        vehiclesMap: MutableMap<String, VehicleStatus>?,
+        updateViewModel: (Pair<String, VehicleStatus>) -> Unit
+    )
 
     fun stopGettingVehiclesDetails()
 
-    fun getNumberOfNearVehicles(): Int
+    fun getNumberOfNearVehicles(vehiclesMap: MutableMap<String, VehicleStatus>?): Int
 }

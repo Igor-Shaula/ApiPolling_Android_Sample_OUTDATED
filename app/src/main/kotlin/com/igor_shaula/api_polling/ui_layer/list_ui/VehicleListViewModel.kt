@@ -26,16 +26,17 @@ class VehicleListViewModel : ViewModel() {
     }
 
     fun startGettingVehiclesDetails(size: Int) {
-        repository.startGettingVehiclesDetails(size, ::updateTheViewModel)
+        repository.startGettingVehiclesDetails(vehiclesMapMLD.value, ::updateTheViewModel)
     }
 
     fun stopGettingVehiclesDetails() {
         repository.stopGettingVehiclesDetails()
     }
 
-    fun getNumberOfNearVehicles() = repository.getNumberOfNearVehicles()
+    fun getNumberOfNearVehicles() = repository.getNumberOfNearVehicles(vehiclesMapMLD.value)
 
-    private fun updateTheViewModel() {
+    private fun updateTheViewModel(pair: Pair<String, VehicleStatus>) {
+        vehiclesMapMLD.value?.put(pair.first, pair.second)
         timeToUpdateVehicleStatus.value = Unit // just to show new statuses on UI
     }
 }

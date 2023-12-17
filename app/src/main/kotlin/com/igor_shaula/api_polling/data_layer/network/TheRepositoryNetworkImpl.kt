@@ -24,11 +24,15 @@ class TheRepositoryNetworkImpl : TheRepository {
             .associateBy({ it.vehicleId }, { it.vehicleStatus })
             .toMutableMap()
 
-    override fun startGettingVehiclesDetails(size: Int, updateViewModel: () -> Unit) {
-//        if (vehiclesMapMLD.value == null) return
-        prepareThreadPoolExecutor(size)
-        vehiclesMapMLD.value?.forEach { (key, _) ->
-            pollingEngine?.launch({ getAllDetailsForOneVehicle(key, updateViewModel) }, 5)
+    override fun startGettingVehiclesDetails(
+        vehiclesMap: MutableMap<String, VehicleStatus>?,
+        updateViewModel: (Pair<String, VehicleStatus>) -> Unit
+    ) {
+        vehiclesMap?.let {
+            prepareThreadPoolExecutor(it.size)
+            vehiclesMap.forEach { (key, _) ->
+                pollingEngine?.launch({ getAllDetailsForOneVehicle(key, updateViewModel) }, 5)
+            }
         }
     }
 
@@ -36,8 +40,8 @@ class TheRepositoryNetworkImpl : TheRepository {
         pollingEngine?.stopAndClearItself()
     }
 
-    override fun getNumberOfNearVehicles(): Int {
-        val vehicleRecordsList = vehiclesMapMLD.value?.toList()?.toVehicleRecordList()
+    override fun getNumberOfNearVehicles(vehiclesMap: MutableMap<String, VehicleStatus>?): Int {
+        val vehicleRecordsList = vehiclesMap?.toList()?.toVehicleRecordList()
         return detectNumberOfNearVehicles(vehicleRecordsList)
     }
 
@@ -51,16 +55,16 @@ class TheRepositoryNetworkImpl : TheRepository {
         pollingEngine = JavaTPEBasedPollingEngine.prepare(size)
     }
 
-    private fun getAllDetailsForOneVehicle(vehicleId: String, updateViewModel: () -> Unit) {
+    private fun getAllDetailsForOneVehicle(
+        vehicleId: String, updateViewModel: (Pair<String, VehicleStatus>) -> Unit
+    ) {
         MainScope().launch {
             val vehicleDetails = readVehicleDetails(vehicleId)
             Timber.d("vehicleDetails = $vehicleDetails")
             if (vehicleDetails != null) {
                 updateVehicleDetailsMap(vehicleId, vehicleDetails)
-                vehiclesMapMLD.value?.put(
-                    vehicleDetails.vehicleId, detectVehicleStatus(vehicleDetails)
-                )
-                updateViewModel()
+                val pair = Pair(vehicleDetails.vehicleId, detectVehicleStatus(vehicleDetails))
+                updateViewModel(pair)
             }
         }
     }

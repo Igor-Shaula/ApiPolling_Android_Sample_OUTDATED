@@ -14,5 +14,5 @@ class DetailViewModel : ViewModel() {
 
     val vehiclesMap by lazy { MutableLiveData<MutableMap<String, VehicleStatus>>() }
 
-    fun getNumberOfNearVehicles() = repository.getNumberOfNearVehicles()
+    fun getNumberOfNearVehicles() = repository.getNumberOfNearVehicles(vehiclesMap.value)
 }
