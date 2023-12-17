@@ -1,4 +1,4 @@
-package com.igor_shaula.api_polling.data
+package com.igor_shaula.api_polling.data_layer
 
 import android.location.Location
 import timber.log.Timber

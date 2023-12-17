@@ -1,4 +1,4 @@
-package com.igor_shaula.api_polling.ui.detail_ui
+package com.igor_shaula.api_polling.ui_layer.detail_ui
 
 import android.content.Context
 import android.os.Bundle
@@ -9,7 +9,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.igor_shaula.api_polling.R
-import com.igor_shaula.api_polling.data.VehicleDetailsRecord
+import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.databinding.FragmentDetailBinding
 import timber.log.Timber
 

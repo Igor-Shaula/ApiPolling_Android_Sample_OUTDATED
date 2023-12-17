@@ -1,7 +1,7 @@
-package com.igor_shaula.api_polling.data
+package com.igor_shaula.api_polling.data_layer
 
-import com.igor_shaula.api_polling.data.network.VehicleDetailsModel
-import com.igor_shaula.api_polling.data.network.VehicleModel
+import com.igor_shaula.api_polling.data_layer.network.VehicleDetailsModel
+import com.igor_shaula.api_polling.data_layer.network.VehicleModel
 
 fun List<Pair<String, VehicleStatus>>.toVehicleRecordList(): List<VehicleRecord> {
     val result = mutableListOf<VehicleRecord>()

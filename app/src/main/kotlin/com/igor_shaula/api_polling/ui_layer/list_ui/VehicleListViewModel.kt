@@ -1,9 +1,9 @@
-package com.igor_shaula.api_polling.ui.list_ui
+package com.igor_shaula.api_polling.ui_layer.list_ui
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.igor_shaula.api_polling.ThisApp
-import com.igor_shaula.api_polling.data.TheRepository
+import com.igor_shaula.api_polling.data_layer.TheRepository
 
 class VehicleListViewModel : ViewModel() {
 

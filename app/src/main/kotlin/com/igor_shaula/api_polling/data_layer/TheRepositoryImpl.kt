@@ -1,6 +1,6 @@
-package com.igor_shaula.api_polling.data
+package com.igor_shaula.api_polling.data_layer
 
-import com.igor_shaula.api_polling.data.network.VehicleNetworkServiceImpl
+import com.igor_shaula.api_polling.data_layer.network.VehicleNetworkServiceImpl
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import timber.log.Timber

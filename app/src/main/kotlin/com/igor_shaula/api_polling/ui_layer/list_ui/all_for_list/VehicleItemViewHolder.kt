@@ -1,10 +1,10 @@
-package com.igor_shaula.api_polling.ui.list_ui.all_for_list
+package com.igor_shaula.api_polling.ui_layer.list_ui.all_for_list
 
 import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import com.igor_shaula.api_polling.R
-import com.igor_shaula.api_polling.data.VehicleRecord
+import com.igor_shaula.api_polling.data_layer.VehicleRecord
 
 class VehicleItemViewHolder(
     itemView: View, private val onClickFunction: (VehicleRecord, Int) -> Unit

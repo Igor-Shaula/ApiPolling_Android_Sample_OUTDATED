@@ -1,4 +1,4 @@
-package com.igor_shaula.api_polling.data.network
+package com.igor_shaula.api_polling.data_layer.network
 
 import com.igor_shaula.api_polling.BuildConfig
 import retrofit2.Response

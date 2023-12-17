@@ -1,4 +1,4 @@
-package com.igor_shaula.api_polling.data
+package com.igor_shaula.api_polling.data_layer
 
 const val TARGET_LATITUDE = 46.5223916
 const val TARGET_LONGITUDE = 6.6314437

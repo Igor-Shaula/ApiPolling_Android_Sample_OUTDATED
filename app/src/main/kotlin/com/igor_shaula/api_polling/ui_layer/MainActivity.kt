@@ -1,4 +1,4 @@
-package com.igor_shaula.api_polling.ui
+package com.igor_shaula.api_polling.ui_layer
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

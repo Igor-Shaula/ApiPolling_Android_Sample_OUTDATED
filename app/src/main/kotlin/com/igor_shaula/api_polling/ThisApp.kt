@@ -1,8 +1,8 @@
 package com.igor_shaula.api_polling
 
 import android.app.Application
-import com.igor_shaula.api_polling.data.TheRepository
-import com.igor_shaula.api_polling.data.TheRepositoryImpl
+import com.igor_shaula.api_polling.data_layer.TheRepository
+import com.igor_shaula.api_polling.data_layer.TheRepositoryImpl
 import timber.log.Timber
 
 class ThisApp : Application() {

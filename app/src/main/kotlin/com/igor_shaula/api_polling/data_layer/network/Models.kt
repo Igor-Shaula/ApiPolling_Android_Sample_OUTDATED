@@ -1,4 +1,4 @@
-package com.igor_shaula.api_polling.data.network
+package com.igor_shaula.api_polling.data_layer.network
 
 import com.google.gson.annotations.SerializedName
 

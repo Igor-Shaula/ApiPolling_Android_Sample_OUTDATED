@@ -16,7 +16,7 @@
         android:theme="@style/Theme.HomeTask_SomeGreen"
         tools:targetApi="34">
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui_layer.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
