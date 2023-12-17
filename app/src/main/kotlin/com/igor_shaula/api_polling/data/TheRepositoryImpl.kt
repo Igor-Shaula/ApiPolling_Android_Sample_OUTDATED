@@ -19,12 +19,6 @@ class TheRepositoryImpl : TheRepository {
         }
     }
 
-    private suspend fun readVehiclesList(): List<VehicleRecord> {
-        val vehicleDataNetworkService = VehicleNetworkServiceImpl()
-        val vehicleList = vehicleDataNetworkService.getVehiclesList()
-        return vehicleList.body().toVehicleItemRecords()
-    }
-
     override fun startGettingVehiclesDetails(size: Int, updateViewModel: () -> Unit) {
 //        if (vehiclesMapMLD.value == null) return
         prepareThreadPoolExecutor(size)
@@ -33,6 +27,20 @@ class TheRepositoryImpl : TheRepository {
                 { getAllDetailsForOneVehicle(key, updateViewModel) }, 0, 5, TimeUnit.SECONDS
             )
         }
+    }
+
+    override fun stopGettingVehiclesDetails() {
+        scheduledThreadPoolExecutor?.shutdown()
+    }
+
+    override fun getNumberOfNearVehicles(): Int {
+        val vehicleRecordsList = vehiclesMapMLD.value?.toList()?.toVehicleRecordList()
+        return detectNumberOfNearVehicles(vehicleRecordsList)
+    }
+    private suspend fun readVehiclesList(): List<VehicleRecord> {
+        val vehicleDataNetworkService = VehicleNetworkServiceImpl()
+        val vehicleList = vehicleDataNetworkService.getVehiclesList()
+        return vehicleList.body().toVehicleItemRecords()
     }
 
     private fun prepareThreadPoolExecutor(size: Int) {
@@ -69,14 +77,5 @@ class TheRepositoryImpl : TheRepository {
         vehicleDetailsMapMLD.value?.put(key, value)
         vehicleDetailsMapMLD.value = vehicleDetailsMapMLD.value
         Timber.d("vehicleDetailsMapMLD.value = ${vehicleDetailsMapMLD.value}")
-    }
-
-    override fun stopGettingVehiclesDetails() {
-        scheduledThreadPoolExecutor?.shutdown()
-    }
-
-    override fun getNumberOfNearVehicles(): Int {
-        val vehicleRecordsList = vehiclesMapMLD.value?.toList()?.toVehicleRecordList()
-        return detectNumberOfNearVehicles(vehicleRecordsList)
     }
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 
 interface TheRepository {
 
+    // MLD = MutableLiveData
     val vehiclesMapMLD get() = MutableLiveData<MutableMap<String, VehicleStatus>>()
     val vehicleDetailsMapMLD get() = MutableLiveData<MutableMap<String, VehicleDetailsRecord>>()
 

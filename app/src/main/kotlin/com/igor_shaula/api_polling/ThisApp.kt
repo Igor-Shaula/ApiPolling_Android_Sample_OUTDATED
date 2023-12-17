@@ -19,10 +19,11 @@ class ThisApp : Application() {
         // vehiclesRepository cannot be not lateinit because it actually can be null
         private var vehiclesRepository: TheRepository? = null
 
+        // simplest ever implementation of DI - popular solutions will be added later
         fun getVehiclesRepository(): TheRepository {
             if (vehiclesRepository == null) {
                 vehiclesRepository = TheRepositoryImpl()
-            }
+            } // else add some debug source of data, maybe based on coroutines
             return vehiclesRepository as TheRepository
         }
     }
