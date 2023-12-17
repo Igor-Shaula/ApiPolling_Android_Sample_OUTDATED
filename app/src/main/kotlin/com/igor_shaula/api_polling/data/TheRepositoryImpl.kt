@@ -8,7 +8,7 @@ import timber.log.Timber
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 
-class VehiclesRepository {
+class TheRepositoryImpl {
 
     val vehiclesMapMLD = MutableLiveData<MutableMap<String, VehicleStatus>>()
     val vehicleDetailsMapMLD = MutableLiveData<MutableMap<String, VehicleDetailsRecord>>()

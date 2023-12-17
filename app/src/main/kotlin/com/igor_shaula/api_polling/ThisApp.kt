@@ -1,7 +1,7 @@
 package com.igor_shaula.api_polling
 
 import android.app.Application
-import com.igor_shaula.api_polling.data.VehiclesRepository
+import com.igor_shaula.api_polling.data.TheRepositoryImpl
 import timber.log.Timber
 
 class ThisApp : Application() {
@@ -16,13 +16,13 @@ class ThisApp : Application() {
     companion object {
 
         // vehiclesRepository cannot be not lateinit because it actually can be null
-        private var vehiclesRepository: VehiclesRepository? = null
+        private var vehiclesRepository: TheRepositoryImpl? = null
 
-        fun getVehiclesRepository(): VehiclesRepository {
+        fun getVehiclesRepository(): TheRepositoryImpl {
             if (vehiclesRepository == null) {
-                vehiclesRepository = VehiclesRepository()
+                vehiclesRepository = TheRepositoryImpl()
             }
-            return vehiclesRepository as VehiclesRepository
+            return vehiclesRepository as TheRepositoryImpl
         }
     }
 }
