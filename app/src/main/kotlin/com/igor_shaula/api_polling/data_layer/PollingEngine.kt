@@ -5,9 +5,7 @@ import java.util.concurrent.TimeUnit
 
 interface PollingEngine {
 
-    fun prepare(size: Int)
-
-    fun launch(intervalInSeconds1: () -> Unit, intervalInSeconds: Int)
+    fun launch(theWorkToDo: () -> Unit, intervalInSeconds: Int)
 
     fun stopAndClearItself()
 }
@@ -16,15 +14,15 @@ class JavaTPEBasedPollingEngine : PollingEngine {
 
     private var scheduledThreadPoolExecutor: ScheduledThreadPoolExecutor? = null
 
-    override fun prepare(size: Int) {
+    fun prepare(size: Int) {
         if (scheduledThreadPoolExecutor == null || scheduledThreadPoolExecutor?.isShutdown == true) {
             scheduledThreadPoolExecutor = ScheduledThreadPoolExecutor(size)
         }
     }
 
-    override fun launch(intervalInSeconds1: () -> Unit, intervalInSeconds: Int) {
+    override fun launch(theWorkToDo: () -> Unit, intervalInSeconds: Int) {
         scheduledThreadPoolExecutor?.scheduleAtFixedRate(
-            intervalInSeconds1, 0, 5, TimeUnit.SECONDS
+            theWorkToDo, 0, 5, TimeUnit.SECONDS
         )
     }
 
