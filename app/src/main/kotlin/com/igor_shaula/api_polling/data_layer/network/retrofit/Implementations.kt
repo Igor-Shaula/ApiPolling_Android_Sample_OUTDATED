@@ -1,5 +1,8 @@
-package com.igor_shaula.api_polling.data_layer.network
+package com.igor_shaula.api_polling.data_layer.network.retrofit
 
+import com.igor_shaula.api_polling.data_layer.network.API_BASE_URL
+import com.igor_shaula.api_polling.data_layer.network.VehicleDetailsModel
+import com.igor_shaula.api_polling.data_layer.network.VehicleModel
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

@@ -1,13 +1,20 @@
-package com.igor_shaula.api_polling.data_layer
+package com.igor_shaula.api_polling.data_layer.network
 
-import com.igor_shaula.api_polling.data_layer.network.VehicleNetworkServiceImpl
+import com.igor_shaula.api_polling.data_layer.TheRepository
+import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
+import com.igor_shaula.api_polling.data_layer.VehicleRecord
+import com.igor_shaula.api_polling.data_layer.detectNumberOfNearVehicles
+import com.igor_shaula.api_polling.data_layer.detectVehicleStatus
+import com.igor_shaula.api_polling.data_layer.network.retrofit.VehicleNetworkServiceImpl
+import com.igor_shaula.api_polling.data_layer.toVehicleItemRecords
+import com.igor_shaula.api_polling.data_layer.toVehicleRecordList
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 
-class TheRepositoryImpl : TheRepository {
+class TheRepositoryNetworkImpl : TheRepository {
 
     private var scheduledThreadPoolExecutor: ScheduledThreadPoolExecutor? = null
 
@@ -37,6 +44,7 @@ class TheRepositoryImpl : TheRepository {
         val vehicleRecordsList = vehiclesMapMLD.value?.toList()?.toVehicleRecordList()
         return detectNumberOfNearVehicles(vehicleRecordsList)
     }
+
     private suspend fun readVehiclesList(): List<VehicleRecord> {
         val vehicleDataNetworkService = VehicleNetworkServiceImpl()
         val vehicleList = vehicleDataNetworkService.getVehiclesList()
