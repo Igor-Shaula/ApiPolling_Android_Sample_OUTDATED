@@ -12,7 +12,7 @@ fun detectVehicleStatus(vehicleDetails: VehicleDetailsRecord): VehicleStatus {
     Timber.d("distanceBetween for ${vehicleDetails.vehicleId} is: ${resultHolder[0]} meters")
     return if (resultHolder[0] == 0F) {
         VehicleStatus.IN_PLACE
-    } else if (resultHolder[0] < DISTANCE_LIMIT) {
+    } else if (resultHolder[0] < NEAR_DISTANCE_LIMIT) {
         VehicleStatus.NEAR
     } else {
         VehicleStatus.AFAR
@@ -21,7 +21,7 @@ fun detectVehicleStatus(vehicleDetails: VehicleDetailsRecord): VehicleStatus {
 
 fun detectNumberOfNearVehicles(vehicleRecordsList: List<VehicleRecord>?): Int {
     if (vehicleRecordsList.isNullOrEmpty()) {
-        return -42
+        return STUB_FOR_DEFAULT_NUMBER_OF_NEAR_VEHICLES
     }
     return vehicleRecordsList.filter {
         it.vehicleStatus == VehicleStatus.IN_PLACE || it.vehicleStatus == VehicleStatus.NEAR

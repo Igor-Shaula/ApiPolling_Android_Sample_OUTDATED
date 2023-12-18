@@ -1,5 +1,6 @@
 package com.igor_shaula.api_polling.data_layer.network
 
+import com.igor_shaula.api_polling.data_layer.DEFAULT_POLLING_INTERVAL
 import com.igor_shaula.api_polling.data_layer.JavaTPEBasedPollingEngine
 import com.igor_shaula.api_polling.data_layer.PollingEngine
 import com.igor_shaula.api_polling.data_layer.TheRepository
@@ -30,7 +31,7 @@ class TheRepositoryNetworkImpl : TheRepository {
         vehiclesMap?.let {
             prepareThreadPoolExecutor(it.size)
             vehiclesMap.forEach { (key, _) ->
-                pollingEngine?.launch(5) {
+                pollingEngine?.launch(DEFAULT_POLLING_INTERVAL) {
                     MainScope().launch {
                         getAllDetailsForOneVehicle(key, updateViewModel)
                     }
