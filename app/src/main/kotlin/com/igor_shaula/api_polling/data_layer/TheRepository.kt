@@ -11,7 +11,7 @@ interface TheRepository {
 
     suspend fun startGettingVehiclesDetails(
         vehiclesMap: MutableMap<String, VehicleStatus>?,
-        updateViewModel: (Pair<String, VehicleStatus>) -> Unit
+        updateViewModel: (Pair<String, VehicleDetailsRecord>) -> Unit
     )
 
     fun stopGettingVehiclesDetails()

@@ -7,7 +7,6 @@ import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
 import com.igor_shaula.api_polling.data_layer.VehicleStatus
 import com.igor_shaula.api_polling.data_layer.detectNumberOfNearVehicles
-import com.igor_shaula.api_polling.data_layer.detectVehicleStatus
 import com.igor_shaula.api_polling.data_layer.network.retrofit.VehicleNetworkServiceImpl
 import com.igor_shaula.api_polling.data_layer.toVehicleItemRecords
 import com.igor_shaula.api_polling.data_layer.toVehicleRecordList
@@ -26,7 +25,7 @@ class TheRepositoryNetworkImpl : TheRepository {
 
     override suspend fun startGettingVehiclesDetails(
         vehiclesMap: MutableMap<String, VehicleStatus>?,
-        updateViewModel: (Pair<String, VehicleStatus>) -> Unit
+        updateViewModel: (Pair<String, VehicleDetailsRecord>) -> Unit
     ) {
         vehiclesMap?.let {
             prepareThreadPoolExecutor(it.size)
@@ -60,14 +59,12 @@ class TheRepositoryNetworkImpl : TheRepository {
     }
 
     private suspend fun getAllDetailsForOneVehicle(
-        vehicleId: String, updateViewModel: (Pair<String, VehicleStatus>) -> Unit
+        vehicleId: String, updateViewModel: (Pair<String, VehicleDetailsRecord>) -> Unit
     ) {
         val vehicleDetails = readVehicleDetails(vehicleId)
         Timber.d("vehicleDetails = $vehicleDetails")
         if (vehicleDetails != null) {
-            updateVehicleDetailsMap(vehicleId, vehicleDetails)
-            val pair = Pair(vehicleDetails.vehicleId, detectVehicleStatus(vehicleDetails))
-            updateViewModel(pair)
+            updateViewModel(Pair(vehicleId, vehicleDetails))
         }
     }
 
