@@ -11,7 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.igor_shaula.api_polling.R
 import com.igor_shaula.api_polling.data_layer.VehicleStatus
@@ -25,7 +25,7 @@ class VehicleListFragment : Fragment() {
 
     private lateinit var binding: FragmentVehiclesListBinding
 
-    private lateinit var viewModel: VehicleListViewModel
+    private val viewModel: VehicleListViewModel by activityViewModels()
 
     private lateinit var rvAdapter: VehicleListAdapter
 
@@ -52,7 +52,7 @@ class VehicleListFragment : Fragment() {
         super.onAttach(context)
         Timber.v("onAttach - 3")
         // java.lang.IllegalStateException: Can't access ViewModels from detached fragment
-        viewModel = ViewModelProvider(this)[VehicleListViewModel::class.java]
+//        viewModel = ViewModelProvider(this)[VehicleListViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
