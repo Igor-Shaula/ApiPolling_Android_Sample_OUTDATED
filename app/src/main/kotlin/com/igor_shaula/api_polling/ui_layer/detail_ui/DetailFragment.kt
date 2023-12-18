@@ -1,30 +1,25 @@
 package com.igor_shaula.api_polling.ui_layer.detail_ui
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import com.igor_shaula.api_polling.R
 import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.databinding.FragmentDetailBinding
+import com.igor_shaula.api_polling.ui_layer.list_ui.VehicleListViewModel
 import timber.log.Timber
 
 class DetailFragment : DialogFragment() {
 
     private lateinit var binding: FragmentDetailBinding
 
-    private lateinit var viewModel: DetailViewModel
+    private val viewModel: VehicleListViewModel by activityViewModels()
 
     private lateinit var vehicleId: String
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        viewModel = ViewModelProvider(this)[DetailViewModel::class.java]
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
