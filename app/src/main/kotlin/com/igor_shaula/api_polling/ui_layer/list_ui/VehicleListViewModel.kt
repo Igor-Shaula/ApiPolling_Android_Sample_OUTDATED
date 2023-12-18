@@ -13,12 +13,13 @@ import timber.log.Timber
 
 class VehicleListViewModel : ViewModel() {
 
-    private var repository: TheRepository = ThisApp.getVehiclesRepository()
-
     // MLD = MutableLiveData
     val vehiclesMapMLD by lazy { MutableLiveData<MutableMap<String, VehicleStatus>>() }
+    val vehiclesDetailsMap by lazy { MutableLiveData<MutableMap<String, VehicleDetailsRecord>>() }
 
     val timeToUpdateVehicleStatus = MutableLiveData<Unit>()
+
+    private var repository: TheRepository = ThisApp.getVehiclesRepository()
 
     fun getAllVehiclesIds() {
         MainScope().launch {
@@ -41,6 +42,7 @@ class VehicleListViewModel : ViewModel() {
 
     private fun updateTheViewModel(pair: Pair<String, VehicleDetailsRecord>) {
         vehiclesMapMLD.value?.put(pair.first, detectVehicleStatus(pair.second))
+        vehiclesDetailsMap.value?.put(pair.first, pair.second)
         timeToUpdateVehicleStatus.value = Unit // just to show new statuses on UI
     }
 }
