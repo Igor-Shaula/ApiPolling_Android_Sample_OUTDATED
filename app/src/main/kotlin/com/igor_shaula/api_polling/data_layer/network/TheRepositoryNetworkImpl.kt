@@ -31,7 +31,11 @@ class TheRepositoryNetworkImpl : TheRepository {
         vehiclesMap?.let {
             prepareThreadPoolExecutor(it.size)
             vehiclesMap.forEach { (key, _) ->
-                pollingEngine?.launch({ getAllDetailsForOneVehicle(key, updateViewModel) }, 5)
+                pollingEngine?.launch(5) {
+                    MainScope().launch {
+                        getAllDetailsForOneVehicle(key, updateViewModel)
+                    }
+                }
             }
         }
     }

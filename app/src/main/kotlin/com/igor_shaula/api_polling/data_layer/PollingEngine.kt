@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit
 
 interface PollingEngine {
 
-    fun launch(theWorkToDo: () -> Unit, intervalInSeconds: Int)
+    fun launch(intervalInSeconds: Int, theWorkToDo: () -> Unit)
 
     fun stopAndClearItself()
 }
@@ -20,7 +20,7 @@ class JavaTPEBasedPollingEngine : PollingEngine {
         }
     }
 
-    override fun launch(theWorkToDo: () -> Unit, intervalInSeconds: Int) {
+    override fun launch(intervalInSeconds: Int, theWorkToDo: () -> Unit) {
         scheduledThreadPoolExecutor?.scheduleAtFixedRate(
             theWorkToDo, 0, 5, TimeUnit.SECONDS
         )
