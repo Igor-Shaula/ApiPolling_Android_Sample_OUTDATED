@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.igor_shaula.api_polling.R
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
 
-class VehicleListAdapter(private val onClickFunction: (VehicleRecord, Int) -> Unit) :
+class VehicleListAdapter(private val onClickFunction: (VehicleRecord) -> Unit) :
     RecyclerView.Adapter<VehicleItemViewHolder>() {
 
     private var items: List<VehicleRecord> = listOf()
@@ -22,7 +22,7 @@ class VehicleListAdapter(private val onClickFunction: (VehicleRecord, Int) -> Un
     }
 
     override fun onBindViewHolder(holder: VehicleItemViewHolder, position: Int) {
-        holder.bind(items[position], position)
+        holder.bind(items[position])
     }
 
     fun setItems(items: List<VehicleRecord>) {

@@ -7,7 +7,7 @@ import com.igor_shaula.api_polling.R
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
 
 class VehicleItemViewHolder(
-    itemView: View, private val onClickFunction: (VehicleRecord, Int) -> Unit
+    itemView: View, private val onClickFunction: (VehicleRecord) -> Unit
 ) : RecyclerView.ViewHolder(itemView) {
 
     private val actvVehicleId: AppCompatTextView
@@ -18,8 +18,8 @@ class VehicleItemViewHolder(
         actvVehicleStatus = itemView.findViewById(R.id.actvVehicleStatus)
     }
 
-    fun bind(item: VehicleRecord, position: Int) {
-        itemView.setOnClickListener { onClickFunction(item, position) }
+    fun bind(item: VehicleRecord) {
+        itemView.setOnClickListener { onClickFunction(item) }
         actvVehicleId.text = item.vehicleId
         actvVehicleStatus.text = item.vehicleStatus.name
     }

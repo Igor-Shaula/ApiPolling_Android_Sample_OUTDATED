@@ -145,8 +145,7 @@ class VehicleListFragment : Fragment() {
     // region work with the List
 
     private fun prepareVehiclesListUI() {
-        rvAdapter = VehicleListAdapter { vehicleItemRecord, position ->
-            Timber.d("click function: vehicleItemRecord = $vehicleItemRecord, position = $position")
+        rvAdapter = VehicleListAdapter { vehicleItemRecord ->
             DetailFragment.show(childFragmentManager, vehicleItemRecord.vehicleId)
         }
         binding.rvVehiclesList.adapter = rvAdapter
