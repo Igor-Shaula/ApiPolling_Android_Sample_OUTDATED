@@ -13,8 +13,12 @@ import timber.log.Timber
 
 class VehicleListViewModel : ViewModel() {
 
-    // MLD = MutableLiveData
-    val vehiclesMapMLD by lazy { MutableLiveData<MutableMap<String, VehicleStatus>>() }
+    // for inner use - only inside this ViewModel - as Google recommends in its examples
+    private val mutableVehiclesMap = MutableLiveData<MutableMap<String, VehicleStatus>>()
+
+    // for outer use - mostly in Fragments & Activities - as Google recommends in its examples
+    val vehiclesMap: MutableLiveData<MutableMap<String, VehicleStatus>> get() = mutableVehiclesMap
+
     val vehiclesDetailsMap by lazy { MutableLiveData<MutableMap<String, VehicleDetailsRecord>>() }
 
     val timeToUpdateVehicleStatus = MutableLiveData<Unit>()
@@ -23,14 +27,14 @@ class VehicleListViewModel : ViewModel() {
 
     fun getAllVehiclesIds() {
         MainScope().launch {
-            vehiclesMapMLD.value = repository.getAllVehiclesIds()
-            Timber.i("vehiclesMap.value = ${vehiclesMapMLD.value}")
+            mutableVehiclesMap.value = repository.getAllVehiclesIds()
+            Timber.i("vehiclesMap.value = ${mutableVehiclesMap.value}")
         }
     }
 
     fun startGettingVehiclesDetails() {
         MainScope().launch {
-            repository.startGettingVehiclesDetails(vehiclesMapMLD.value, ::updateTheViewModel)
+            repository.startGettingVehiclesDetails(mutableVehiclesMap.value, ::updateTheViewModel)
         }
     }
 
@@ -38,10 +42,10 @@ class VehicleListViewModel : ViewModel() {
         repository.stopGettingVehiclesDetails()
     }
 
-    fun getNumberOfNearVehicles() = repository.getNumberOfNearVehicles(vehiclesMapMLD.value)
+    fun getNumberOfNearVehicles() = repository.getNumberOfNearVehicles(mutableVehiclesMap.value)
 
     private fun updateTheViewModel(pair: Pair<String, VehicleDetailsRecord>) {
-        vehiclesMapMLD.value?.put(pair.first, detectVehicleStatus(pair.second))
+        mutableVehiclesMap.value?.put(pair.first, detectVehicleStatus(pair.second))
         vehiclesDetailsMap.value?.put(pair.first, pair.second)
         timeToUpdateVehicleStatus.value = Unit // just to show new statuses on UI
     }
