@@ -1,4 +1,4 @@
-package com.igor_shaula.api_polling.ui_layer.list_ui
+package com.igor_shaula.api_polling.ui_layer
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,7 +11,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class VehicleListViewModel : ViewModel() {
+class SharedViewModel : ViewModel() {
 
     // for inner use - only inside this ViewModel - as Google recommends in its examples
     private val mutableVehiclesMap = MutableLiveData<MutableMap<String, VehicleStatus>>()

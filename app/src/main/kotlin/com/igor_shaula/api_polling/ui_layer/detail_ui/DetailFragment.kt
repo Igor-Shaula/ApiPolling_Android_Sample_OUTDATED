@@ -10,14 +10,14 @@ import androidx.fragment.app.activityViewModels
 import com.igor_shaula.api_polling.R
 import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.databinding.FragmentDetailBinding
-import com.igor_shaula.api_polling.ui_layer.list_ui.VehicleListViewModel
+import com.igor_shaula.api_polling.ui_layer.SharedViewModel
 import timber.log.Timber
 
 class DetailFragment : DialogFragment() {
 
     private lateinit var binding: FragmentDetailBinding
 
-    private val viewModel: VehicleListViewModel by activityViewModels()
+    private val viewModel: SharedViewModel by activityViewModels()
 
     private lateinit var vehicleId: String
 

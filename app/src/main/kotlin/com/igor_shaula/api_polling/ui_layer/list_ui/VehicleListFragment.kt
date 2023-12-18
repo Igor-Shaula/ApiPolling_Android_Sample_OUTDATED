@@ -17,6 +17,7 @@ import com.igor_shaula.api_polling.R
 import com.igor_shaula.api_polling.data_layer.VehicleStatus
 import com.igor_shaula.api_polling.data_layer.toVehicleRecordList
 import com.igor_shaula.api_polling.databinding.FragmentVehiclesListBinding
+import com.igor_shaula.api_polling.ui_layer.SharedViewModel
 import com.igor_shaula.api_polling.ui_layer.detail_ui.DetailFragment
 import com.igor_shaula.api_polling.ui_layer.list_ui.all_for_list.VehicleListAdapter
 import timber.log.Timber
@@ -25,7 +26,7 @@ class VehicleListFragment : Fragment() {
 
     private lateinit var binding: FragmentVehiclesListBinding
 
-    private val viewModel: VehicleListViewModel by activityViewModels()
+    private val viewModel: SharedViewModel by activityViewModels()
 
     private lateinit var rvAdapter: VehicleListAdapter
 
@@ -52,7 +53,7 @@ class VehicleListFragment : Fragment() {
         super.onAttach(context)
         Timber.v("onAttach - 3")
         // java.lang.IllegalStateException: Can't access ViewModels from detached fragment
-//        viewModel = ViewModelProvider(this)[VehicleListViewModel::class.java]
+//        viewModel = ViewModelProvider(this)[SharedViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
