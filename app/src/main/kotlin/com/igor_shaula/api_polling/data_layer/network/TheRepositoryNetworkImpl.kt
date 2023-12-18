@@ -74,13 +74,13 @@ class TheRepositoryNetworkImpl : TheRepository {
         return vehicleDetails.body()?.toVehicleItemRecords()
     }
 
-    private fun updateVehicleDetailsMap(key: String, value: VehicleDetailsRecord) {
-        if (vehicleDetailsMapMLD.value == null) {
-            // we need this preparation for value?.put() to work as the value is nullable
-            vehicleDetailsMapMLD.value = mutableMapOf()
-        }
-        vehicleDetailsMapMLD.value?.put(key, value)
-        vehicleDetailsMapMLD.value = vehicleDetailsMapMLD.value
-        Timber.d("vehicleDetailsMapMLD.value = ${vehicleDetailsMapMLD.value}")
-    }
+//    private fun updateVehicleDetailsMap(key: String, value: VehicleDetailsRecord) {
+//        if (vehicleDetailsMapMLD.value == null) {
+//            // we need this preparation for value?.put() to work as the value is nullable
+//            vehicleDetailsMapMLD.value = mutableMapOf()
+//        }
+//        vehicleDetailsMapMLD.value?.put(key, value)
+//        vehicleDetailsMapMLD.value = vehicleDetailsMapMLD.value
+//        Timber.d("vehicleDetailsMapMLD.value = ${vehicleDetailsMapMLD.value}")
+//    }
 }
