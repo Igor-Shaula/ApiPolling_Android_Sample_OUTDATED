@@ -92,7 +92,7 @@ class VehicleListFragment : Fragment() {
         Timber.v("onStart - 9")
         viewModel.vehiclesMapMLD.observe(viewLifecycleOwner) { thisMap ->
             showDataInTheList(thisMap.toList())
-            viewModel.startGettingVehiclesDetails(thisMap.size)
+            viewModel.startGettingVehiclesDetails()
         }
         viewModel.timeToUpdateVehicleStatus.observe(viewLifecycleOwner) {
             viewModel.vehiclesMapMLD.value?.toList()?.let { showDataInTheList(it) }

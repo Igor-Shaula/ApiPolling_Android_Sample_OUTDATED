@@ -25,8 +25,10 @@ class VehicleListViewModel : ViewModel() {
         }
     }
 
-    fun startGettingVehiclesDetails(size: Int) {
-        repository.startGettingVehiclesDetails(vehiclesMapMLD.value, ::updateTheViewModel)
+    fun startGettingVehiclesDetails() {
+        MainScope().launch {
+            repository.startGettingVehiclesDetails(vehiclesMapMLD.value, ::updateTheViewModel)
+        }
     }
 
     fun stopGettingVehiclesDetails() {

@@ -9,7 +9,7 @@ interface TheRepository {
 
     suspend fun getAllVehiclesIds(): MutableMap<String, VehicleStatus>
 
-    fun startGettingVehiclesDetails(
+    suspend fun startGettingVehiclesDetails(
         vehiclesMap: MutableMap<String, VehicleStatus>?,
         updateViewModel: (Pair<String, VehicleStatus>) -> Unit
     )

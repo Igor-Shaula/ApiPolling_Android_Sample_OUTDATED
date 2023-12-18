@@ -24,7 +24,7 @@ class TheRepositoryNetworkImpl : TheRepository {
             .associateBy({ it.vehicleId }, { it.vehicleStatus })
             .toMutableMap()
 
-    override fun startGettingVehiclesDetails(
+    override suspend fun startGettingVehiclesDetails(
         vehiclesMap: MutableMap<String, VehicleStatus>?,
         updateViewModel: (Pair<String, VehicleStatus>) -> Unit
     ) {
@@ -59,17 +59,15 @@ class TheRepositoryNetworkImpl : TheRepository {
         pollingEngine = JavaTPEBasedPollingEngine.prepare(size)
     }
 
-    private fun getAllDetailsForOneVehicle(
+    private suspend fun getAllDetailsForOneVehicle(
         vehicleId: String, updateViewModel: (Pair<String, VehicleStatus>) -> Unit
     ) {
-        MainScope().launch {
-            val vehicleDetails = readVehicleDetails(vehicleId)
-            Timber.d("vehicleDetails = $vehicleDetails")
-            if (vehicleDetails != null) {
-                updateVehicleDetailsMap(vehicleId, vehicleDetails)
-                val pair = Pair(vehicleDetails.vehicleId, detectVehicleStatus(vehicleDetails))
-                updateViewModel(pair)
-            }
+        val vehicleDetails = readVehicleDetails(vehicleId)
+        Timber.d("vehicleDetails = $vehicleDetails")
+        if (vehicleDetails != null) {
+            updateVehicleDetailsMap(vehicleId, vehicleDetails)
+            val pair = Pair(vehicleDetails.vehicleId, detectVehicleStatus(vehicleDetails))
+            updateViewModel(pair)
         }
     }
 
