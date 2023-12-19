@@ -20,7 +20,10 @@ class SharedViewModel : ViewModel() {
     // for outer use - mostly in Fragments & Activities - as Google recommends in its examples
     val vehiclesMap: LiveData<MutableMap<String, VehicleStatus>> get() = mutableVehiclesMap
 
-    val vehiclesDetailsMap by lazy { MutableLiveData<MutableMap<String, VehicleDetailsRecord>>() }
+    private val mutableVehiclesDetailsMap =
+        MutableLiveData<MutableMap<String, VehicleDetailsRecord>>()
+    val vehiclesDetailsMap: LiveData<MutableMap<String, VehicleDetailsRecord>>
+        get() = mutableVehiclesDetailsMap
 
     // no need to make this LiveData private - it's only a trigger for update action
     val timeToUpdateVehicleStatus = MutableLiveData<Unit>()
@@ -28,7 +31,7 @@ class SharedViewModel : ViewModel() {
     private var repository: TheRepository = ThisApp.getVehiclesRepository()
 
     init {
-        vehiclesDetailsMap.value = mutableMapOf()
+        mutableVehiclesDetailsMap.value = mutableMapOf()
     }
 
     fun getAllVehiclesIds() {
@@ -52,8 +55,8 @@ class SharedViewModel : ViewModel() {
 
     private fun updateTheViewModel(pair: Pair<String, VehicleDetailsRecord>) {
         mutableVehiclesMap.value?.put(pair.first, detectVehicleStatus(pair.second))
-        vehiclesDetailsMap.value?.put(pair.first, pair.second)
-        vehiclesDetailsMap.postValue(vehiclesDetailsMap.value)
+        mutableVehiclesDetailsMap.value?.put(pair.first, pair.second)
+        mutableVehiclesDetailsMap.postValue(mutableVehiclesDetailsMap.value)
         // why postValue instead of setValue() -> https://www.geeksforgeeks.org/livedata-setvalue-vs-postvalue-in-android/
         timeToUpdateVehicleStatus.value = Unit // just to show new statuses on UI
     }
