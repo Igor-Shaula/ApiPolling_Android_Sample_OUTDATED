@@ -1,5 +1,6 @@
 package com.igor_shaula.api_polling.ui_layer
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.igor_shaula.api_polling.ThisApp
@@ -25,6 +26,10 @@ class SharedViewModel : ViewModel() {
 
     private var repository: TheRepository = ThisApp.getVehiclesRepository()
 
+    init {
+        vehiclesDetailsMap.value = mutableMapOf()
+    }
+
     fun getAllVehiclesIds() {
         MainScope().launch {
             mutableVehiclesMap.value = repository.getAllVehiclesIds()
@@ -47,6 +52,8 @@ class SharedViewModel : ViewModel() {
     private fun updateTheViewModel(pair: Pair<String, VehicleDetailsRecord>) {
         mutableVehiclesMap.value?.put(pair.first, detectVehicleStatus(pair.second))
         vehiclesDetailsMap.value?.put(pair.first, pair.second)
+        vehiclesDetailsMap.postValue(vehiclesDetailsMap.value)
+        // why postValue instead of setValue() -> https://www.geeksforgeeks.org/livedata-setvalue-vs-postvalue-in-android/
         timeToUpdateVehicleStatus.value = Unit // just to show new statuses on UI
     }
 }
