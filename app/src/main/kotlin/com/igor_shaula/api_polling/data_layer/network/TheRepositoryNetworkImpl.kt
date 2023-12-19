@@ -11,9 +11,10 @@ import com.igor_shaula.api_polling.data_layer.detectNumberOfNearVehicles
 import com.igor_shaula.api_polling.data_layer.network.retrofit.VehicleNetworkServiceImpl
 import com.igor_shaula.api_polling.data_layer.toVehicleItemRecords
 import com.igor_shaula.api_polling.data_layer.toVehicleRecordList
-import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import kotlin.coroutines.CoroutineContext
 
 class TheRepositoryNetworkImpl : TheRepository {
 
@@ -26,13 +27,14 @@ class TheRepositoryNetworkImpl : TheRepository {
 
     override suspend fun startGettingVehiclesDetails(
         vehiclesMap: MutableMap<String, VehicleStatus>?,
-        updateViewModel: (Pair<String, VehicleDetailsRecord>) -> Unit
+        updateViewModel: (Pair<String, VehicleDetailsRecord>) -> Unit,
+        coroutineContext: CoroutineContext // for automatic cancellation from the outer scope
     ) {
         vehiclesMap?.let {
             preparePollingEngine(it.size)
             vehiclesMap.forEach { (key, _) ->
                 pollingEngine?.launch(DEFAULT_POLLING_INTERVAL) {
-                    MainScope().launch {
+                    CoroutineScope(coroutineContext).launch {
                         getAllDetailsForOneVehicle(key, updateViewModel)
                     }
                 }
@@ -57,7 +59,7 @@ class TheRepositoryNetworkImpl : TheRepository {
 
     private fun preparePollingEngine(size: Int) {
 //        if (pollingEngine == null)
-            pollingEngine = JavaTPEBasedPollingEngine.prepare(size)
+        pollingEngine = JavaTPEBasedPollingEngine.prepare(size)
     }
 
     private suspend fun getAllDetailsForOneVehicle(

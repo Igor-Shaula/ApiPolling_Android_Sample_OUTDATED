@@ -54,8 +54,10 @@ class SharedViewModel : ViewModel() {
     }
 
     fun startGettingVehiclesDetails() {
-        MainScope().launch {
-            repository.startGettingVehiclesDetails(mutableVehiclesMap.value, ::updateTheViewModel)
+        coroutineScope.launch {
+            repository.startGettingVehiclesDetails(
+                mutableVehiclesMap.value, ::updateTheViewModel, currentCoroutineContext()
+            )
         }
     }
 
