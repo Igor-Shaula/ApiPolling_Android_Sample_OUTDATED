@@ -29,7 +29,7 @@ class TheRepositoryNetworkImpl : TheRepository {
         updateViewModel: (Pair<String, VehicleDetailsRecord>) -> Unit
     ) {
         vehiclesMap?.let {
-            prepareThreadPoolExecutor(it.size)
+            preparePollingEngine(it.size)
             vehiclesMap.forEach { (key, _) ->
                 pollingEngine?.launch(DEFAULT_POLLING_INTERVAL) {
                     MainScope().launch {
@@ -55,8 +55,9 @@ class TheRepositoryNetworkImpl : TheRepository {
         return vehicleList.body().toVehicleItemRecords()
     }
 
-    private fun prepareThreadPoolExecutor(size: Int) {
-        pollingEngine = JavaTPEBasedPollingEngine.prepare(size)
+    private fun preparePollingEngine(size: Int) {
+//        if (pollingEngine == null)
+            pollingEngine = JavaTPEBasedPollingEngine.prepare(size)
     }
 
     private suspend fun getAllDetailsForOneVehicle(
