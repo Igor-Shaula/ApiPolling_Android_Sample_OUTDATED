@@ -18,10 +18,11 @@ class SharedViewModel : ViewModel() {
     private val mutableVehiclesMap = MutableLiveData<MutableMap<String, VehicleStatus>>()
 
     // for outer use - mostly in Fragments & Activities - as Google recommends in its examples
-    val vehiclesMap: MutableLiveData<MutableMap<String, VehicleStatus>> get() = mutableVehiclesMap
+    val vehiclesMap: LiveData<MutableMap<String, VehicleStatus>> get() = mutableVehiclesMap
 
     val vehiclesDetailsMap by lazy { MutableLiveData<MutableMap<String, VehicleDetailsRecord>>() }
 
+    // no need to make this LiveData private - it's only a trigger for update action
     val timeToUpdateVehicleStatus = MutableLiveData<Unit>()
 
     private var repository: TheRepository = ThisApp.getVehiclesRepository()
