@@ -8,8 +8,13 @@ import com.igor_shaula.api_polling.data_layer.TheRepository
 import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.data_layer.VehicleStatus
 import com.igor_shaula.api_polling.data_layer.detectVehicleStatus
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import timber.log.Timber
 
 class SharedViewModel : ViewModel() {
@@ -30,12 +35,19 @@ class SharedViewModel : ViewModel() {
 
     private var repository: TheRepository = ThisApp.getVehiclesRepository()
 
+    private val coroutineScope: CoroutineScope = MainScope() + CoroutineName("SharedViewModel")
+
     init {
         mutableVehiclesDetailsMap.value = mutableMapOf()
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        coroutineScope.cancel()
+    }
+
     fun getAllVehiclesIds() {
-        MainScope().launch {
+        coroutineScope.launch {
             mutableVehiclesMap.value = repository.getAllVehiclesIds()
             Timber.i("vehiclesMap.value = ${mutableVehiclesMap.value}")
         }
