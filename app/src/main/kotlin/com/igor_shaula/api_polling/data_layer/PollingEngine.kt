@@ -28,6 +28,8 @@ class JavaTPEBasedPollingEngine : PollingEngine {
 
     override fun stopAndClearItself() {
         scheduledThreadPoolExecutor?.shutdown()
+//        scheduledThreadPoolExecutor?.purge() // todo find out if this is needed here
+        scheduledThreadPoolExecutor = null
     }
 
     companion object {
