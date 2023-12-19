@@ -11,14 +11,18 @@ import com.igor_shaula.api_polling.data_layer.detectNumberOfNearVehicles
 import com.igor_shaula.api_polling.data_layer.network.retrofit.VehicleNetworkServiceImpl
 import com.igor_shaula.api_polling.data_layer.toVehicleItemRecords
 import com.igor_shaula.api_polling.data_layer.toVehicleRecordList
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import timber.log.Timber
-import kotlin.coroutines.CoroutineContext
 
 class TheRepositoryNetworkImpl : TheRepository {
 
     private var pollingEngine: PollingEngine? = null
+
+    private val coroutineScope = MainScope() + CoroutineName("TheRepositoryNetworkImpl")
 
     override suspend fun getAllVehiclesIds(): MutableMap<String, VehicleStatus> =
         readVehiclesList()
@@ -27,14 +31,13 @@ class TheRepositoryNetworkImpl : TheRepository {
 
     override suspend fun startGettingVehiclesDetails(
         vehiclesMap: MutableMap<String, VehicleStatus>?,
-        updateViewModel: (Pair<String, VehicleDetailsRecord>) -> Unit,
-        coroutineContext: CoroutineContext // for automatic cancellation from the outer scope
+        updateViewModel: (Pair<String, VehicleDetailsRecord>) -> Unit
     ) {
         vehiclesMap?.let {
             preparePollingEngine(it.size)
             vehiclesMap.forEach { (key, _) ->
                 pollingEngine?.launch(DEFAULT_POLLING_INTERVAL) {
-                    CoroutineScope(coroutineContext).launch {
+                    coroutineScope.launch {
                         getAllDetailsForOneVehicle(key, updateViewModel)
                     }
                 }
@@ -44,6 +47,7 @@ class TheRepositoryNetworkImpl : TheRepository {
 
     override fun stopGettingVehiclesDetails() {
         pollingEngine?.stopAndClearItself()
+        coroutineScope.cancel()
     }
 
     override fun getNumberOfNearVehicles(vehiclesMap: MutableMap<String, VehicleStatus>?): Int {

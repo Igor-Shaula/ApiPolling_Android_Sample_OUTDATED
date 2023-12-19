@@ -12,7 +12,6 @@ import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import timber.log.Timber
@@ -55,9 +54,7 @@ class SharedViewModel : ViewModel() {
 
     fun startGettingVehiclesDetails() {
         coroutineScope.launch {
-            repository.startGettingVehiclesDetails(
-                mutableVehiclesMap.value, ::updateTheViewModel, currentCoroutineContext()
-            )
+            repository.startGettingVehiclesDetails(mutableVehiclesMap.value, ::updateTheViewModel)
         }
     }
 
