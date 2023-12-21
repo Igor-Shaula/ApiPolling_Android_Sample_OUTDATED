@@ -31,6 +31,7 @@ class SharedViewModel : ViewModel() {
 
     // no need to make this LiveData private - it's only a trigger for update action
     val timeToUpdateVehicleStatus = MutableLiveData<Unit>()
+    val timeToShowGeneralBusyState = MutableLiveData<Boolean>()
 
     private var repository: TheRepository = ThisApp.getVehiclesRepository()
 
@@ -47,7 +48,9 @@ class SharedViewModel : ViewModel() {
 
     fun getAllVehiclesIds() {
         coroutineScope.launch {
+            timeToShowGeneralBusyState.value = true
             mutableVehiclesMap.value = repository.getAllVehiclesIds()
+            timeToShowGeneralBusyState.value = false
             Timber.i("vehiclesMap.value = ${mutableVehiclesMap.value}")
         }
     }
