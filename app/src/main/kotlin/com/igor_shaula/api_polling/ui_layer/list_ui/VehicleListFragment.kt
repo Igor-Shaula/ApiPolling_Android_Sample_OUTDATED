@@ -93,7 +93,6 @@ class VehicleListFragment : Fragment() {
         Timber.v("onStart - 9")
         viewModel.vehiclesMap.observe(viewLifecycleOwner) { thisMap ->
             showDataInTheList(thisMap.toList())
-            viewModel.startGettingVehiclesDetails()
         }
         viewModel.timeToUpdateVehicleStatus.observe(viewLifecycleOwner) {
             viewModel.vehiclesMap.value?.toList()?.let { showDataInTheList(it) }
@@ -107,6 +106,10 @@ class VehicleListFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         Timber.v("onResume - 10")
+        binding.actbPolling.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) viewModel.startGettingVehiclesDetails()
+            else viewModel.stopGettingVehiclesDetails()
+        }
     }
 
     override fun onStop() {
