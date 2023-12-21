@@ -4,5 +4,7 @@
     <string name="vehicleId">vehicleId: %1$s</string>
     <string name="vehicleStatus">vehicleStatus: %1$s</string>
     <string name="location_text_base">latitude: %1$f\nlongitude: %2$f</string>
+    <string name="toggle_button_off_text">start API polling</string>
+    <string name="toggle_button_on_text">stop API polling</string>
 
 </resources>

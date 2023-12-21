@@ -40,6 +40,10 @@
         android:id="@+id/actbPolling"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:checked="false"
+        android:enabled="false"
+        android:textOff="@string/toggle_button_off_text"
+        android:textOn="@string/toggle_button_on_text"
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <ProgressBar
