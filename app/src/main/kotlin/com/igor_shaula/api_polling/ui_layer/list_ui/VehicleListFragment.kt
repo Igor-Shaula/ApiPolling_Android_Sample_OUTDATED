@@ -98,6 +98,9 @@ class VehicleListFragment : Fragment() {
         viewModel.timeToUpdateVehicleStatus.observe(viewLifecycleOwner) {
             viewModel.vehiclesMap.value?.toList()?.let { showDataInTheList(it) }
         }
+        viewModel.timeToShowGeneralBusyState.observe(viewLifecycleOwner) { show ->
+            showStartingBusyState(show)
+        }
         viewModel.getAllVehiclesIds() // first data fetch which is one-time due to the requirements
     }
 
@@ -165,4 +168,9 @@ class VehicleListFragment : Fragment() {
     }
 
     // endregion work with the List
+
+    private fun showStartingBusyState(show: Boolean) {
+        binding.actvHeader.visibility = if (!show) View.VISIBLE else View.GONE
+        binding.pbCentral.visibility = if (show) View.VISIBLE else View.GONE
+    }
 }
