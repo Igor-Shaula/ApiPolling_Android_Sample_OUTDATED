@@ -35,6 +35,7 @@ class VehicleListFragment : Fragment() {
 
     @Deprecated("Deprecated in Java")
     override fun onInflate(activity: Activity, attrs: AttributeSet, savedInstanceState: Bundle?) {
+        @Suppress("DEPRECATION")
         super.onInflate(activity, attrs, savedInstanceState)
         Timber.v("onInflate deprecated")
     }
@@ -46,6 +47,7 @@ class VehicleListFragment : Fragment() {
 
     @Deprecated("Deprecated in Java")
     override fun onAttach(activity: Activity) {
+        @Suppress("DEPRECATION")
         super.onAttach(activity)
         Timber.v("onAttach - 2 deprecated")
     }
@@ -79,6 +81,7 @@ class VehicleListFragment : Fragment() {
 
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
+        @Suppress("DEPRECATION")
         super.onActivityCreated(savedInstanceState)
         Timber.v("onActivityCreated - 7 deprecated")
     }
