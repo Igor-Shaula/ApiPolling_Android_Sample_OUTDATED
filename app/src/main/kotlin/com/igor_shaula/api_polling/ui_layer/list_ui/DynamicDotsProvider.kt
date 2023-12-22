@@ -12,6 +12,10 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 
+private const val BASE_CHAR = ':'
+private const val HIGH_CHAR = '|'
+private const val TOTAL_ANIMATION_TIME = 1000L // 1 second
+
 class DynamicDotsProvider(private val textView: TextView) {
 
     private val textDotsCoroutineScope: CoroutineScope =
@@ -20,36 +24,24 @@ class DynamicDotsProvider(private val textView: TextView) {
 
     private var textAnimationJob: Job? = null
     private var textBeforeAnimation: String = ""
+    private val stringBuilder = StringBuilder()
+    private var nextChar: Char = BASE_CHAR
 
     fun startShowing5DynamicDots() {
         textBeforeAnimation = textView.text.toString()
-        val baseChar = '.'
-        val highChar = '|'
-        val separator = ' '
         val textLength = textView.text.length
-        val animationFrameTime = 1000 / textLength
-        val text0 = ". . . . ."
-        val text1 = "| . . . ."
-        val text2 = "| | . . ."
-        val text3 = "| | | . ."
-        val text4 = "| | | | ."
-        val text5 = "| | | | |"
+        val animationFrameTime = TOTAL_ANIMATION_TIME / textLength
+//        textDotsCoroutineScope.launch { // text is not updated for unknown reason
         textAnimationJob = (GlobalScope + CoroutineName(textView.text.toString()))
             .launch { // works fine but it's dangerous API
-//        textDotsCoroutineScope.launch { // text is not updated for unknown reason
+                var indexOfStep = 0
                 while (isActive) {
-                    textView.text = text0
-                    delay(100)
-                    textView.text = text1
-                    delay(100)
-                    textView.text = text2
-                    delay(100)
-                    textView.text = text3
-                    delay(100)
-                    textView.text = text4
-                    delay(100)
-                    textView.text = text5
-                    delay(500)
+                    repeat(textLength) {
+                        textView.text = getStringForThisTick(indexOfStep)
+                        delay(animationFrameTime)
+                        if (indexOfStep < textLength) indexOfStep++
+                        else indexOfStep = 0
+                    }
                 }
             }
     }
@@ -60,5 +52,14 @@ class DynamicDotsProvider(private val textView: TextView) {
         textAnimationJob?.cancel()
         if (textBeforeAnimation.isNotEmpty())
             textView.text = textBeforeAnimation
+    }
+
+    private fun getStringForThisTick(indexOfStep: Int): String {
+        stringBuilder.clear()
+        for (i in textBeforeAnimation.indices) {
+            nextChar = if (i <= indexOfStep) HIGH_CHAR else BASE_CHAR
+            stringBuilder.append(nextChar)
+        }
+        return stringBuilder.toString()
     }
 }
