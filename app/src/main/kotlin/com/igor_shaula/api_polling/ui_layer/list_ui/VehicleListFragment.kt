@@ -114,6 +114,12 @@ class VehicleListFragment : Fragment() {
             if (isChecked) viewModel.startGettingVehiclesDetails()
             else viewModel.stopGettingVehiclesDetails()
         }
+        binding.acbLaunchInitialRequest.setOnClickListener {
+            viewModel.getAllVehiclesIds()
+            binding.acivAlert.isVisible = false
+            binding.actvErrorStatePhrase.isVisible = false
+            binding.acbLaunchInitialRequest.isEnabled = false
+        }
     }
 
     override fun onStop() {
@@ -179,6 +185,7 @@ class VehicleListFragment : Fragment() {
         if (list.isEmpty()) {
             binding.groupWithProperList.isVisible = false
             binding.groupWithAbsentList.isVisible = true
+            binding.acbLaunchInitialRequest.isEnabled = true
         } else {
             binding.groupWithProperList.isVisible = true
             binding.groupWithAbsentList.isVisible = false
