@@ -53,44 +53,44 @@ class VehicleListFragment : Fragment() {
     override fun onInflate(activity: Activity, attrs: AttributeSet, savedInstanceState: Bundle?) {
         @Suppress("DEPRECATION")
         super.onInflate(activity, attrs, savedInstanceState)
-        Timber.v("onInflate deprecated")
+        Timber.v("onInflate - 1 deprecated")
     }
 
     override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
         super.onInflate(context, attrs, savedInstanceState)
-        Timber.v("onInflate - 1")
+        Timber.v("onInflate - 2")
     }
 
     @Deprecated("Deprecated in Java")
     override fun onAttach(activity: Activity) {
         @Suppress("DEPRECATION")
         super.onAttach(activity)
-        Timber.v("onAttach - 2 deprecated")
+        Timber.v("onAttach - 3 deprecated")
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        Timber.v("onAttach - 3")
+        Timber.v("onAttach - 4")
         // java.lang.IllegalStateException: Can't access ViewModels from detached fragment
 //        viewModel = ViewModelProvider(this)[SharedViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Timber.v("onCreate - 4")
+        Timber.v("onCreate - 5")
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        Timber.v("onCreateView - 5")
+        Timber.v("onCreateView - 6")
         binding = FragmentVehiclesListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Timber.v("onViewCreated - 6")
+        Timber.v("onViewCreated - 7")
         showNearVehiclesNumber()
         prepareVehiclesListUI()
     }
@@ -99,18 +99,18 @@ class VehicleListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         @Suppress("DEPRECATION")
         super.onActivityCreated(savedInstanceState)
-        Timber.v("onActivityCreated - 7 deprecated")
+        Timber.v("onActivityCreated - 8 deprecated")
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        Timber.v("onViewStateRestored - 8")
+        Timber.v("onViewStateRestored - 9")
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onStart() {
         super.onStart()
-        Timber.v("onStart - 9")
+        Timber.v("onStart - 10")
         viewModel.vehiclesMap.observe(viewLifecycleOwner) { thisMap ->
             prepareUIForListWithDetails(thisMap.toList())
         }
@@ -128,7 +128,7 @@ class VehicleListFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        Timber.v("onResume - 10")
+        Timber.v("onResume - 11")
         binding.actbPolling.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) viewModel.startGettingVehiclesDetails()
             else viewModel.stopGettingVehiclesDetails()
@@ -148,7 +148,7 @@ class VehicleListFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        Timber.v("onSaveInstanceState - 11")
+        Timber.v("onSaveInstanceState - 12")
     }
 
     // endregion standard androidx.fragment.app.Fragment callbacks
