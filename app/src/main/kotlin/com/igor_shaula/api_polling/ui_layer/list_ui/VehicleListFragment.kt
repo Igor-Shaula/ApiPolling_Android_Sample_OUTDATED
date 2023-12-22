@@ -119,9 +119,8 @@ class VehicleListFragment : Fragment() {
         }
         binding.acbLaunchInitialRequest.setOnClickListener {
             viewModel.getAllVehiclesIds()
-            binding.acivAlert.isVisible = false
-            binding.actvErrorStatePhrase.isVisible = false
-            binding.acbLaunchInitialRequest.isEnabled = false
+            hideErrorViewsDuringFirstRequest()
+            showCentralBusyState(true)
         }
     }
 
@@ -176,13 +175,13 @@ class VehicleListFragment : Fragment() {
         rvAdapter.setItems(vehicleRecordsList)
     }
 
+    // endregion work with the List
+
     private fun showNearVehiclesNumber() {
         val howManyVehiclesAreNear = viewModel.getNumberOfNearVehicles()
         binding.actvHeader.text =
             getString(R.string.close_distance_counter_text_base, howManyVehiclesAreNear)
     }
-
-    // endregion work with the List
 
     private fun prepareUIForListWithDetails(list: List<Pair<String, VehicleStatus>>) {
         if (list.isEmpty()) {
@@ -197,7 +196,13 @@ class VehicleListFragment : Fragment() {
         }
     }
 
-    private fun showCentralBusyState(show: Boolean) {
-        binding.pbCentral.isVisible = show
+    private fun hideErrorViewsDuringFirstRequest() {
+        binding.acivAlert.isVisible = false
+        binding.actvErrorStatePhrase.isVisible = false
+        binding.acbLaunchInitialRequest.isEnabled = false
+    }
+
+    private fun showCentralBusyState(isBusy: Boolean) {
+        binding.pbCentral.isVisible = isBusy
     }
 }
