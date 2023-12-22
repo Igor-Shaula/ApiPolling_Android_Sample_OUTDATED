@@ -1,4 +1,4 @@
-package com.igor_shaula.api_polling.ui_layer
+package com.igor_shaula.utilities
 
 import android.widget.TextView
 import kotlinx.coroutines.CoroutineName

@@ -18,10 +18,10 @@ import com.igor_shaula.api_polling.R
 import com.igor_shaula.api_polling.data_layer.VehicleStatus
 import com.igor_shaula.api_polling.data_layer.toVehicleRecordList
 import com.igor_shaula.api_polling.databinding.FragmentVehiclesListBinding
-import com.igor_shaula.api_polling.ui_layer.AnimatedStringProgress
 import com.igor_shaula.api_polling.ui_layer.SharedViewModel
 import com.igor_shaula.api_polling.ui_layer.detail_ui.DetailFragment
 import com.igor_shaula.api_polling.ui_layer.list_ui.all_for_list.VehicleListAdapter
+import com.igor_shaula.utilities.AnimatedStringProgress
 import timber.log.Timber
 
 class VehicleListFragment : Fragment() {
