@@ -177,17 +177,9 @@ class VehicleListFragment : Fragment() {
 
     private fun prepareUIForListWithDetails(list: List<Pair<String, VehicleStatus>>) {
         if (list.isEmpty()) {
-            binding.apply { // showing empty state
-                actvHeader.isVisible = false
-                rvVehiclesList.isVisible = false
-                actbPolling.isVisible = false
-            }
+            binding.groupWithProperList.isVisible = false
         } else {
-            binding.apply {// showing first state with given list items
-                actvHeader.isVisible = true
-                rvVehiclesList.isVisible = true
-                actbPolling.isVisible = true
-            }
+            binding.groupWithProperList.isVisible = true
             updateItemsInTheList(list) // now it's time to get all details for every item in the list
             showNearVehiclesNumber()
         }
