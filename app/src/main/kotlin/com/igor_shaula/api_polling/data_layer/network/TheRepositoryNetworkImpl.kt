@@ -57,7 +57,9 @@ class TheRepositoryNetworkImpl : TheRepository {
 
     private suspend fun readVehiclesList(): List<VehicleRecord> {
         val vehicleDataNetworkService = VehicleNetworkServiceImpl()
+        Timber.v("readVehiclesList: created vehicleDataNetworkService: ${vehicleDataNetworkService.hashCode()}")
         val vehicleList = vehicleDataNetworkService.getVehiclesList()
+        Timber.v("readVehiclesList: received vehicleList: $vehicleList")
         return vehicleList.body().toVehicleItemRecords()
     }
 
