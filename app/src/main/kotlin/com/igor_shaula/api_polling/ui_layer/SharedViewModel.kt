@@ -9,7 +9,6 @@ import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.data_layer.VehicleStatus
 import com.igor_shaula.api_polling.data_layer.detectVehicleStatus
 import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
@@ -35,7 +34,7 @@ class SharedViewModel : ViewModel() {
 
     private var repository: TheRepository = ThisApp.getVehiclesRepository()
 
-    private val coroutineScope: CoroutineScope = MainScope() + CoroutineName("SharedViewModel")
+    private val coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
 
     init {
         mutableVehiclesDetailsMap.value = mutableMapOf()

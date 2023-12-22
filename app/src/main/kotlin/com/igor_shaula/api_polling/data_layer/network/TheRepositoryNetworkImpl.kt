@@ -22,7 +22,7 @@ class TheRepositoryNetworkImpl : TheRepository {
 
     private var pollingEngine: PollingEngine? = null
 
-    private val coroutineScope = MainScope() + CoroutineName("TheRepositoryNetworkImpl")
+    private val coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
 
     override suspend fun getAllVehiclesIds(): MutableMap<String, VehicleStatus> =
         readVehiclesList()

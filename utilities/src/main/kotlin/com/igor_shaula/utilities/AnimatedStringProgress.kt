@@ -20,7 +20,7 @@ private const val TOTAL_ANIMATION_TIME = 1000L // 1 second
 class AnimatedStringProgress(private val textView: TextView) {
 
     private val textDotsCoroutineScope: CoroutineScope =
-        MainScope() + CoroutineName(this.javaClass.name)
+        MainScope() + CoroutineName(this.javaClass.simpleName)
 //    private val textDotsCoroutineScope = CoroutineScope(Dispatchers.Main + Job()) // doesn't work
 
     private var textAnimationJob: Job? = null
