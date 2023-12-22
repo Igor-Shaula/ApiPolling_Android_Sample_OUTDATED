@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -92,13 +93,16 @@ class VehicleListFragment : Fragment() {
         super.onStart()
         Timber.v("onStart - 9")
         viewModel.vehiclesMap.observe(viewLifecycleOwner) { thisMap ->
-            showDataInTheList(thisMap.toList())
+            prepareUIForListWithDetails(thisMap.toList())
         }
         viewModel.timeToUpdateVehicleStatus.observe(viewLifecycleOwner) {
-            viewModel.vehiclesMap.value?.toList()?.let { showDataInTheList(it) }
+            viewModel.vehiclesMap.value?.toList()?.let {
+                updateItemsInTheList(it)
+                showNearVehiclesNumber()
+            }
         }
         viewModel.timeToShowGeneralBusyState.observe(viewLifecycleOwner) { show ->
-            showStartingBusyState(show)
+            showCentralBusyState(show)
         }
         viewModel.getAllVehiclesIds() // first data fetch which is one-time due to the requirements
     }
@@ -158,10 +162,9 @@ class VehicleListFragment : Fragment() {
         binding.rvVehiclesList.layoutManager = LinearLayoutManager(context)
     }
 
-    private fun showDataInTheList(pairs: List<Pair<String, VehicleStatus>>) {
+    private fun updateItemsInTheList(pairs: List<Pair<String, VehicleStatus>>) {
         val vehicleRecordsList = pairs.toVehicleRecordList()
         rvAdapter.setItems(vehicleRecordsList)
-        showNearVehiclesNumber()
     }
 
     private fun showNearVehiclesNumber() {
@@ -172,8 +175,25 @@ class VehicleListFragment : Fragment() {
 
     // endregion work with the List
 
-    private fun showStartingBusyState(show: Boolean) {
-        binding.actvHeader.visibility = if (!show) View.VISIBLE else View.GONE
-        binding.pbCentral.visibility = if (show) View.VISIBLE else View.GONE
+    private fun prepareUIForListWithDetails(list: List<Pair<String, VehicleStatus>>) {
+        if (list.isEmpty()) {
+            binding.apply { // showing empty state
+                actvHeader.isVisible = false
+                rvVehiclesList.isVisible = false
+                actbPolling.isVisible = false
+            }
+        } else {
+            binding.apply {// showing first state with given list items
+                actvHeader.isVisible = true
+                rvVehiclesList.isVisible = true
+                actbPolling.isVisible = true
+            }
+            updateItemsInTheList(list) // now it's time to get all details for every item in the list
+            showNearVehiclesNumber()
+        }
+    }
+
+    private fun showCentralBusyState(show: Boolean) {
+        binding.pbCentral.isVisible = show
     }
 }
