@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="app_name">HomeTask_ApiPolling</string>
     <string name="close_distance_counter_text_base">number of vehicles which are close to the target:\n %1$d</string>
     <string name="vehicleId">vehicleId: %1$s</string>
@@ -6,7 +6,7 @@
     <string name="location_text_base">latitude: %1$f\nlongitude: %2$f</string>
     <string name="toggle_button_off_text">start API polling</string>
     <string name="toggle_button_on_text">stop API polling</string>
-    <string name="error_state_central_text" tools:ignore="ExtraTranslation">looks like selected API does not provide us with proper list of results - but you can try again by pressing given button some later</string>
-    <string name="error_state_try_again_text" tools:ignore="ExtraTranslation">try again</string>
+    <string name="error_state_central_text">looks like selected API does not provide us with proper list of results - but you can try again by pressing given button some later</string>
+    <string name="error_state_try_again_text">try again</string>
 
 </resources>
