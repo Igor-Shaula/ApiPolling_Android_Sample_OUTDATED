@@ -1,4 +1,4 @@
-package com.igor_shaula.api_polling.ui_layer.list_ui
+package com.igor_shaula.api_polling.ui_layer
 
 import android.widget.TextView
 import kotlinx.coroutines.CoroutineName
@@ -17,10 +17,10 @@ private const val BASE_CHAR = ':'
 private const val HIGH_CHAR = '|'
 private const val TOTAL_ANIMATION_TIME = 1000L // 1 second
 
-class DynamicDotsProvider(private val textView: TextView) {
+class AnimatedStringProgress(private val textView: TextView) {
 
     private val textDotsCoroutineScope: CoroutineScope =
-        MainScope() + CoroutineName("textDotsCoroutineScope")
+        MainScope() + CoroutineName(this.javaClass.name)
 //    private val textDotsCoroutineScope = CoroutineScope(Dispatchers.Main + Job()) // doesn't work
 
     private var textAnimationJob: Job? = null
