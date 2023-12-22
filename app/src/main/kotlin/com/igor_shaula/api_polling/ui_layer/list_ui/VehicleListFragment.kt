@@ -42,6 +42,11 @@ class VehicleListFragment : Fragment() {
 
     private lateinit var rvAdapter: VehicleListAdapter
 
+    private val dynamicDotsProvider: DynamicDotsProvider by lazy {
+        Timber.v("lazy dynamicDotsProvider init")
+        DynamicDotsProvider(binding.acbLaunchInitialRequest)
+    }
+
     // region standard lifecycle androidx.fragment.app.Fragment callbacks
 
     @Deprecated("Deprecated in Java")
@@ -129,6 +134,7 @@ class VehicleListFragment : Fragment() {
             else viewModel.stopGettingVehiclesDetails()
         }
         binding.acbLaunchInitialRequest.setOnClickListener {
+            dynamicDotsProvider.startShowing5DynamicDots()
             viewModel.getAllVehiclesIds()
             hideErrorViewsDuringFirstRequest()
             showCentralBusyState(true)
@@ -197,6 +203,7 @@ class VehicleListFragment : Fragment() {
     }
 
     private fun prepareUIForListWithDetails(list: List<Pair<String, VehicleStatus>>) {
+        dynamicDotsProvider.stopShowingDynamicDottedText()
         if (list.isEmpty()) {
             binding.groupWithProperList.isVisible = false
             binding.groupWithAbsentList.isVisible = true
@@ -220,6 +227,9 @@ class VehicleListFragment : Fragment() {
     }
 
     // endregion work with the rest of UI
+}
+
+class DynamicDotsProvider(private val textView: TextView) {
 
     private val textDotsCoroutineScope: CoroutineScope =
         MainScope() + CoroutineName("textDotsCoroutineScope")
@@ -228,7 +238,7 @@ class VehicleListFragment : Fragment() {
     private var textAnimationJob: Job? = null
     private var textBeforeAnimation: String = ""
 
-    private fun startShowing5DynamicDots(textView: TextView) {
+     fun startShowing5DynamicDots() {
         textBeforeAnimation = textView.text.toString()
         val text0 = ". . . . ."
         val text1 = "| . . . ."
@@ -256,7 +266,7 @@ class VehicleListFragment : Fragment() {
             }
     }
 
-    private fun stopShowingDynamicDottedText(textView: TextView) {
+     fun stopShowingDynamicDottedText() {
         if (textDotsCoroutineScope.isActive)
             textDotsCoroutineScope.cancel()
         textAnimationJob?.cancel()
