@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/holo_green_dark"
     android:fitsSystemWindows="true"
-    android:padding="16dp"
+    android:padding="@dimen/default_indentation_size"
     tools:context=".ui_layer.list_ui.VehicleListFragment">
 
     <!-- region set of views for the first group -->
@@ -26,7 +26,7 @@
         android:id="@+id/rvVehiclesList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="16dp"
+        android:layout_marginVertical="@dimen/default_indentation_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/actvHeader"
@@ -61,8 +61,8 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/acivAlert"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="@dimen/central_icon_size"
+        android:layout_height="@dimen/central_icon_size"
         android:src="@android:drawable/stat_notify_error"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -73,7 +73,7 @@
         android:id="@+id/actvErrorStatePhrase"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="16dp"
+        android:layout_marginVertical="@dimen/default_indentation_size"
         android:gravity="center"
         android:text="@string/error_state_central_text"
         android:textColor="@color/black"
@@ -97,8 +97,8 @@
 
     <ProgressBar
         android:id="@+id/pbCentral"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="@dimen/central_icon_size"
+        android:layout_height="@dimen/central_icon_size"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
