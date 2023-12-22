@@ -3,6 +3,7 @@ package com.igor_shaula.api_polling.ui_layer.list_ui
 import android.widget.TextView
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
@@ -27,6 +28,7 @@ class DynamicDotsProvider(private val textView: TextView) {
     private val stringBuilder = StringBuilder()
     private var nextChar: Char = BASE_CHAR
 
+    @OptIn(DelicateCoroutinesApi::class)
     fun startShowing5DynamicDots() {
         textBeforeAnimation = textView.text.toString()
         val textLength = textView.text.length
@@ -46,10 +48,15 @@ class DynamicDotsProvider(private val textView: TextView) {
             }
     }
 
+    // REMEMBER TO INVOKE THIS METHOD - otherwise there will be a memory leak with textAnimationJob
     fun stopShowingDynamicDottedText() {
+
+        // at first we need to stop everything & clear resources
         if (textDotsCoroutineScope.isActive)
             textDotsCoroutineScope.cancel()
         textAnimationJob?.cancel()
+
+        // now obviously it will be nice to restore initial text in the given view
         if (textBeforeAnimation.isNotEmpty())
             textView.text = textBeforeAnimation
     }
