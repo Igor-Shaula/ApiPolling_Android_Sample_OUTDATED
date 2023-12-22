@@ -60,10 +60,10 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/acivAlert"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:src="@android:drawable/ic_dialog_alert"
-        app:layout_constraintBottom_toTopOf="@+id/actvErrorStatePhrase"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@android:drawable/stat_notify_error"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
