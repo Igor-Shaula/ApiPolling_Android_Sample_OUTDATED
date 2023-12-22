@@ -11,7 +11,7 @@
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/actvVehicleId"
         android:layout_width="0dp"
-        android:layout_height="20dp"
+        android:layout_height="@dimen/item_line_height"
         android:layout_marginEnd="@dimen/default_indentation_size"
         android:gravity="center_vertical|start"
         android:hint="vehicle id"
@@ -24,7 +24,7 @@
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/actvVehicleStatus"
         android:layout_width="wrap_content"
-        android:layout_height="20dp"
+        android:layout_height="@dimen/item_line_height"
         android:gravity="center_vertical|end"
         android:hint="42"
         android:textColor="@color/black"

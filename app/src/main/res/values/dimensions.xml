@@ -2,4 +2,5 @@
 <resources>
     <dimen name="central_icon_size">80dp</dimen>
     <dimen name="default_indentation_size">16dp</dimen>
+    <dimen name="item_line_height">20dp</dimen>
 </resources>
