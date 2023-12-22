@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/holo_green_dark"
+    android:fitsSystemWindows="true"
     android:padding="16dp"
     tools:context=".ui_layer.list_ui.VehicleListFragment">
 
@@ -91,13 +92,13 @@
         android:id="@+id/groupWithAbsentList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
+        android:visibility="gone"
         app:constraint_referenced_ids="acivAlert, actvErrorStatePhrase, acbLaunchInitialRequest" />
 
     <ProgressBar
         android:id="@+id/pbCentral"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
