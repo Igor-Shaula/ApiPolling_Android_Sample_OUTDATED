@@ -15,6 +15,7 @@
         android:layout_marginTop="@dimen/default_indentation_size"
         android:gravity="center"
         android:text="@string/close_distance_counter_text_base"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -26,6 +27,7 @@
         android:layout_marginTop="@dimen/default_indentation_size"
         android:gravity="center"
         android:hint="@string/hint_vehicle_id"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/actvCounterOfNearVehicles" />
@@ -37,6 +39,7 @@
         android:layout_marginTop="@dimen/default_indentation_size"
         android:gravity="center"
         android:hint="@string/hint_live_status"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/actvVehicleId" />
@@ -48,6 +51,7 @@
         android:layout_marginTop="@dimen/default_indentation_size"
         android:gravity="center"
         android:hint="@string/hint_live_coordinates"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/actvLiveStatus" />
