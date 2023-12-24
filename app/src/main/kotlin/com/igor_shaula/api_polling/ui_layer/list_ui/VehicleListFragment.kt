@@ -203,6 +203,7 @@ class VehicleListFragment : Fragment() {
             binding.groupWithAbsentList.isVisible = false
             updateItemsInTheList(list) // now it's time to get all details for every item in the list
             showNearVehiclesNumber()
+            binding.actbPolling.isEnabled = true
         }
     }
 
