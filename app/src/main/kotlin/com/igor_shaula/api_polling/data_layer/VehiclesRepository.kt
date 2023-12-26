@@ -1,6 +1,6 @@
 package com.igor_shaula.api_polling.data_layer
 
-interface TheRepository {
+interface VehiclesRepository {
 
     suspend fun getAllVehiclesIds(): MutableMap<String, VehicleStatus>
 

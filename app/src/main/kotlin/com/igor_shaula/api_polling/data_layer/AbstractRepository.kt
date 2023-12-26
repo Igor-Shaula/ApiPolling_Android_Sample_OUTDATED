@@ -7,7 +7,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import timber.log.Timber
 
-abstract class AbstractRepository : TheRepository {
+abstract class AbstractRepository : VehiclesRepository {
 
     private var pollingEngine: PollingEngine? = null
 

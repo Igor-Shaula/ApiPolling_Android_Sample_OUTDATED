@@ -1,7 +1,7 @@
 package com.igor_shaula.api_polling
 
 import android.app.Application
-import com.igor_shaula.api_polling.data_layer.TheRepository
+import com.igor_shaula.api_polling.data_layer.VehiclesRepository
 import com.igor_shaula.api_polling.data_layer.stub_source.StubRepositoryImpl
 import timber.log.Timber
 
@@ -17,15 +17,15 @@ class ThisApp : Application() {
     companion object {
 
         // vehiclesRepository cannot be not lateinit because it actually can be null
-        private var vehiclesRepository: TheRepository? = null
+        private var vehiclesRepository: VehiclesRepository? = null
 
         // simplest ever implementation of DI - popular solutions will be added later
-        fun getVehiclesRepository(): TheRepository {
+        fun getVehiclesRepository(): VehiclesRepository {
             if (vehiclesRepository == null) {
 //                vehiclesRepository = NetworkRepositoryImpl()
                 vehiclesRepository = StubRepositoryImpl()
             } // else add some debug source of data, maybe based on coroutines
-            return vehiclesRepository as TheRepository
+            return vehiclesRepository as VehiclesRepository
         }
     }
 }

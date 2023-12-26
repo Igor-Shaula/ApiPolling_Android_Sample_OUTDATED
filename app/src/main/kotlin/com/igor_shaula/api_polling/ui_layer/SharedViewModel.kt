@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.igor_shaula.api_polling.ThisApp
-import com.igor_shaula.api_polling.data_layer.TheRepository
+import com.igor_shaula.api_polling.data_layer.VehiclesRepository
 import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.data_layer.VehicleStatus
 import com.igor_shaula.api_polling.data_layer.detectVehicleStatus
@@ -32,7 +32,7 @@ class SharedViewModel : ViewModel() {
     val timeToUpdateVehicleStatus = MutableLiveData<Unit>()
     val timeToShowGeneralBusyState = MutableLiveData<Boolean>()
 
-    private var repository: TheRepository = ThisApp.getVehiclesRepository()
+    private var repository: VehiclesRepository = ThisApp.getVehiclesRepository()
 
     private val coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
 
