@@ -1,8 +1,10 @@
 package com.igor_shaula.api_polling.data_layer
 
 import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import timber.log.Timber
@@ -11,7 +13,15 @@ abstract class AbstractRepository : VehiclesRepository {
 
     private var pollingEngine: PollingEngine? = null
 
-    private val coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
+    private lateinit var coroutineScope: CoroutineScope
+
+    init {
+        createThisCoroutineScope()
+    }
+
+    private fun createThisCoroutineScope() {
+        coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
+    }
 
     override suspend fun getAllVehiclesIds(): MutableMap<String, VehicleStatus> =
         readVehiclesList()
@@ -27,6 +37,9 @@ abstract class AbstractRepository : VehiclesRepository {
             preparePollingEngine(it.size)
             vehiclesMap.forEach { (key, _) ->
                 pollingEngine?.launch(DEFAULT_POLLING_INTERVAL) {
+                    if (!coroutineScope.isActive) {
+                        createThisCoroutineScope()
+                    }
                     coroutineScope.launch {
                         getAllDetailsForOneVehicle(key, updateViewModel)
                     }
