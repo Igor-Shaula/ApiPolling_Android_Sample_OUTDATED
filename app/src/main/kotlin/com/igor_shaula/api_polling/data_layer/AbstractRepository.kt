@@ -15,6 +15,7 @@ abstract class AbstractRepository : TheRepository {
 
     override suspend fun getAllVehiclesIds(): MutableMap<String, VehicleStatus> =
         readVehiclesList()
+            .also { Timber.v("getAllVehiclesIds() -> readVehiclesList() = $it") }
             .associateBy({ it.vehicleId }, { it.vehicleStatus })
             .toMutableMap()
 
