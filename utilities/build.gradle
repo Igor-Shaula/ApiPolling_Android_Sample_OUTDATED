@@ -39,6 +39,7 @@ dependencies {
     // for now - for coroutine-based AnimatedStringProgress we need only coroutines here
 //    implementation 'org.jetbrains.kotlinx.kotlinx-coroutines-core-jvm:1.6.4' // doesn't help
     implementation 'androidx.appcompat:appcompat:1.6.1' // includes coroutines for some reason !!!
+//    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0-RC2"
 
     // all needed dependencies for initial tests to compile
     testImplementation 'junit:junit:4.13.2'
