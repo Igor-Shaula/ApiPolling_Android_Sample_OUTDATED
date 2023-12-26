@@ -12,17 +12,17 @@ import kotlin.random.nextInt
 class StubDataSource {
 
     suspend fun getVehiclesList(): List<VehicleModel> {
-        delay(1500)
+        delay(Random.nextInt(50..5_000).toLong())
         val result: MutableList<VehicleModel> = mutableListOf()
-        result.add(VehicleModel("id-1"))
-        result.add(VehicleModel("id-2"))
-        result.add(VehicleModel("id-3"))
-        result.add(VehicleModel("id-4"))
-        result.add(VehicleModel("id-5"))
-        result.add(VehicleModel("id-6"))
-        result.add(VehicleModel("id-7"))
-        result.add(VehicleModel("id-8"))
-        result.add(VehicleModel("id-9"))
+        result.add(VehicleModel("#1"))
+        result.add(VehicleModel("#2"))
+        result.add(VehicleModel("#3"))
+        result.add(VehicleModel("#4"))
+        result.add(VehicleModel("#5"))
+        result.add(VehicleModel("#6"))
+        result.add(VehicleModel("#7"))
+        result.add(VehicleModel("#8"))
+        result.add(VehicleModel("#9"))
         return result
     }
 
