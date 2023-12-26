@@ -10,14 +10,12 @@ interface PollingEngine {
     fun stopAndClearItself()
 }
 
-class JavaTPEBasedPollingEngine : PollingEngine {
+class JavaTPEBasedPollingEngine(size: Int) : PollingEngine {
 
     private var scheduledThreadPoolExecutor: ScheduledThreadPoolExecutor? = null
 
-    fun prepare(size: Int) {
-        if (scheduledThreadPoolExecutor == null || scheduledThreadPoolExecutor?.isShutdown == true) {
-            scheduledThreadPoolExecutor = ScheduledThreadPoolExecutor(size)
-        }
+    init {
+        scheduledThreadPoolExecutor = ScheduledThreadPoolExecutor(size)
     }
 
     override fun launch(intervalInSeconds: Int, theWorkToDo: () -> Unit) {
@@ -28,8 +26,6 @@ class JavaTPEBasedPollingEngine : PollingEngine {
 
     override fun stopAndClearItself() {
         scheduledThreadPoolExecutor?.shutdown()
-//        scheduledThreadPoolExecutor?.purge() // todo find out if this is needed here
-        scheduledThreadPoolExecutor = null
     }
 
     companion object {
@@ -37,10 +33,7 @@ class JavaTPEBasedPollingEngine : PollingEngine {
         private var thisPollingEngine: JavaTPEBasedPollingEngine? = null
 
         fun prepare(size: Int): JavaTPEBasedPollingEngine {
-            if (thisPollingEngine == null) {
-                thisPollingEngine = JavaTPEBasedPollingEngine()
-                thisPollingEngine?.prepare(size)
-            }
+            thisPollingEngine = JavaTPEBasedPollingEngine(size)
             return thisPollingEngine as JavaTPEBasedPollingEngine
         }
     }
