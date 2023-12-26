@@ -6,6 +6,8 @@ import com.igor_shaula.api_polling.data_layer.network.LocationModel
 import com.igor_shaula.api_polling.data_layer.network.VehicleDetailsModel
 import com.igor_shaula.api_polling.data_layer.network.VehicleModel
 import kotlinx.coroutines.delay
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 class StubDataSource {
 
@@ -25,12 +27,12 @@ class StubDataSource {
     }
 
     suspend fun getVehicleDetails(vehicleId: String): VehicleDetailsModel {
-        lateinit var locationModel: LocationModel
-        val vehicleRandomIndex = 7
-        when (vehicleRandomIndex) {
-            7 -> locationModel = LocationModel(TARGET_LATITUDE + 0.0001, TARGET_LONGITUDE + 0.0001)
-        }
-        delay(100)
-        return VehicleDetailsModel(vehicleId, locationModel)
+        val randomCoefficient = if (Random.nextBoolean()) 0.001 else -0.001
+        val randomShift = randomCoefficient * Random.nextInt(0..10)
+        val newLocationModel = LocationModel(
+            TARGET_LATITUDE + randomShift, TARGET_LONGITUDE + randomShift
+        )
+        delay(Random.nextInt(10..10_000).toLong())
+        return VehicleDetailsModel(vehicleId, newLocationModel)
     }
 }
