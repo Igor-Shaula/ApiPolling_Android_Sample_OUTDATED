@@ -6,7 +6,7 @@ import com.igor_shaula.api_polling.data_layer.VehicleRecord
 import com.igor_shaula.api_polling.data_layer.network.retrofit.VehicleNetworkServiceImpl
 import com.igor_shaula.api_polling.data_layer.toVehicleItemRecords
 
-class TheRepositoryNetworkImpl : AbstractRepository() {
+class NetworkRepositoryImpl : AbstractRepository() {
 
     private val vehicleDataNetworkService = VehicleNetworkServiceImpl()
 

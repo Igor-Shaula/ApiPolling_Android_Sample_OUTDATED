@@ -5,7 +5,7 @@ import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
 import com.igor_shaula.api_polling.data_layer.toVehicleItemRecords
 
-class TheRepositoryStubImpl : AbstractRepository() {
+class StubRepositoryImpl : AbstractRepository() {
 
     private val stubDataSource = StubDataSource()
 
