@@ -19,12 +19,12 @@ class MainActivity : AppCompatActivity() {
 
     fun createAlertDialogForProvidingWithStubData(): AlertDialog =
         AlertDialog.Builder(this)
-            .setTitle("there is good stub data...")
-            .setMessage("switch to using stub data?")
-            .setPositiveButton("Positive") { thisDialog, _ ->
+            .setTitle(R.string.stubDataProposalTitle)
+            .setMessage(R.string.stubDataProposalMessage)
+            .setPositiveButton(R.string.stubDataProposalPositiveButtonText) { thisDialog, _ ->
                 thisDialog.cancel()
             }
-            .setNegativeButton("Negative") { thisDialog, _ ->
+            .setNegativeButton(R.string.stubDataProposalNegativeButtonText) { thisDialog, _ ->
                 thisDialog.cancel()
             }
             .setOnDismissListener {
