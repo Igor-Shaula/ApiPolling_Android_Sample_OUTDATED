@@ -7,20 +7,19 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class VehicleNetworkServiceImpl : VehiclesNetworkService {
+class VehicleRetrofitNetworkServiceImpl : VehiclesRetrofitNetworkService {
 
-    override suspend fun getVehiclesList(): Response<List<VehicleModel>> =
-        prepareVehiclesNetworkService()
-            .getVehiclesList()
-
-    override suspend fun getVehicleDetails(vehicleId: String): Response<VehicleDetailsModel> =
-        prepareVehiclesNetworkService()
-            .getVehicleDetails(vehicleId)
-
-    private fun prepareVehiclesNetworkService() =
+    private val retrofitNetworkService: VehiclesRetrofitNetworkService by lazy {
         Retrofit.Builder()
             .baseUrl(API_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(VehiclesNetworkService::class.java)
+            .create(VehiclesRetrofitNetworkService::class.java)
+    }
+
+    override suspend fun getVehiclesList(): Response<List<VehicleModel>> =
+        retrofitNetworkService.getVehiclesList()
+
+    override suspend fun getVehicleDetails(vehicleId: String): Response<VehicleDetailsModel> =
+        retrofitNetworkService.getVehicleDetails(vehicleId)
 }

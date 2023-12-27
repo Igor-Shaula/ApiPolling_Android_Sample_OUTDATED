@@ -12,7 +12,7 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Path
 
-interface VehiclesNetworkService {
+interface VehiclesRetrofitNetworkService {
 
     @Headers("$API_KEY_HEADER: ${BuildConfig.API_KEY}")
     @GET(API_ENDPOINT_VEHICLES_LIST)
