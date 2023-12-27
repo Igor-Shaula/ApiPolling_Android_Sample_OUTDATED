@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.igor_shaula.api_polling.R
-import com.igor_shaula.api_polling.ThisApp
 import com.igor_shaula.api_polling.data_layer.VehicleStatus
 import com.igor_shaula.api_polling.data_layer.toVehicleRecordList
 import com.igor_shaula.api_polling.databinding.FragmentVehiclesListBinding
@@ -25,9 +24,6 @@ import com.igor_shaula.api_polling.ui_layer.SharedViewModel
 import com.igor_shaula.api_polling.ui_layer.detail_ui.DetailFragment
 import com.igor_shaula.api_polling.ui_layer.list_ui.all_for_list.VehicleListAdapter
 import com.igor_shaula.utilities.AnimatedStringProgress
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class VehicleListFragment : Fragment() {
@@ -121,6 +117,9 @@ class VehicleListFragment : Fragment() {
         viewModel.timeToShowGeneralBusyState.observe(viewLifecycleOwner) { show ->
             showCentralBusyState(show)
         }
+        viewModel.timeToShowStubDataProposal.observe(viewLifecycleOwner) { show ->
+            if (show) showStubDataProposal()
+        }
         viewModel.getAllVehiclesIds() // first data fetch which is one-time due to the requirements
     }
 
@@ -204,7 +203,6 @@ class VehicleListFragment : Fragment() {
     private fun prepareUIForListWithDetails(list: List<Pair<String, VehicleStatus>>) {
         animatedStringProgress.stopShowingDynamicDottedText()
         if (list.isEmpty()) {
-            processAlternativesForGettingData()
             binding.groupWithProperList.isVisible = false
             binding.groupWithAbsentList.isVisible = true
             binding.acbLaunchInitialRequest.isEnabled = true
@@ -214,22 +212,6 @@ class VehicleListFragment : Fragment() {
             updateItemsInTheList(list)
             showNearVehiclesNumber()
             binding.actbPolling.isEnabled = true
-        }
-    }
-
-    // for now it is decided to leave this method here to avoid having more code in the ViewModel
-    private fun processAlternativesForGettingData() {
-        MainScope().launch(Dispatchers.IO) {
-            (activity?.application as ThisApp).readNeedStubDialogFromLocalPrefs()
-                .collect { needToShowStubDataProposal ->
-                    if (needToShowStubDataProposal) {
-                        launch(Dispatchers.Main) {
-                            showStubDataProposal()
-                        }
-                    } else {
-                        (activity?.application as ThisApp).saveNeedStubDialogToLocalPrefs()
-                    }
-                }
         }
     }
 

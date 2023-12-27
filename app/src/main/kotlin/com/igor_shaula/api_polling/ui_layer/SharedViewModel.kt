@@ -4,13 +4,13 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.igor_shaula.api_polling.ThisApp
-import com.igor_shaula.api_polling.data_layer.VehiclesRepository
 import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.data_layer.VehicleStatus
+import com.igor_shaula.api_polling.data_layer.VehiclesRepository
 import com.igor_shaula.api_polling.data_layer.detectVehicleStatus
 import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
@@ -33,6 +33,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     // no need to make this LiveData private - it's only a trigger for update action
     val timeToUpdateVehicleStatus = MutableLiveData<Unit>()
     val timeToShowGeneralBusyState = MutableLiveData<Boolean>()
+    val timeToShowStubDataProposal = MutableLiveData<Boolean>()
 
     private var repository: VehiclesRepository = ThisApp.getVehiclesRepository()
 
@@ -50,9 +51,11 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     fun getAllVehiclesIds() {
         coroutineScope.launch {
             timeToShowGeneralBusyState.value = true
-            mutableVehiclesMap.value = repository.getAllVehiclesIds()
+            val vehicleIdList = repository.getAllVehiclesIds()
+            mutableVehiclesMap.value = vehicleIdList
             timeToShowGeneralBusyState.value = false
             Timber.i("vehiclesMap.value = ${mutableVehiclesMap.value}")
+            if (vehicleIdList.isEmpty()) processAlternativesForGettingData()
         }
     }
 
@@ -67,6 +70,21 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun getNumberOfNearVehicles() = repository.getNumberOfNearVehicles(mutableVehiclesMap.value)
+
+    private fun processAlternativesForGettingData() {
+        MainScope().launch(Dispatchers.IO) {
+            getApplication<ThisApp>().readNeedStubDialogFromLocalPrefs()
+                .collect { needToShowStubDataProposal ->
+                    if (needToShowStubDataProposal) {
+                        launch(Dispatchers.Main) {
+                            timeToShowStubDataProposal.value = true
+                        }
+                    } else {
+                        getApplication<ThisApp>().saveNeedStubDialogToLocalPrefs()
+                    }
+                }
+        }
+    }
 
     private fun updateTheViewModel(pair: Pair<String, VehicleDetailsRecord>) {
         mutableVehiclesMap.value?.put(pair.first, detectVehicleStatus(pair.second))
