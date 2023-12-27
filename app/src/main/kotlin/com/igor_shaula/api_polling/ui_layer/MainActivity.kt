@@ -21,11 +21,17 @@ class MainActivity : AppCompatActivity() {
         AlertDialog.Builder(this)
             .setTitle("there is good stub data...")
             .setMessage("switch to using stub data?")
-            .setPositiveButton("Positive") { _, _ ->
-                Timber.v("positive button clicked")
+            .setPositiveButton("Positive") { thisDialog, _ ->
+                thisDialog.cancel()
             }
-            .setNegativeButton("Negative") { _, _ ->
-                Timber.v("negative button clicked")
+            .setNegativeButton("Negative") { thisDialog, _ ->
+                thisDialog.cancel()
+            }
+            .setOnDismissListener {
+                Timber.v("AlertDialog is dismissed")
+            }
+            .setOnCancelListener {
+                Timber.v("AlertDialog is cancelled")
             }
             .create()
 }
