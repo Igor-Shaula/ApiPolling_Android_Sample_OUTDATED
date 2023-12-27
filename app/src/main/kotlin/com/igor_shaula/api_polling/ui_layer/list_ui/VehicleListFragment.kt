@@ -10,18 +10,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.igor_shaula.api_polling.R
+import com.igor_shaula.api_polling.ThisApp
 import com.igor_shaula.api_polling.data_layer.VehicleStatus
 import com.igor_shaula.api_polling.data_layer.toVehicleRecordList
 import com.igor_shaula.api_polling.databinding.FragmentVehiclesListBinding
+import com.igor_shaula.api_polling.ui_layer.MainActivity
 import com.igor_shaula.api_polling.ui_layer.SharedViewModel
 import com.igor_shaula.api_polling.ui_layer.detail_ui.DetailFragment
 import com.igor_shaula.api_polling.ui_layer.list_ui.all_for_list.VehicleListAdapter
 import com.igor_shaula.utilities.AnimatedStringProgress
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class VehicleListFragment : Fragment() {
@@ -31,6 +37,8 @@ class VehicleListFragment : Fragment() {
     private val viewModel: SharedViewModel by activityViewModels()
 
     private lateinit var rvAdapter: VehicleListAdapter
+
+    private var alertDialog: AlertDialog? = null
 
     private val animatedStringProgress: AnimatedStringProgress by lazy {
         Timber.v("lazy animatedStringProgress init")
@@ -134,6 +142,7 @@ class VehicleListFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         viewModel.stopGettingVehiclesDetails()
+        alertDialog?.dismiss()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -195,16 +204,41 @@ class VehicleListFragment : Fragment() {
     private fun prepareUIForListWithDetails(list: List<Pair<String, VehicleStatus>>) {
         animatedStringProgress.stopShowingDynamicDottedText()
         if (list.isEmpty()) {
+            processAlternativesForGettingData()
             binding.groupWithProperList.isVisible = false
             binding.groupWithAbsentList.isVisible = true
             binding.acbLaunchInitialRequest.isEnabled = true
         } else {
             binding.groupWithProperList.isVisible = true
             binding.groupWithAbsentList.isVisible = false
-            updateItemsInTheList(list) // now it's time to get all details for every item in the list
+            updateItemsInTheList(list)
             showNearVehiclesNumber()
             binding.actbPolling.isEnabled = true
         }
+    }
+
+    // for now it is decided to leave this method here to avoid having more code in the ViewModel
+    private fun processAlternativesForGettingData() {
+        MainScope().launch(Dispatchers.IO) {
+            (activity?.application as ThisApp).readNeedStubDialogFromLocalPrefs()
+                .collect { needToShowStubDataProposal ->
+                    if (needToShowStubDataProposal) {
+                        launch(Dispatchers.Main) {
+                            showStubDataProposal()
+                        }
+                    } else {
+                        (activity?.application as ThisApp).saveNeedStubDialogToLocalPrefs()
+                    }
+                }
+        }
+    }
+
+    private fun showStubDataProposal() {
+        if (alertDialog != null && alertDialog?.isShowing == true) {
+            alertDialog?.dismiss()
+        }
+        alertDialog = (activity as MainActivity).createAlertDialogForProvidingWithStubData()
+        alertDialog?.show()
     }
 
     private fun hideErrorViewsDuringFirstRequest() {
