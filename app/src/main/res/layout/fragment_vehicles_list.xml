@@ -15,6 +15,7 @@
         android:id="@+id/actvHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_indentation_size"
         android:gravity="center"
         android:textColor="@color/black"
         android:textStyle="bold"
@@ -42,6 +43,7 @@
         android:id="@+id/actbPolling"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_indentation_size"
         android:checked="false"
         android:enabled="false"
         android:textOff="@string/toggle_button_off_text"
@@ -83,6 +85,7 @@
         android:id="@+id/acbLaunchInitialRequest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_indentation_size"
         android:text="@string/error_state_try_again_text"
         app:layout_constraintBottom_toBottomOf="parent" />
 
