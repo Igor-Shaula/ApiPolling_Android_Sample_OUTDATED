@@ -2,6 +2,7 @@ package com.igor_shaula.api_polling
 
 import android.app.Application
 import com.igor_shaula.api_polling.data_layer.VehiclesRepository
+import com.igor_shaula.api_polling.data_layer.network.NetworkRepositoryImpl
 import com.igor_shaula.api_polling.data_layer.stub_source.StubRepositoryImpl
 import timber.log.Timber
 
@@ -22,8 +23,8 @@ class ThisApp : Application() {
         // simplest ever implementation of DI - popular solutions will be added later
         fun getVehiclesRepository(): VehiclesRepository {
             if (vehiclesRepository == null) {
-//                vehiclesRepository = NetworkRepositoryImpl()
-                vehiclesRepository = StubRepositoryImpl()
+                vehiclesRepository = NetworkRepositoryImpl()
+//                vehiclesRepository = StubRepositoryImpl()
             } // else add some debug source of data, maybe based on coroutines
             return vehiclesRepository as VehiclesRepository
         }
