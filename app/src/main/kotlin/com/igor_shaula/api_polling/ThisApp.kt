@@ -9,6 +9,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import com.igor_shaula.api_polling.data_layer.VehiclesRepository
 import com.igor_shaula.api_polling.data_layer.network.NetworkRepositoryImpl
+import com.igor_shaula.api_polling.data_layer.stub_source.StubRepositoryImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.Flow
@@ -44,16 +45,10 @@ class ThisApp : Application() {
 
     companion object {
 
-        // vehiclesRepository cannot be not lateinit because it actually can be null
-        private var vehiclesRepository: VehiclesRepository? = null
-
         // simplest ever implementation of DI - popular solutions will be added later
-        fun getVehiclesRepository(): VehiclesRepository {
-            if (vehiclesRepository == null) {
-                vehiclesRepository = NetworkRepositoryImpl()
-//                vehiclesRepository = StubRepositoryImpl()
-            } // else add some debug source of data, maybe based on coroutines
-            return vehiclesRepository as VehiclesRepository
-        }
+        fun getVehiclesRepository(): VehiclesRepository = NetworkRepositoryImpl()
+
+        // i decided for now to just create the needed type and avoid complexity of logic here
+        fun getStubVehiclesRepository(): VehiclesRepository = StubRepositoryImpl()
     }
 }
