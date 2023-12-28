@@ -30,8 +30,9 @@ abstract class AbstractVehiclesRepository : VehiclesRepository {
             .toMutableMap()
 
     override suspend fun startGettingVehiclesDetails(
-        vehiclesMap: MutableMap<String, VehicleStatus>?,
-        updateViewModel: (Pair<String, VehicleDetailsRecord>) -> Unit
+        vehiclesMap: MutableMap<String, VehicleRecord>?,
+        updateViewModel: (String, VehicleDetailsRecord) -> Unit,
+        toggleBusyStateFor: (String, Boolean) -> Unit
     ) {
         vehiclesMap?.let {
             preparePollingEngine(it.size)
@@ -41,6 +42,7 @@ abstract class AbstractVehiclesRepository : VehiclesRepository {
                         createThisCoroutineScope()
                     }
                     coroutineScope.launch {
+                        toggleBusyStateFor(key, true)
                         getAllDetailsForOneVehicle(key, updateViewModel)
                     }
                 }

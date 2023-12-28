@@ -62,7 +62,9 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
 
     fun startGettingVehiclesDetails() {
         coroutineScope.launch {
-            repository.startGettingVehiclesDetails(mutableVehiclesMap.value, ::updateTheViewModel)
+            repository.startGettingVehiclesDetails(
+                mutableVehiclesMap.value, ::updateTheViewModel, ::toggleBusyStateFor
+            )
         }
     }
 
@@ -96,6 +98,13 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         mutableVehiclesDetailsMap.postValue(mutableVehiclesDetailsMap.value)
         // why postValue instead of setValue() -> https://www.geeksforgeeks.org/livedata-setvalue-vs-postvalue-in-android/
         timeToUpdateVehicleStatus.value = Unit // just to show new statuses on UI
+    }
+
+    private fun toggleBusyStateFor(vehicleId: String, isBusy: Boolean) {
+        mutableVehiclesMap.value?.put(
+            vehicleId,
+            VehicleRecord(vehicleId, VehicleStatus.UNKNOWN, isBusy)
+        )
     }
 
     fun onReadyToUseStubData() {

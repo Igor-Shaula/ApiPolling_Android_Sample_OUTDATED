@@ -6,7 +6,8 @@ interface VehiclesRepository {
 
     suspend fun startGettingVehiclesDetails(
         vehiclesMap: MutableMap<String, VehicleRecord>?,
-        updateViewModel: (String, VehicleDetailsRecord) -> Unit
+        updateViewModel: (String, VehicleDetailsRecord) -> Unit,
+        toggleBusyStateFor: (String, Boolean) -> Unit
     )
 
     fun stopGettingVehiclesDetails()
