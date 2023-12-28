@@ -93,4 +93,9 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         // why postValue instead of setValue() -> https://www.geeksforgeeks.org/livedata-setvalue-vs-postvalue-in-android/
         timeToUpdateVehicleStatus.value = Unit // just to show new statuses on UI
     }
+
+    fun onReadyToUseStubData() {
+        stopGettingVehiclesDetails() // to avoid any possible resource leaks if this one still works
+        repository = ThisApp.getStubVehiclesRepository() // must be a new value - with stub data
+    }
 }

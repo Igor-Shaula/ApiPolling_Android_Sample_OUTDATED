@@ -17,11 +17,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun createAlertDialogForProvidingWithStubData(): AlertDialog =
+    fun createAlertDialogForProvidingWithStubData(onReadyToUseStubData: () -> Unit): AlertDialog =
         AlertDialog.Builder(this)
             .setTitle(R.string.stubDataProposalTitle)
             .setMessage(R.string.stubDataProposalMessage)
             .setPositiveButton(R.string.stubDataProposalPositiveButtonText) { thisDialog, _ ->
+                onReadyToUseStubData.invoke() // invoke() instead of () - just to be more visible
                 thisDialog.cancel()
             }
             .setNegativeButton(R.string.stubDataProposalNegativeButtonText) { thisDialog, _ ->

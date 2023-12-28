@@ -219,7 +219,8 @@ class VehicleListFragment : Fragment() {
         if (alertDialog != null && alertDialog?.isShowing == true) {
             alertDialog?.dismiss()
         }
-        alertDialog = (activity as MainActivity).createAlertDialogForProvidingWithStubData()
+        alertDialog = (activity as MainActivity)
+            .createAlertDialogForProvidingWithStubData { viewModel.onReadyToUseStubData() }
         alertDialog?.show()
     }
 
