@@ -23,10 +23,10 @@ abstract class AbstractVehiclesRepository : VehiclesRepository {
         coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
     }
 
-    override suspend fun getAllVehiclesIds(): MutableMap<String, VehicleStatus> =
+    override suspend fun getAllVehiclesIds(): MutableMap<String, VehicleRecord> =
         readVehiclesList()
             .also { Timber.v("getAllVehiclesIds() -> readVehiclesList() = $it") }
-            .associateBy({ it.vehicleId }, { it.vehicleStatus })
+            .associateBy({ it.vehicleId }, { VehicleRecord(it.vehicleId, it.vehicleStatus) })
             .toMutableMap()
 
     override suspend fun startGettingVehiclesDetails(
@@ -53,7 +53,7 @@ abstract class AbstractVehiclesRepository : VehiclesRepository {
         coroutineScope.cancel()
     }
 
-    override fun getNumberOfNearVehicles(vehiclesMap: MutableMap<String, VehicleStatus>?): Int {
+    override fun getNumberOfNearVehicles(vehiclesMap: MutableMap<String, VehicleRecord>?): Int {
         val vehicleRecordsList = vehiclesMap?.toList()?.toVehicleRecordList()
         return detectNumberOfNearVehicles(vehicleRecordsList)
     }

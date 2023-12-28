@@ -3,10 +3,10 @@ package com.igor_shaula.api_polling.data_layer
 import com.igor_shaula.api_polling.data_layer.network.VehicleDetailsModel
 import com.igor_shaula.api_polling.data_layer.network.VehicleModel
 
-fun List<Pair<String, VehicleStatus>>.toVehicleRecordList(): List<VehicleRecord> {
+fun List<Pair<String, VehicleRecord>>.toVehicleRecordList(): List<VehicleRecord> {
     val result = mutableListOf<VehicleRecord>()
     this.forEach {
-        result.add(VehicleRecord(it.first, it.second))
+        result.add(it.second)
     }
     return result
 }

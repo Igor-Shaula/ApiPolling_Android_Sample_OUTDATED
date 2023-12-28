@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.igor_shaula.api_polling.R
-import com.igor_shaula.api_polling.data_layer.VehicleStatus
+import com.igor_shaula.api_polling.data_layer.VehicleRecord
 import com.igor_shaula.api_polling.data_layer.toVehicleRecordList
 import com.igor_shaula.api_polling.databinding.FragmentVehiclesListBinding
 import com.igor_shaula.api_polling.ui_layer.MainActivity
@@ -185,7 +185,7 @@ class VehicleListFragment : Fragment() {
         binding.rvVehiclesList.layoutManager = LinearLayoutManager(context)
     }
 
-    private fun updateItemsInTheList(pairs: List<Pair<String, VehicleStatus>>) {
+    private fun updateItemsInTheList(pairs: List<Pair<String, VehicleRecord>>) {
         val vehicleRecordsList = pairs.toVehicleRecordList()
         rvAdapter.setItems(vehicleRecordsList)
     }
@@ -200,7 +200,7 @@ class VehicleListFragment : Fragment() {
             getString(R.string.close_distance_counter_text_base, howManyVehiclesAreNear)
     }
 
-    private fun prepareUIForListWithDetails(list: List<Pair<String, VehicleStatus>>) {
+    private fun prepareUIForListWithDetails(list: List<Pair<String, VehicleRecord>>) {
         animatedStringProgress.stopShowingDynamicDottedText()
         if (list.isEmpty()) {
             binding.groupWithProperList.isVisible = false

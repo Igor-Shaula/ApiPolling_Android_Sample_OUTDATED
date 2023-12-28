@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.igor_shaula.api_polling.ThisApp
 import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
+import com.igor_shaula.api_polling.data_layer.VehicleRecord
 import com.igor_shaula.api_polling.data_layer.VehicleStatus
 import com.igor_shaula.api_polling.data_layer.VehiclesRepository
 import com.igor_shaula.api_polling.data_layer.detectVehicleStatus
@@ -20,10 +21,10 @@ import timber.log.Timber
 class SharedViewModel(application: Application) : AndroidViewModel(application) {
 
     // for inner use - only inside this ViewModel - as Google recommends in its examples
-    private val mutableVehiclesMap = MutableLiveData<MutableMap<String, VehicleStatus>>()
+    private val mutableVehiclesMap = MutableLiveData<MutableMap<String, VehicleRecord>>()
 
     // for outer use - mostly in Fragments & Activities - as Google recommends in its examples
-    val vehiclesMap: LiveData<MutableMap<String, VehicleStatus>> get() = mutableVehiclesMap
+    val vehiclesMap: LiveData<MutableMap<String, VehicleRecord>> get() = mutableVehiclesMap
 
     private val mutableVehiclesDetailsMap =
         MutableLiveData<MutableMap<String, VehicleDetailsRecord>>()
