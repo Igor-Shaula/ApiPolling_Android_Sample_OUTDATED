@@ -63,12 +63,12 @@ abstract class AbstractVehiclesRepository : VehiclesRepository {
     protected abstract suspend fun readVehicleDetails(vehicleId: String): VehicleDetailsRecord?
 
     private suspend fun getAllDetailsForOneVehicle(
-        vehicleId: String, updateViewModel: (Pair<String, VehicleDetailsRecord>) -> Unit
+        vehicleId: String, updateViewModel: (String, VehicleDetailsRecord) -> Unit
     ) {
         val vehicleDetails = readVehicleDetails(vehicleId)
         Timber.d("vehicleDetails = $vehicleDetails")
         if (vehicleDetails != null) {
-            updateViewModel(Pair(vehicleId, vehicleDetails))
+            updateViewModel(vehicleId, vehicleDetails)
         }
     }
 

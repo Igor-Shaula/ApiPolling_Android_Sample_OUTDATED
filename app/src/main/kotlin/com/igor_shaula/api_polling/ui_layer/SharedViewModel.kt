@@ -87,9 +87,12 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    private fun updateTheViewModel(pair: Pair<String, VehicleDetailsRecord>) {
-        mutableVehiclesMap.value?.put(pair.first, detectVehicleStatus(pair.second))
-        mutableVehiclesDetailsMap.value?.put(pair.first, pair.second)
+    private fun updateTheViewModel(vehicleId: String, vehicleDetails: VehicleDetailsRecord) {
+        mutableVehiclesMap.value?.put(
+            vehicleId,
+            VehicleRecord(vehicleId, detectVehicleStatus(vehicleDetails), false)
+        )
+        mutableVehiclesDetailsMap.value?.put(vehicleId, vehicleDetails)
         mutableVehiclesDetailsMap.postValue(mutableVehiclesDetailsMap.value)
         // why postValue instead of setValue() -> https://www.geeksforgeeks.org/livedata-setvalue-vs-postvalue-in-android/
         timeToUpdateVehicleStatus.value = Unit // just to show new statuses on UI
