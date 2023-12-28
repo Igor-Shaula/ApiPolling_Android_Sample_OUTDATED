@@ -2,7 +2,8 @@ package com.igor_shaula.api_polling.data_layer
 
 data class VehicleRecord(
     val vehicleId: String,
-    val vehicleStatus: VehicleStatus
+    val vehicleStatus: VehicleStatus,
+    val isBusyGettingNewData: Boolean = false
 )
 
 enum class VehicleStatus {
