@@ -11,8 +11,8 @@ class NetworkRepositoryImpl : AbstractVehiclesRepository() {
     private val vehicleDataNetworkService = VehicleRetrofitNetworkServiceImpl()
 
     override suspend fun readVehiclesList(): List<VehicleRecord> =
-        vehicleDataNetworkService.getVehiclesList().body().toVehicleItemRecords()
+        vehicleDataNetworkService.getVehiclesList().toVehicleItemRecords()
 
     override suspend fun readVehicleDetails(vehicleId: String): VehicleDetailsRecord? =
-        vehicleDataNetworkService.getVehicleDetails(vehicleId).body()?.toVehicleItemRecords()
+        vehicleDataNetworkService.getVehicleDetails(vehicleId)?.toVehicleItemRecords()
 }
