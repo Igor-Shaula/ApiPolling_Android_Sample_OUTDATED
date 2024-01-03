@@ -13,16 +13,14 @@ class VehicleStubNetworkServiceImpl {
 
     suspend fun getVehiclesList(): List<VehicleModel> {
         delay(Random.nextInt(50..5_000).toLong())
+
+        val quantity = 30
+        val stubDataGenerator = StubVehicleGenerator("API stub vehicle #")
+
         val result: MutableList<VehicleModel> = mutableListOf()
-        result.add(VehicleModel("API stub #1"))
-        result.add(VehicleModel("API stub #2"))
-        result.add(VehicleModel("API stub #3"))
-        result.add(VehicleModel("API stub #4"))
-        result.add(VehicleModel("API stub #5"))
-        result.add(VehicleModel("API stub #6"))
-        result.add(VehicleModel("API stub #7"))
-        result.add(VehicleModel("API stub #8"))
-        result.add(VehicleModel("API stub #9"))
+        repeat(quantity) {
+            result.add(stubDataGenerator.createNextVehicleModel())
+        }
         return result
     }
 
