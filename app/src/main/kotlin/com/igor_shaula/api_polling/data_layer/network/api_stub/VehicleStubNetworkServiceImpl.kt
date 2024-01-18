@@ -5,6 +5,7 @@ import com.igor_shaula.api_polling.data_layer.TARGET_LONGITUDE
 import com.igor_shaula.api_polling.data_layer.network.LocationModel
 import com.igor_shaula.api_polling.data_layer.network.VehicleDetailsModel
 import com.igor_shaula.api_polling.data_layer.network.VehicleModel
+import com.igor_shaula.stub_data_generator.StubVehicleGenerator
 import kotlinx.coroutines.delay
 import kotlin.random.Random
 import kotlin.random.nextInt
@@ -19,12 +20,12 @@ class VehicleStubNetworkServiceImpl {
 
         val result: MutableList<VehicleModel> = mutableListOf()
         repeat(quantity) {
-            result.add(stubDataGenerator.createNextVehicleModel())
+            result.add(VehicleModel(stubDataGenerator.createNextVehicleModelString()))
         }
         return result
     }
 
-    suspend fun getVehicleDetails(vehicleId: String): VehicleDetailsModel? {
+    suspend fun getVehicleDetails(vehicleId: String): VehicleDetailsModel {
         val randomCoefficient = if (Random.nextBoolean()) 0.001 else -0.001
         val randomShift = randomCoefficient * Random.nextInt(0..10)
         val newLocationModel = LocationModel(
