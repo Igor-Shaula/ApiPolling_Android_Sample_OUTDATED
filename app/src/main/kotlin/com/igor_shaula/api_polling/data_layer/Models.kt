@@ -6,8 +6,12 @@ data class VehicleRecord(
     val isBusyGettingNewData: Boolean = false
 )
 
-enum class VehicleStatus {
-    UNKNOWN, NEAR, AFAR, IN_PLACE, NEW_ROUND
+enum class VehicleStatus(val uiStatus: String, val isNear: Boolean?) {
+    UNKNOWN("unknown", null),
+    NEAR("near", true),
+    AFAR("far away", false),
+    IN_PLACE("in place", true),
+    NEW_ROUND("new round", null)
 }
 
 data class VehicleDetailsRecord(
