@@ -46,7 +46,9 @@ class DetailFragment : DialogFragment() {
     private fun updateUI(vehicleDetailsRecord: VehicleDetailsRecord?) {
         binding.apply {
             actvCounterOfNearVehicles.text = getString(
-                R.string.close_distance_counter_text_base, viewModel.getNumberOfNearVehicles()
+                R.string.close_distance_counter_text_base,
+                viewModel.getNumberOfNearVehicles(),
+                viewModel.getNumberOfAllVehicles()
             )
             actvVehicleId.text = getString(
                 R.string.vehicleId, vehicleId

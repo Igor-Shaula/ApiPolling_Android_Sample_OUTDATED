@@ -195,9 +195,12 @@ class VehicleListFragment : Fragment() {
     // region work with the rest of UI
 
     private fun showNearVehiclesNumber() {
-        val howManyVehiclesAreNear = viewModel.getNumberOfNearVehicles()
         binding.actvHeader.text =
-            getString(R.string.close_distance_counter_text_base, howManyVehiclesAreNear)
+            getString(
+                R.string.close_distance_counter_text_base,
+                viewModel.getNumberOfNearVehicles(),
+                viewModel.getNumberOfAllVehicles()
+            )
     }
 
     private fun prepareUIForListWithDetails(list: List<Pair<String, VehicleRecord>>) {

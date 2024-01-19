@@ -74,6 +74,8 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
 
     fun getNumberOfNearVehicles() = repository.getNumberOfNearVehicles(mutableVehiclesMap.value)
 
+    fun getNumberOfAllVehicles() = mutableVehiclesMap.value?.size
+
     private fun processAlternativesForGettingData() {
         MainScope().launch(Dispatchers.IO) {
             getApplication<ThisApp>().readNeedStubDialogFromLocalPrefs()
