@@ -54,7 +54,8 @@ class DetailFragment : DialogFragment() {
                 R.string.vehicleId, vehicleId
             )
             actvLiveStatus.text = getString(
-                R.string.vehicleStatus, viewModel.vehiclesMap.value?.get(vehicleId).toString()
+                R.string.vehicleStatus,
+                viewModel.vehiclesMap.value?.get(vehicleId)?.vehicleStatus?.uiStatus?.uppercase()
             )
             actvLiveCoordinates.text = getString(
                 R.string.location_text_base,
