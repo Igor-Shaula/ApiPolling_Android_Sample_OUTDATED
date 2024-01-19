@@ -103,7 +103,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     private fun toggleBusyStateFor(vehicleId: String, isBusy: Boolean) {
         mutableVehiclesMap.value?.put(
             vehicleId,
-            VehicleRecord(vehicleId, VehicleStatus.UNKNOWN, isBusy)
+            VehicleRecord(vehicleId, VehicleStatus.NEW_ROUND, isBusy)
         )
     }
 
