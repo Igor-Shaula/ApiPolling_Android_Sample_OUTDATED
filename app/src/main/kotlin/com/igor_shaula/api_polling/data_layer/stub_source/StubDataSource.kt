@@ -16,7 +16,7 @@ class StubDataSource {
         delay(Random.nextInt(50..5_000).toLong())
         val generator = StubVehicleGenerator("stub vehicle #")
         val result: MutableList<VehicleModel> = mutableListOf()
-        (0..Random.nextInt(100)).forEach { _ ->
+        (0..Random.nextInt(30)).forEach { _ ->
             result.add(VehicleModel(generator.createNextVehicleModelString()))
         }
         return result
@@ -28,7 +28,7 @@ class StubDataSource {
         val newLocationModel = LocationModel(
             TARGET_LATITUDE + randomShift, TARGET_LONGITUDE + randomShift
         )
-        delay(Random.nextInt(10..10_000).toLong())
+        delay(Random.nextInt(100..3_000).toLong())
         return VehicleDetailsModel(vehicleId, newLocationModel)
     }
 }

@@ -32,9 +32,9 @@ class VehicleItemViewHolder(
             if (this.isNear == null) {
                 actvVehicleStatus.setTextColor(Color.DKGRAY)
             } else if (this.isNear) {
-                actvVehicleStatus.setTextColor(Color.BLUE)
+                actvVehicleStatus.setTextColor(Color.CYAN)
             } else {
-                actvVehicleStatus.setTextColor(Color.RED)
+                actvVehicleStatus.setTextColor(Color.BLUE)
             }
         }
     }
