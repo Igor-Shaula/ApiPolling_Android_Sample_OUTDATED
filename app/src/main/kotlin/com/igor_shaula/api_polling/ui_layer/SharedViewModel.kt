@@ -40,6 +40,8 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
 
     private val coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
 
+    private var firstTimeLaunched = true
+
     init {
         mutableVehiclesDetailsMap.value = mutableMapOf()
     }
@@ -77,7 +79,11 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     fun getNumberOfAllVehicles() = mutableVehiclesMap.value?.size
 
     private fun processAlternativesForGettingData() {
-        MainScope().launch(Dispatchers.IO) {
+        if (firstTimeLaunched) { // during the first launch showing dialog is not needed
+            firstTimeLaunched = false
+            return // optimization for avoiding excess IO request to the storage
+        }
+        coroutineScope.launch(Dispatchers.IO) {
             getApplication<ThisApp>().readNeedStubDialogFromLocalPrefs()
                 .collect { needToShowStubDataProposal ->
                     if (needToShowStubDataProposal) {
