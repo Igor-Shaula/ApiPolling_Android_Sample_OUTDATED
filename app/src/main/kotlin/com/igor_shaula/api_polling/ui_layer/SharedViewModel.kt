@@ -91,7 +91,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
                             timeToShowStubDataProposal.value = true
                         }
                     } else {
-                        getApplication<ThisApp>().saveNeedStubDialogToLocalPrefs()
+                        getApplication<ThisApp>().saveNeedStubDialogToLocalPrefs(true)
                     }
                 }
         }

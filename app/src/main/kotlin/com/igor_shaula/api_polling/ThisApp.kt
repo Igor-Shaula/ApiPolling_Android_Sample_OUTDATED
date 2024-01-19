@@ -10,11 +10,8 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.igor_shaula.api_polling.data_layer.VehiclesRepository
 import com.igor_shaula.api_polling.data_layer.network.NetworkRepositoryImpl
 import com.igor_shaula.api_polling.data_layer.stub_source.StubRepositoryImpl
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import timber.log.Timber
 
 val TIME_TO_SHOW_GOTO_STUB_DIALOG = booleanPreferencesKey("timeToShowGoToStubDialog")
@@ -35,11 +32,9 @@ class ThisApp : Application() {
             preferences[TIME_TO_SHOW_GOTO_STUB_DIALOG] ?: false
         }
 
-    fun saveNeedStubDialogToLocalPrefs() {
-        MainScope().launch(Dispatchers.IO) {
-            dataStore.edit { preferences ->
-                preferences[TIME_TO_SHOW_GOTO_STUB_DIALOG] = true
-            }
+    suspend fun saveNeedStubDialogToLocalPrefs(showStubDataNextTime: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[TIME_TO_SHOW_GOTO_STUB_DIALOG] = showStubDataNextTime
         }
     }
 
