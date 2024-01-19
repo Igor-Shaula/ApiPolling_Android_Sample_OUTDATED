@@ -1,5 +1,6 @@
 package com.igor_shaula.utilities
 
+import android.graphics.Color
 import android.graphics.Typeface
 import android.widget.TextView
 import kotlinx.coroutines.CoroutineName
@@ -36,6 +37,7 @@ class AnimatedStringProgress(private val textView: TextView) {
         val animationFrameTime = TOTAL_ANIMATION_TIME / textLength
 //        textDotsCoroutineScope.launch { // text is not updated for unknown reason
         textView.setTypeface(textView.typeface, Typeface.BOLD)
+        textView.setTextColor(Color.YELLOW)
         textAnimationJob = (GlobalScope + CoroutineName(textView.text.toString()))
             .launch { // works fine but it's dangerous API
                 var indexOfStep = 0
@@ -62,6 +64,7 @@ class AnimatedStringProgress(private val textView: TextView) {
         if (textBeforeAnimation.isNotEmpty()) {
             textView.text = textBeforeAnimation
             textView.setTypeface(textView.typeface, Typeface.NORMAL)
+            textView.setTextColor(Color.WHITE)
         }
     }
 
