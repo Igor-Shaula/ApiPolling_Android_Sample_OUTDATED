@@ -142,6 +142,7 @@ class VehicleListFragment : Fragment() {
         super.onStop()
         viewModel.stopGettingVehiclesDetails()
         alertDialog?.dismiss()
+        viewModel.clearPreviousStubDataSelection()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

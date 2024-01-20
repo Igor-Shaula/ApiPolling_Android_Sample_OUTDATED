@@ -124,4 +124,15 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         stopGettingVehiclesDetails() // to avoid any possible resource leaks if this one still works
         repository = ThisApp.getStubVehiclesRepository() // must be a new value - with stub data
     }
+
+    fun clearPreviousStubDataSelection() {
+        firstTimeLaunched = true
+        timeToShowStubDataProposal.value = false
+        mutableVehiclesMap.value?.clear()
+        coroutineScope.launch {
+            getApplication<ThisApp>().saveNeedStubDialogToLocalPrefs(false)
+        }
+        coroutineScope.cancel()
+        repository = ThisApp.getVehiclesRepository()
+    }
 }
