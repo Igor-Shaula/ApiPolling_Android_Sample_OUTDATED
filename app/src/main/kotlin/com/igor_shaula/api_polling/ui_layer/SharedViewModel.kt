@@ -115,7 +115,9 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     private fun toggleMainBusyState(isBusy: Boolean) {
-        timeToShowGeneralBusyState.value = isBusy
+        coroutineScope.launch(Dispatchers.Main) {
+            timeToShowGeneralBusyState.value = isBusy
+        }
     }
 
     fun onReadyToUseStubData() {
