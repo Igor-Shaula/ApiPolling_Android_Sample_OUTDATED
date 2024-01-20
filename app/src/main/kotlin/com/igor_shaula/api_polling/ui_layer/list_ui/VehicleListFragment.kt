@@ -120,7 +120,8 @@ class VehicleListFragment : Fragment() {
         viewModel.timeToShowStubDataProposal.observe(viewLifecycleOwner) { show ->
             if (show) showStubDataProposal()
         }
-        viewModel.getAllVehiclesIds() // first data fetch which is one-time due to the requirements
+//        viewModel.getAllVehiclesIds() // first data fetch which is one-time due to the requirements
+        binding.groupWithAbsentList.isVisible = true
     }
 
     override fun onResume() {
