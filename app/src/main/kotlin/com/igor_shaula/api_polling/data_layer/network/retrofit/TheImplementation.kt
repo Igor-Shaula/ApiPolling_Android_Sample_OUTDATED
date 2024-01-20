@@ -17,7 +17,7 @@ class VehicleRetrofitNetworkServiceImpl {
             .create(VehiclesRetrofitNetworkService::class.java)
     }
 
-    suspend fun getVehiclesList(): List<VehicleModel>? {
+    fun getVehiclesList(): List<VehicleModel>? {
         val response = retrofitNetworkService.getVehiclesList()
         if (!response.isSuccessful) {
             Timber.w("getVehiclesList: errorCode = ${response.code()}")
@@ -26,6 +26,6 @@ class VehicleRetrofitNetworkServiceImpl {
         return response.body()
     }
 
-    suspend fun getVehicleDetails(vehicleId: String): VehicleDetailsModel? =
+    fun getVehicleDetails(vehicleId: String): VehicleDetailsModel? =
         retrofitNetworkService.getVehicleDetails(vehicleId).body()
 }

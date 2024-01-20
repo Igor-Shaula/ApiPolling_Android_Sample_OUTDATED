@@ -16,11 +16,11 @@ interface VehiclesRetrofitNetworkService {
 
     @Headers("$API_KEY_HEADER: ${BuildConfig.API_KEY}")
     @GET(API_ENDPOINT_VEHICLES_LIST)
-    suspend fun getVehiclesList(): Response<List<VehicleModel>>
+    fun getVehiclesList(): Response<List<VehicleModel>>
 
     @Headers("$API_KEY_HEADER: ${BuildConfig.API_KEY}")
     @GET("$API_ENDPOINT_VEHICLE_DETAILS_BASE/{$API_PATH_VEHICLE_ID}")
-    suspend fun getVehicleDetails(
+    fun getVehicleDetails(
         @Path(API_PATH_VEHICLE_ID) vehicleId: String
     ): Response<VehicleDetailsModel>
 }
