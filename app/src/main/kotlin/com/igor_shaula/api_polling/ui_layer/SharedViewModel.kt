@@ -52,14 +52,15 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun getAllVehiclesIds() {
-        coroutineScope.launch {
-            timeToShowGeneralBusyState.value = true
-            val vehicleIdList = repository.getAllVehiclesIds()
-            mutableVehiclesMap.value = vehicleIdList
-            timeToShowGeneralBusyState.value = false
-            Timber.i("vehiclesMap.value = ${mutableVehiclesMap.value}")
-            if (vehicleIdList.isEmpty()) processAlternativesForGettingData()
+        // i decided to have lazy subscription - only when we need it - here, not in init-block
+        repository.mainDataStorage.observeForever {
+            mutableVehiclesMap.value = it
+            Timber.i("mutableVehiclesMap.value = ${mutableVehiclesMap.value}")
+            if (mutableVehiclesMap.value?.isEmpty() == true) processAlternativesForGettingData()
         }
+//        coroutineScope.launch {
+        repository.launchGetAllVehicleIdsRequest(::toggleMainBusyState)
+//        }
     }
 
     fun startGettingVehiclesDetails() {
@@ -113,6 +114,10 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
             vehicleId,
             VehicleRecord(vehicleId, VehicleStatus.NEW_ROUND, isBusy)
         )
+    }
+
+    private fun toggleMainBusyState(isBusy: Boolean) {
+        timeToShowGeneralBusyState.value = isBusy
     }
 
     fun onReadyToUseStubData() {

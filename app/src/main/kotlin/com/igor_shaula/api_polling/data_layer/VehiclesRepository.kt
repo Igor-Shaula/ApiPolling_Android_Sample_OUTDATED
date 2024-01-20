@@ -1,8 +1,12 @@
 package com.igor_shaula.api_polling.data_layer
 
+import androidx.lifecycle.MutableLiveData
+
 interface VehiclesRepository {
 
-    suspend fun getAllVehiclesIds(): MutableMap<String, VehicleRecord>
+    val mainDataStorage: MutableLiveData<MutableMap<String, VehicleRecord>>
+
+    fun launchGetAllVehicleIdsRequest(toggleMainBusyState: (Boolean) -> Unit)
 
     suspend fun startGettingVehiclesDetails(
         vehiclesMap: MutableMap<String, VehicleRecord>?,

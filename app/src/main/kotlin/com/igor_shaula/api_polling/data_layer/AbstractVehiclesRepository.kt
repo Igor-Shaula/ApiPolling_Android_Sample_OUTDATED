@@ -1,5 +1,6 @@
 package com.igor_shaula.api_polling.data_layer
 
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -11,9 +12,11 @@ import timber.log.Timber
 
 abstract class AbstractVehiclesRepository : VehiclesRepository {
 
+    override val mainDataStorage = MutableLiveData<MutableMap<String, VehicleRecord>>()
+
     private var pollingEngine: PollingEngine? = null
 
-    private lateinit var coroutineScope: CoroutineScope
+    private lateinit var coroutineScope: CoroutineScope // lateinit is not dangerous here
 
     init {
         createThisCoroutineScope()
@@ -23,11 +26,23 @@ abstract class AbstractVehiclesRepository : VehiclesRepository {
         coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
     }
 
-    override suspend fun getAllVehiclesIds(): MutableMap<String, VehicleRecord> =
-        readVehiclesList()
-            .also { Timber.v("getAllVehiclesIds() -> readVehiclesList() = $it") }
-            .associateBy({ it.vehicleId }, { VehicleRecord(it.vehicleId, it.vehicleStatus) })
-            .toMutableMap()
+    override fun launchGetAllVehicleIdsRequest(toggleMainBusyState: (Boolean) -> Unit) {
+        if (!coroutineScope.isActive) {
+            createThisCoroutineScope()
+        }
+        coroutineScope.launch {
+            if (isActive) {
+                toggleMainBusyState.invoke(true)
+                mainDataStorage.value = readVehiclesList()
+                    .also { Timber.v("getAllVehiclesIds() -> readVehiclesList() = $it") }
+                    .associateBy(
+                        { it.vehicleId },
+                        { VehicleRecord(it.vehicleId, it.vehicleStatus) })
+                    .toMutableMap()
+            }
+            toggleMainBusyState.invoke(false)
+        }
+    }
 
     override suspend fun startGettingVehiclesDetails(
         vehiclesMap: MutableMap<String, VehicleRecord>?,
