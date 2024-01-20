@@ -5,6 +5,7 @@ import com.igor_shaula.api_polling.data_layer.network.VehicleDetailsModel
 import com.igor_shaula.api_polling.data_layer.network.VehicleModel
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import timber.log.Timber
 
 class VehicleRetrofitNetworkServiceImpl {
 
@@ -16,8 +17,14 @@ class VehicleRetrofitNetworkServiceImpl {
             .create(VehiclesRetrofitNetworkService::class.java)
     }
 
-    suspend fun getVehiclesList(): List<VehicleModel>? =
-        retrofitNetworkService.getVehiclesList().body()
+    suspend fun getVehiclesList(): List<VehicleModel>? {
+        val response = retrofitNetworkService.getVehiclesList()
+        if (!response.isSuccessful) {
+            Timber.w("getVehiclesList: errorCode = ${response.code()}")
+            Timber.w("getVehiclesList: errorBody = ${response.errorBody()?.string()}")
+        }
+        return response.body()
+    }
 
     suspend fun getVehicleDetails(vehicleId: String): VehicleDetailsModel? =
         retrofitNetworkService.getVehicleDetails(vehicleId).body()
