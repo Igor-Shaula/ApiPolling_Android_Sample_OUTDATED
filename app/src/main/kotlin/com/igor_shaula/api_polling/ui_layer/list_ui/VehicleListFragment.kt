@@ -102,6 +102,7 @@ class VehicleListFragment : Fragment() {
         super.onStart()
         Timber.v("onStart - 10")
         viewModel.vehiclesMap.observe(viewLifecycleOwner) { thisMap ->
+            animatedStringProgress.stopShowingDynamicDottedText()
             prepareUIForListWithDetails(thisMap.toList())
         }
         viewModel.timeToUpdateVehicleStatus.observe(viewLifecycleOwner) {
@@ -196,7 +197,6 @@ class VehicleListFragment : Fragment() {
     }
 
     private fun prepareUIForListWithDetails(list: List<Pair<String, VehicleRecord>>) {
-        animatedStringProgress.stopShowingDynamicDottedText()
         if (list.isEmpty()) {
             binding.groupWithProperList.isVisible = false
             binding.groupWithAbsentList.isVisible = true
