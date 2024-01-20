@@ -113,7 +113,6 @@ class VehicleListFragment : Fragment() {
         viewModel.timeToShowGeneralBusyState.observe(viewLifecycleOwner) { show ->
             showCentralBusyState(show)
         }
-//        viewModel.getAllVehiclesIds() // first data fetch which is one-time due to the requirements
         binding.groupWithAbsentList.isVisible = true
     }
 
@@ -128,7 +127,6 @@ class VehicleListFragment : Fragment() {
             animatedStringProgress.startShowing5DynamicDots()
             viewModel.getAllVehiclesIds()
             hideErrorViewsDuringFirstRequest()
-            showCentralBusyState(true)
         }
     }
 
