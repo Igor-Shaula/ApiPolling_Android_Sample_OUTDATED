@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -19,7 +18,6 @@ import com.igor_shaula.api_polling.R
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
 import com.igor_shaula.api_polling.data_layer.toVehicleRecordList
 import com.igor_shaula.api_polling.databinding.FragmentVehiclesListBinding
-import com.igor_shaula.api_polling.ui_layer.MainActivity
 import com.igor_shaula.api_polling.ui_layer.SharedViewModel
 import com.igor_shaula.api_polling.ui_layer.detail_ui.DetailFragment
 import com.igor_shaula.api_polling.ui_layer.list_ui.all_for_list.VehicleListAdapter
@@ -33,8 +31,6 @@ class VehicleListFragment : Fragment() {
     private val viewModel: SharedViewModel by activityViewModels()
 
     private lateinit var rvAdapter: VehicleListAdapter
-
-    private var alertDialog: AlertDialog? = null
 
     private val animatedStringProgress: AnimatedStringProgress by lazy {
         Timber.v("lazy animatedStringProgress init")
@@ -117,9 +113,6 @@ class VehicleListFragment : Fragment() {
         viewModel.timeToShowGeneralBusyState.observe(viewLifecycleOwner) { show ->
             showCentralBusyState(show)
         }
-        viewModel.timeToShowStubDataProposal.observe(viewLifecycleOwner) { show ->
-            if (show) showStubDataProposal()
-        }
 //        viewModel.getAllVehiclesIds() // first data fetch which is one-time due to the requirements
         binding.groupWithAbsentList.isVisible = true
     }
@@ -142,7 +135,6 @@ class VehicleListFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         viewModel.stopGettingVehiclesDetails()
-        alertDialog?.dismiss()
         viewModel.clearPreviousStubDataSelection()
     }
 
@@ -218,15 +210,6 @@ class VehicleListFragment : Fragment() {
             showNearVehiclesNumber()
             binding.actbPolling.isEnabled = true
         }
-    }
-
-    private fun showStubDataProposal() {
-        if (alertDialog != null && alertDialog?.isShowing == true) {
-            alertDialog?.dismiss()
-        }
-        alertDialog = (activity as MainActivity)
-            .createAlertDialogForProvidingWithStubData { viewModel.onReadyToUseStubData() }
-        alertDialog?.show()
     }
 
     private fun hideErrorViewsDuringFirstRequest() {
