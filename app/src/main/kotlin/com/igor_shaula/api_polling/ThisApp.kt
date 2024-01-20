@@ -3,8 +3,6 @@ package com.igor_shaula.api_polling
 import android.app.Application
 import android.content.Context
 import android.os.StrictMode
-import android.os.StrictMode.ThreadPolicy
-import android.os.StrictMode.VmPolicy
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -24,31 +22,11 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
 class ThisApp : Application() {
 
     override fun onCreate() {
-        enableStrictMode()
+        StrictMode.enableDefaults() // https://developer.android.com/reference/android/os/StrictMode.html
         super.onCreate()
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
-    }
-
-    // why we need this - https://developer.android.com/reference/android/os/StrictMode.html
-    private fun enableStrictMode() {
-        StrictMode.setThreadPolicy(
-            ThreadPolicy.Builder()
-                .detectDiskReads()
-                .detectDiskWrites()
-                .detectNetwork() // or .detectAll() for all detectable problems
-                .penaltyLog()
-                .build()
-        )
-        StrictMode.setVmPolicy(
-            VmPolicy.Builder()
-                .detectLeakedSqlLiteObjects()
-                .detectLeakedClosableObjects()
-                .penaltyLog()
-                .penaltyDeath()
-                .build()
-        )
     }
 
     fun readNeedStubDialogFromLocalPrefs(): Flow<Boolean> =
