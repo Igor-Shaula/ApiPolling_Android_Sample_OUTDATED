@@ -3,7 +3,6 @@ package com.igor_shaula.api_polling.data_layer
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.isActive
@@ -28,27 +27,17 @@ abstract class AbstractVehiclesRepository : VehiclesRepository {
     }
 
     override suspend fun launchGetAllVehicleIdsRequest(toggleMainBusyState: (Boolean) -> Unit) {
-        if (!coroutineScope.isActive) {
-            createThisCoroutineScope()
-        }
-        coroutineScope.launch(Dispatchers.IO) {
-            toggleMainBusyState.invoke(true)
-            val result = readVehiclesList()
-                .also { Timber.v("launchGetAllVehicleIdsRequest() -> readVehiclesList() = $it") }
-                .associateBy(
-                    { it.vehicleId },
-                    { VehicleRecord(it.vehicleId, it.vehicleStatus) })
-                .toMutableMap()
-                .also { Timber.v("launchGetAllVehicleIdsRequest() -> MutableMap = $it") }
-            mainDataStorage.value = result
-            toggleMainBusyState.invoke(false)
-            Timber.v("launchGetAllVehicleIdsRequest() -> mainDataStorage.value = ${mainDataStorage.value}")
-        }
-    }
-
-    // todo: remove later when the situation with launchGetAllVehicleIdsRequest() is clear
-    private fun readVehiclesListFake(): List<VehicleRecord> {
-        return mutableListOf(VehicleRecord("fake vehicle 0", VehicleStatus.UNKNOWN, false))
+        toggleMainBusyState.invoke(true)
+        val result = readVehiclesList()
+            .also { Timber.v("launchGetAllVehicleIdsRequest() -> readVehiclesList() = $it") }
+            .associateBy(
+                { it.vehicleId },
+                { VehicleRecord(it.vehicleId, it.vehicleStatus) })
+            .toMutableMap()
+            .also { Timber.v("launchGetAllVehicleIdsRequest() -> MutableMap = $it") }
+        mainDataStorage.value = result
+        toggleMainBusyState.invoke(false)
+        Timber.v("launchGetAllVehicleIdsRequest() -> mainDataStorage.value = ${mainDataStorage.value}")
     }
 
     override suspend fun startGettingVehiclesDetails(
