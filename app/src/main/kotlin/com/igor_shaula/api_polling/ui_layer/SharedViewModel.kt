@@ -58,9 +58,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
             Timber.i("mutableVehiclesMap.value = ${mutableVehiclesMap.value}")
             if (mutableVehiclesMap.value?.isEmpty() == true) processAlternativesForGettingData()
         }
-//        coroutineScope.launch {
         repository.launchGetAllVehicleIdsRequest(::toggleMainBusyState)
-//        }
     }
 
     fun startGettingVehiclesDetails() {
@@ -129,7 +127,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         firstTimeLaunched = true
         timeToShowStubDataProposal.value = false
         mutableVehiclesMap.value?.clear()
-        coroutineScope.launch {
+        coroutineScope.launch(Dispatchers.IO) {
             getApplication<ThisApp>().saveNeedStubDialogToLocalPrefs(false)
         }
         coroutineScope.cancel()
