@@ -12,6 +12,7 @@ import com.igor_shaula.api_polling.data_layer.VehiclesRepository
 import com.igor_shaula.api_polling.data_layer.detectVehicleStatus
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
@@ -36,9 +37,12 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     val timeToShowGeneralBusyState = MutableLiveData<Boolean>()
     val timeToShowStubDataProposal = MutableLiveData<Boolean>()
 
-    private var repository: VehiclesRepository = ThisApp.getVehiclesRepository()
+//    private var repository: VehiclesRepository = ThisApp.getVehiclesRepository()
+    private var repository: VehiclesRepository = ThisApp.getStubVehiclesRepository()
 
     private val coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
+
+    private var getAllVehiclesJob: Job? = null
 
     private var firstTimeLaunched = true
 
@@ -48,6 +52,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
 
     override fun onCleared() {
         super.onCleared()
+        getAllVehiclesJob?.cancel()
         coroutineScope.cancel()
     }
 
@@ -57,8 +62,12 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
             mutableVehiclesMap.value = it
             Timber.i("mutableVehiclesMap.value = ${mutableVehiclesMap.value}")
             if (mutableVehiclesMap.value?.isEmpty() == true) processAlternativesForGettingData()
+            getAllVehiclesJob?.cancel()
+            getAllVehiclesJob = null
         }
-        repository.launchGetAllVehicleIdsRequest(::toggleMainBusyState)
+        getAllVehiclesJob = coroutineScope.launch {
+            repository.launchGetAllVehicleIdsRequest(::toggleMainBusyState)
+        }
     }
 
     fun startGettingVehiclesDetails() {
