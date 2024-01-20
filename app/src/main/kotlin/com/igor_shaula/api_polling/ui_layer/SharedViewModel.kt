@@ -37,8 +37,8 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     val timeToShowGeneralBusyState = MutableLiveData<Boolean>()
     val timeToShowStubDataProposal = MutableLiveData<Boolean>()
 
-//    private var repository: VehiclesRepository = ThisApp.getVehiclesRepository()
-    private var repository: VehiclesRepository = ThisApp.getStubVehiclesRepository()
+    private var repository: VehiclesRepository = ThisApp.getVehiclesRepository()
+//    private var repository: VehiclesRepository = ThisApp.getStubVehiclesRepository()
 
     private val coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
 
@@ -65,7 +65,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
             getAllVehiclesJob?.cancel()
             getAllVehiclesJob = null
         }
-        getAllVehiclesJob = coroutineScope.launch {
+        getAllVehiclesJob = coroutineScope.launch(Dispatchers.Main) { // only Main does work here
             repository.launchGetAllVehicleIdsRequest(::toggleMainBusyState)
         }
     }
