@@ -153,14 +153,14 @@ class VehicleListFragment : Fragment() {
 
     // region other standard androidx.fragment.app.Fragment callbacks
 
+    override fun onGetLayoutInflater(savedInstanceState: Bundle?): LayoutInflater {
+        Timber.v("onGetLayoutInflater - 5++")
+        return super.onGetLayoutInflater(savedInstanceState)
+    }
+
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         Timber.v("onConfigurationChanged")
-    }
-
-    override fun onGetLayoutInflater(savedInstanceState: Bundle?): LayoutInflater {
-        Timber.v("onGetLayoutInflater")
-        return super.onGetLayoutInflater(savedInstanceState)
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
