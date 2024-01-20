@@ -12,6 +12,7 @@ import com.igor_shaula.api_polling.data_layer.VehiclesRepository
 import com.igor_shaula.api_polling.data_layer.detectVehicleStatus
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
@@ -37,8 +38,11 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     val timeToShowStubDataProposal = MutableLiveData<Boolean>()
 
     private var repository: VehiclesRepository = ThisApp.getVehiclesRepository()
+//    private var repository: VehiclesRepository = ThisApp.getStubVehiclesRepository()
 
     private val coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
+
+    private var getAllVehiclesJob: Job? = null
 
     private var firstTimeLaunched = true
 
@@ -48,6 +52,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
 
     override fun onCleared() {
         super.onCleared()
+        getAllVehiclesJob?.cancel()
         coroutineScope.cancel()
     }
 
@@ -57,8 +62,12 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
             mutableVehiclesMap.value = it
             Timber.i("mutableVehiclesMap.value = ${mutableVehiclesMap.value}")
             if (mutableVehiclesMap.value?.isEmpty() == true) processAlternativesForGettingData()
+            getAllVehiclesJob?.cancel()
+            getAllVehiclesJob = null
         }
-        repository.launchGetAllVehicleIdsRequest(::toggleMainBusyState)
+        getAllVehiclesJob = coroutineScope.launch(Dispatchers.Main) { // only Main does work here
+            repository.launchGetAllVehicleIdsRequest(::toggleMainBusyState)
+        }
     }
 
     fun startGettingVehiclesDetails() {
@@ -115,7 +124,9 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     private fun toggleMainBusyState(isBusy: Boolean) {
-        timeToShowGeneralBusyState.value = isBusy
+        coroutineScope.launch(Dispatchers.Main) {
+            timeToShowGeneralBusyState.value = isBusy
+        }
     }
 
     fun onReadyToUseStubData() {

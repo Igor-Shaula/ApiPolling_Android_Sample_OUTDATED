@@ -26,22 +26,18 @@ abstract class AbstractVehiclesRepository : VehiclesRepository {
         coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
     }
 
-    override fun launchGetAllVehicleIdsRequest(toggleMainBusyState: (Boolean) -> Unit) {
-        if (!coroutineScope.isActive) {
-            createThisCoroutineScope()
-        }
-        coroutineScope.launch {
-            if (isActive) {
-                toggleMainBusyState.invoke(true)
-                mainDataStorage.value = readVehiclesList()
-                    .also { Timber.v("getAllVehiclesIds() -> readVehiclesList() = $it") }
-                    .associateBy(
-                        { it.vehicleId },
-                        { VehicleRecord(it.vehicleId, it.vehicleStatus) })
-                    .toMutableMap()
-            }
-            toggleMainBusyState.invoke(false)
-        }
+    override suspend fun launchGetAllVehicleIdsRequest(toggleMainBusyState: (Boolean) -> Unit) {
+        toggleMainBusyState.invoke(true)
+        val result = readVehiclesList()
+            .also { Timber.v("launchGetAllVehicleIdsRequest() -> readVehiclesList() = $it") }
+            .associateBy(
+                { it.vehicleId },
+                { VehicleRecord(it.vehicleId, it.vehicleStatus) })
+            .toMutableMap()
+            .also { Timber.v("launchGetAllVehicleIdsRequest() -> MutableMap = $it") }
+        mainDataStorage.value = result
+        toggleMainBusyState.invoke(false)
+        Timber.v("launchGetAllVehicleIdsRequest() -> mainDataStorage.value = ${mainDataStorage.value}")
     }
 
     override suspend fun startGettingVehiclesDetails(
