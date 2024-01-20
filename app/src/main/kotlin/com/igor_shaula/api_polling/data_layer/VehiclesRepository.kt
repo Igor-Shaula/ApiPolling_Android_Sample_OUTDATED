@@ -6,7 +6,7 @@ interface VehiclesRepository {
 
     val mainDataStorage: MutableLiveData<MutableMap<String, VehicleRecord>>
 
-    fun launchGetAllVehicleIdsRequest(toggleMainBusyState: (Boolean) -> Unit)
+    suspend fun launchGetAllVehicleIdsRequest(toggleMainBusyState: (Boolean) -> Unit)
 
     suspend fun startGettingVehiclesDetails(
         vehiclesMap: MutableMap<String, VehicleRecord>?,

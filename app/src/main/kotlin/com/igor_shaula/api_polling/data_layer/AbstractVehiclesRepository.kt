@@ -3,6 +3,7 @@ package com.igor_shaula.api_polling.data_layer
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.isActive
@@ -26,22 +27,28 @@ abstract class AbstractVehiclesRepository : VehiclesRepository {
         coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
     }
 
-    override fun launchGetAllVehicleIdsRequest(toggleMainBusyState: (Boolean) -> Unit) {
+    override suspend fun launchGetAllVehicleIdsRequest(toggleMainBusyState: (Boolean) -> Unit) {
         if (!coroutineScope.isActive) {
             createThisCoroutineScope()
         }
-        coroutineScope.launch {
-            if (isActive) {
-                toggleMainBusyState.invoke(true)
-                mainDataStorage.value = readVehiclesList()
-                    .also { Timber.v("getAllVehiclesIds() -> readVehiclesList() = $it") }
-                    .associateBy(
-                        { it.vehicleId },
-                        { VehicleRecord(it.vehicleId, it.vehicleStatus) })
-                    .toMutableMap()
-            }
+        coroutineScope.launch(Dispatchers.IO) {
+            toggleMainBusyState.invoke(true)
+            val result = readVehiclesList()
+                .also { Timber.v("launchGetAllVehicleIdsRequest() -> readVehiclesList() = $it") }
+                .associateBy(
+                    { it.vehicleId },
+                    { VehicleRecord(it.vehicleId, it.vehicleStatus) })
+                .toMutableMap()
+                .also { Timber.v("launchGetAllVehicleIdsRequest() -> MutableMap = $it") }
+            mainDataStorage.value = result
             toggleMainBusyState.invoke(false)
+            Timber.v("launchGetAllVehicleIdsRequest() -> mainDataStorage.value = ${mainDataStorage.value}")
         }
+    }
+
+    // todo: remove later when the situation with launchGetAllVehicleIdsRequest() is clear
+    private fun readVehiclesListFake(): List<VehicleRecord> {
+        return mutableListOf(VehicleRecord("fake vehicle 0", VehicleStatus.UNKNOWN, false))
     }
 
     override suspend fun startGettingVehiclesDetails(
