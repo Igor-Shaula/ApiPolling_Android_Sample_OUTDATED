@@ -17,13 +17,15 @@ class VehicleRetrofitNetworkServiceImpl {
             .create(VehiclesRetrofitNetworkService::class.java)
     }
 
-    fun getVehiclesList(): List<VehicleModel>? {
+    fun getVehiclesList(): List<VehicleModel> {
         val response = retrofitNetworkService.getVehiclesList()
         if (!response.isSuccessful) {
             Timber.w("getVehiclesList: errorCode = ${response.code()}")
             Timber.w("getVehiclesList: errorBody = ${response.errorBody()?.string()}")
         }
-        return response.body()
+        val result: MutableList<VehicleModel> = mutableListOf()
+        response.body()?.let { result.addAll(it) }
+        return result
     }
 
     fun getVehicleDetails(vehicleId: String): VehicleDetailsModel? =
