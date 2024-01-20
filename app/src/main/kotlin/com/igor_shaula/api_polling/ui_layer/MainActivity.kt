@@ -52,10 +52,14 @@ class MainActivity : AppCompatActivity() {
             .setMessage(R.string.stubDataProposalMessage)
             .setPositiveButton(R.string.stubDataProposalPositiveButtonText) { thisDialog, _ ->
                 onReadyToUseStubData.invoke() // invoke() instead of () - just to be more visible
-                thisDialog.cancel()
+                thisDialog.dismiss()
+                alertDialog?.dismiss()
+                alertDialog = null
             }
             .setNegativeButton(R.string.stubDataProposalNegativeButtonText) { thisDialog, _ ->
-                thisDialog.cancel()
+                thisDialog.dismiss()
+                alertDialog?.dismiss()
+                alertDialog = null
             }
             .setOnDismissListener {
                 Timber.v("AlertDialog is dismissed")
