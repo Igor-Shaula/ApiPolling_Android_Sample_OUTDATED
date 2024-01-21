@@ -4,11 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.igor_shaula.api_polling.ThisApp
+import com.igor_shaula.api_polling.data_layer.AbstractVehiclesRepository
 import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
 import com.igor_shaula.api_polling.data_layer.VehicleStatus
-import com.igor_shaula.api_polling.data_layer.VehiclesRepository
 import com.igor_shaula.api_polling.data_layer.detectVehicleStatus
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Dispatchers
@@ -18,6 +19,8 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import timber.log.Timber
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 class SharedViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -37,8 +40,15 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     val timeToShowGeneralBusyState = MutableLiveData<Boolean>()
     val timeToShowStubDataProposal = MutableLiveData<Boolean>()
 
-    private var repository: VehiclesRepository = ThisApp.getVehiclesRepository()
-//    private var repository: VehiclesRepository = ThisApp.getStubVehiclesRepository()
+    private val repositoryObserver: Observer<MutableMap<String, VehicleRecord>> = Observer {
+        mutableVehiclesMap.value = it
+        Timber.i("mutableVehiclesMap.value = ${mutableVehiclesMap.value}")
+        if (mutableVehiclesMap.value?.isEmpty() == true) processAlternativesForGettingData()
+        getAllVehiclesJob?.cancel()
+        getAllVehiclesJob = null
+    }
+
+    private var repository: AbstractVehiclesRepository by RepositoryProperty(repositoryObserver)
 
     private val coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
 
@@ -58,13 +68,6 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
 
     fun getAllVehiclesIds() {
         // i decided to have lazy subscription - only when we need it - here, not in init-block
-        repository.mainDataStorage.observeForever {
-            mutableVehiclesMap.value = it
-            Timber.i("mutableVehiclesMap.value = ${mutableVehiclesMap.value}")
-            if (mutableVehiclesMap.value?.isEmpty() == true) processAlternativesForGettingData()
-            getAllVehiclesJob?.cancel()
-            getAllVehiclesJob = null
-        }
         getAllVehiclesJob = coroutineScope.launch(Dispatchers.Main) { // only Main does work here
             repository.launchGetAllVehicleIdsRequest(::toggleMainBusyState)
         }
@@ -131,7 +134,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
 
     fun onReadyToUseStubData() {
         stopGettingVehiclesDetails() // to avoid any possible resource leaks if this one still works
-        repository = ThisApp.getStubVehiclesRepository() // must be a new value - with stub data
+        repository = ThisApp.switchRepositoryBy(ThisApp.RepositoryType.STUB) // must be a new value - with stub data
     }
 
     fun clearPreviousStubDataSelection() {
@@ -142,6 +145,26 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
             getApplication<ThisApp>().saveNeedStubDialogToLocalPrefs(false)
         }
         coroutineScope.cancel()
-        repository = ThisApp.getVehiclesRepository()
+        repository = ThisApp.switchRepositoryBy(ThisApp.RepositoryType.NETWORK)
+    }
+}
+
+class RepositoryProperty(private val observer: Observer<MutableMap<String, VehicleRecord>>) : ReadWriteProperty<Any, AbstractVehiclesRepository> {
+
+    private lateinit var repository: AbstractVehiclesRepository
+    override fun getValue(thisRef: Any, property: KProperty<*>): AbstractVehiclesRepository {
+        if (!this::repository.isInitialized) {
+            repository = ThisApp.getRepository()
+            repository.mainDataStorage.observeForever(observer)
+        }
+        return repository
+    }
+
+    override fun setValue(thisRef: Any, property: KProperty<*>, value: AbstractVehiclesRepository) {
+        if (this::repository.isInitialized) {
+            repository.mainDataStorage.removeObserver(observer)
+        }
+        repository = value
+        repository.mainDataStorage.observeForever(observer)
     }
 }

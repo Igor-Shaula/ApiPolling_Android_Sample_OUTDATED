@@ -8,7 +8,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
-import com.igor_shaula.api_polling.data_layer.VehiclesRepository
+import com.igor_shaula.api_polling.data_layer.AbstractVehiclesRepository
 import com.igor_shaula.api_polling.data_layer.network.NetworkRepositoryImpl
 import com.igor_shaula.api_polling.data_layer.stub_source.StubRepositoryImpl
 import kotlinx.coroutines.flow.Flow
@@ -40,12 +40,36 @@ class ThisApp : Application() {
         }
     }
 
+
+    enum class RepositoryType {
+        NETWORK, STUB
+    }
+
     companion object {
+        private val networkRepo: NetworkRepositoryImpl by lazy {
+            NetworkRepositoryImpl()
+        }
+        private val stubRepo: StubRepositoryImpl by lazy {
+            StubRepositoryImpl()
+        }
+        private lateinit var currRepo: AbstractVehiclesRepository
 
-        // simplest ever implementation of DI - popular solutions will be added later
-        fun getVehiclesRepository(): VehiclesRepository = NetworkRepositoryImpl()
+        fun getRepository() : AbstractVehiclesRepository {
+            if (!this::currRepo.isInitialized) {
+                currRepo = networkRepo;
+            }
+            return currRepo;
+        }
 
-        // i decided for now to just create the needed type and avoid complexity of logic here
-        fun getStubVehiclesRepository(): VehiclesRepository = StubRepositoryImpl()
+        /**
+         * Switches the Repository impl between Network and Stub
+         */
+        fun switchRepositoryBy(type: RepositoryType) : AbstractVehiclesRepository {
+            currRepo = when(type) {
+                RepositoryType.STUB -> stubRepo
+                RepositoryType.NETWORK -> networkRepo
+            }
+            return currRepo;
+        }
     }
 }
