@@ -4,6 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import com.igor_shaula.api_polling.ThisApp
 import com.igor_shaula.api_polling.data_layer.data_sources.NetworkDataSource
 import com.igor_shaula.api_polling.data_layer.data_sources.StubDataSource
+import com.igor_shaula.api_polling.data_layer.polling_engines.JavaTPEBasedPollingEngine
+import com.igor_shaula.api_polling.data_layer.polling_engines.PollingEngine
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope

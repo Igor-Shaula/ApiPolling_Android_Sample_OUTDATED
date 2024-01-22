@@ -1,14 +1,7 @@
-package com.igor_shaula.api_polling.data_layer
+package com.igor_shaula.api_polling.data_layer.polling_engines
 
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.TimeUnit
-
-interface PollingEngine {
-
-    fun launch(intervalInSeconds: Int, theWorkToDo: () -> Unit)
-
-    fun stopAndClearItself()
-}
 
 class JavaTPEBasedPollingEngine(size: Int) : PollingEngine {
 
