@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import timber.log.Timber
 
-class AbstractVehiclesRepository(
+class VehiclesRepository(
     private val networkDataSource: NetworkDataSource,
     private val stubDataSource: StubDataSource,
     private val activeDataSource: ThisApp.ActiveDataSource

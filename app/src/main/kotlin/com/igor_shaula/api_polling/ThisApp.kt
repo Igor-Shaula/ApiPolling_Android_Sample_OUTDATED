@@ -8,7 +8,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
-import com.igor_shaula.api_polling.data_layer.AbstractVehiclesRepository
+import com.igor_shaula.api_polling.data_layer.VehiclesRepository
 import com.igor_shaula.api_polling.data_layer.network_data_source.NetworkDataSource
 import com.igor_shaula.api_polling.data_layer.stub_data_source.StubDataSource
 import kotlinx.coroutines.flow.Flow
@@ -46,19 +46,19 @@ class ThisApp : Application() {
 
     companion object {
 
-        private val networkDataRepository: AbstractVehiclesRepository by lazy {
-            AbstractVehiclesRepository(
+        private val networkDataRepository: VehiclesRepository by lazy {
+            VehiclesRepository(
                 NetworkDataSource(), StubDataSource(), ActiveDataSource.NETWORK
             )
         }
 
-        private val stubDataRepository: AbstractVehiclesRepository by lazy {
-            AbstractVehiclesRepository(NetworkDataSource(), StubDataSource(), ActiveDataSource.STUB)
+        private val stubDataRepository: VehiclesRepository by lazy {
+            VehiclesRepository(NetworkDataSource(), StubDataSource(), ActiveDataSource.STUB)
         }
 
-        private lateinit var currentRepository: AbstractVehiclesRepository
+        private lateinit var currentRepository: VehiclesRepository
 
-        fun getRepository(): AbstractVehiclesRepository {
+        fun getRepository(): VehiclesRepository {
             if (!this::currentRepository.isInitialized) {
                 currentRepository = networkDataRepository
             }
@@ -68,7 +68,7 @@ class ThisApp : Application() {
         /**
          * Switches the DataSource for the VehiclesRepository between Network and Stub
          */
-        fun switchActiveDataSource(type: ActiveDataSource): AbstractVehiclesRepository {
+        fun switchActiveDataSource(type: ActiveDataSource): VehiclesRepository {
             currentRepository = when (type) {
                 ActiveDataSource.STUB -> stubDataRepository
                 ActiveDataSource.NETWORK -> networkDataRepository
