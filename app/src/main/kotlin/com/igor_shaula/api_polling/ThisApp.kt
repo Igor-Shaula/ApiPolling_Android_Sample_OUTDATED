@@ -40,36 +40,38 @@ class ThisApp : Application() {
         }
     }
 
-
-    enum class RepositoryType {
+    enum class DataSourceType {
         NETWORK, STUB
     }
 
     companion object {
-        private val networkRepo: NetworkRepositoryImpl by lazy {
+
+        private val networkDataRepository: NetworkRepositoryImpl by lazy {
             NetworkRepositoryImpl()
         }
-        private val stubRepo: StubDataSource by lazy {
+
+        private val stubDataRepository: StubDataSource by lazy {
             StubDataSource()
         }
-        private lateinit var currRepo: AbstractVehiclesRepository
 
-        fun getRepository() : AbstractVehiclesRepository {
-            if (!this::currRepo.isInitialized) {
-                currRepo = networkRepo;
+        private lateinit var currentRepository: AbstractVehiclesRepository
+
+        fun getRepository(): AbstractVehiclesRepository {
+            if (!this::currentRepository.isInitialized) {
+                currentRepository = networkDataRepository
             }
-            return currRepo;
+            return currentRepository
         }
 
         /**
-         * Switches the Repository impl between Network and Stub
+         * Switches the DataSource for the VehiclesRepository between Network and Stub
          */
-        fun switchRepositoryBy(type: RepositoryType) : AbstractVehiclesRepository {
-            currRepo = when(type) {
-                RepositoryType.STUB -> stubRepo
-                RepositoryType.NETWORK -> networkRepo
+        fun switchActiveDataSource(type: DataSourceType): AbstractVehiclesRepository {
+            currentRepository = when (type) {
+                DataSourceType.STUB -> stubDataRepository
+                DataSourceType.NETWORK -> networkDataRepository
             }
-            return currRepo;
+            return currentRepository;
         }
     }
 }
