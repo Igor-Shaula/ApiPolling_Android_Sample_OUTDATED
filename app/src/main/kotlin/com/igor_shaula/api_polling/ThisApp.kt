@@ -10,7 +10,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import com.igor_shaula.api_polling.data_layer.AbstractVehiclesRepository
 import com.igor_shaula.api_polling.data_layer.network_data_source.NetworkRepositoryImpl
-import com.igor_shaula.api_polling.data_layer.stub_data_source.StubRepositoryImpl
+import com.igor_shaula.api_polling.data_layer.stub_data_source.StubDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
@@ -49,8 +49,8 @@ class ThisApp : Application() {
         private val networkRepo: NetworkRepositoryImpl by lazy {
             NetworkRepositoryImpl()
         }
-        private val stubRepo: StubRepositoryImpl by lazy {
-            StubRepositoryImpl()
+        private val stubRepo: StubDataSource by lazy {
+            StubDataSource()
         }
         private lateinit var currRepo: AbstractVehiclesRepository
 
