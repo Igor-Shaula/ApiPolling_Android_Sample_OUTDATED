@@ -2,9 +2,9 @@ package com.igor_shaula.api_polling.data_layer.stub_data_source
 
 import com.igor_shaula.api_polling.data_layer.TARGET_LATITUDE
 import com.igor_shaula.api_polling.data_layer.TARGET_LONGITUDE
-import com.igor_shaula.api_polling.data_layer.network.LocationModel
-import com.igor_shaula.api_polling.data_layer.network.VehicleDetailsModel
-import com.igor_shaula.api_polling.data_layer.network.VehicleModel
+import com.igor_shaula.api_polling.data_layer.network_data_source.LocationModel
+import com.igor_shaula.api_polling.data_layer.network_data_source.VehicleDetailsModel
+import com.igor_shaula.api_polling.data_layer.network_data_source.VehicleModel
 import com.igor_shaula.stub_data_generator.StubVehicleGenerator
 import kotlinx.coroutines.delay
 import kotlin.random.Random

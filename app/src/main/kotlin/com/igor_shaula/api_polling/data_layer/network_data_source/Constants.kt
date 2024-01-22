@@ -1,4 +1,4 @@
-package com.igor_shaula.api_polling.data_layer.network
+package com.igor_shaula.api_polling.data_layer.network_data_source
 
 const val API_BASE_URL = "https://5w53f1x8oa.execute-api.eu-west-1.amazonaws.com/dev/"
 

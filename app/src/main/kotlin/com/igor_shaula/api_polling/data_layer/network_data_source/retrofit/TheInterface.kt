@@ -1,12 +1,12 @@
-package com.igor_shaula.api_polling.data_layer.network.retrofit
+package com.igor_shaula.api_polling.data_layer.network_data_source.retrofit
 
 import com.igor_shaula.api_polling.BuildConfig
-import com.igor_shaula.api_polling.data_layer.network.API_ENDPOINT_VEHICLES_LIST
-import com.igor_shaula.api_polling.data_layer.network.API_ENDPOINT_VEHICLE_DETAILS_BASE
-import com.igor_shaula.api_polling.data_layer.network.API_KEY_HEADER
-import com.igor_shaula.api_polling.data_layer.network.API_PATH_VEHICLE_ID
-import com.igor_shaula.api_polling.data_layer.network.VehicleDetailsModel
-import com.igor_shaula.api_polling.data_layer.network.VehicleModel
+import com.igor_shaula.api_polling.data_layer.network_data_source.API_ENDPOINT_VEHICLES_LIST
+import com.igor_shaula.api_polling.data_layer.network_data_source.API_ENDPOINT_VEHICLE_DETAILS_BASE
+import com.igor_shaula.api_polling.data_layer.network_data_source.API_KEY_HEADER
+import com.igor_shaula.api_polling.data_layer.network_data_source.API_PATH_VEHICLE_ID
+import com.igor_shaula.api_polling.data_layer.network_data_source.VehicleDetailsModel
+import com.igor_shaula.api_polling.data_layer.network_data_source.VehicleModel
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Headers
