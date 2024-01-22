@@ -11,6 +11,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.igor_shaula.api_polling.data_layer.VehiclesRepository
 import com.igor_shaula.api_polling.data_layer.data_sources.NetworkDataSource
 import com.igor_shaula.api_polling.data_layer.data_sources.StubDataSource
+import com.igor_shaula.api_polling.data_layer.data_sources.retrofit.VehicleRetrofitNetworkServiceImpl
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
@@ -46,14 +47,22 @@ class ThisApp : Application() {
 
     companion object {
 
+// TODO: current solution is TEMPORARY - later move all DataSource usage logic into the Repository level
+
         private val networkDataRepository: VehiclesRepository by lazy {
             VehiclesRepository(
-                NetworkDataSource(), StubDataSource(), ActiveDataSource.NETWORK
+                NetworkDataSource(VehicleRetrofitNetworkServiceImpl()),
+                StubDataSource(),
+                ActiveDataSource.NETWORK
             )
         }
 
         private val stubDataRepository: VehiclesRepository by lazy {
-            VehiclesRepository(NetworkDataSource(), StubDataSource(), ActiveDataSource.STUB)
+            VehiclesRepository(
+                NetworkDataSource(VehicleRetrofitNetworkServiceImpl()),
+                StubDataSource(),
+                ActiveDataSource.STUB
+            )
         }
 
         private lateinit var currentRepository: VehiclesRepository
