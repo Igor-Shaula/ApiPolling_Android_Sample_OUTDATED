@@ -1,4 +1,4 @@
-package com.igor_shaula.api_polling.data_layer.stub_source
+package com.igor_shaula.api_polling.data_layer.stub_data_source
 
 import com.igor_shaula.api_polling.data_layer.TARGET_LATITUDE
 import com.igor_shaula.api_polling.data_layer.TARGET_LONGITUDE

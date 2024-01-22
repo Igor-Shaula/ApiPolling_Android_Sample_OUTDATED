@@ -10,7 +10,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import com.igor_shaula.api_polling.data_layer.AbstractVehiclesRepository
 import com.igor_shaula.api_polling.data_layer.network.NetworkRepositoryImpl
-import com.igor_shaula.api_polling.data_layer.stub_source.StubRepositoryImpl
+import com.igor_shaula.api_polling.data_layer.stub_data_source.StubRepositoryImpl
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
