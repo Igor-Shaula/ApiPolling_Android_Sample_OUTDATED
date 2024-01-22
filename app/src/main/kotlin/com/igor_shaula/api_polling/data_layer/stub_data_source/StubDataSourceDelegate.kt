@@ -10,7 +10,7 @@ import kotlinx.coroutines.delay
 import kotlin.random.Random
 import kotlin.random.nextInt
 
-class StubDataSource {
+class StubDataSourceDelegate {
 
     suspend fun getVehiclesList(): List<VehicleModel> {
         delay(Random.nextInt(50..5_000).toLong())

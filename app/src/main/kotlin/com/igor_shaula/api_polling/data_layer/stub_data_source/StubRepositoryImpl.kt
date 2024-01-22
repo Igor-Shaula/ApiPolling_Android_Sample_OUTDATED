@@ -7,11 +7,11 @@ import com.igor_shaula.api_polling.data_layer.toVehicleItemRecords
 
 class StubRepositoryImpl : AbstractVehiclesRepository() {
 
-    private val stubDataSource = StubDataSource()
+    private val stubDataSourceDelegate = StubDataSourceDelegate()
 
     override suspend fun readVehiclesList(): List<VehicleRecord> =
-        stubDataSource.getVehiclesList().toVehicleItemRecords()
+        stubDataSourceDelegate.getVehiclesList().toVehicleItemRecords()
 
     override suspend fun readVehicleDetails(vehicleId: String): VehicleDetailsRecord =
-        stubDataSource.getVehicleDetails(vehicleId).toVehicleItemRecords()
+        stubDataSourceDelegate.getVehicleDetails(vehicleId).toVehicleItemRecords()
 }
