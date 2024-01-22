@@ -17,7 +17,7 @@ class AbstractVehiclesRepository(
     private val networkDataSource: NetworkDataSource,
     private val stubDataSource: StubDataSource,
     private val activeDataSource: ThisApp.ActiveDataSource
-) : VehiclesRepository {
+) : VehiclesRepositoryContract {
 
     override val mainDataStorage = MutableLiveData<MutableMap<String, VehicleRecord>>()
 

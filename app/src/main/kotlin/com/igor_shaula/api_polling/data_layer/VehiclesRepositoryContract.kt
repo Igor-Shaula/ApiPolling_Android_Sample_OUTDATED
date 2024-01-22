@@ -2,7 +2,7 @@ package com.igor_shaula.api_polling.data_layer
 
 import androidx.lifecycle.MutableLiveData
 
-interface VehiclesRepository {
+interface VehiclesRepositoryContract {
 
     val mainDataStorage: MutableLiveData<MutableMap<String, VehicleRecord>>
 
