@@ -134,7 +134,8 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
 
     fun onReadyToUseStubData() {
         stopGettingVehiclesDetails() // to avoid any possible resource leaks if this one still works
-        repository = ThisApp.switchActiveDataSource(ThisApp.DataSourceType.STUB) // must be a new value - with stub data
+        repository =
+            ThisApp.switchActiveDataSource(ThisApp.ActiveDataSource.STUB) // must be a new value - with stub data
     }
 
     fun clearPreviousStubDataSelection() {
@@ -145,11 +146,12 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
             getApplication<ThisApp>().saveNeedStubDialogToLocalPrefs(false)
         }
         coroutineScope.cancel()
-        repository = ThisApp.switchActiveDataSource(ThisApp.DataSourceType.NETWORK)
+        repository = ThisApp.switchActiveDataSource(ThisApp.ActiveDataSource.NETWORK)
     }
 }
 
-class RepositoryProperty(private val observer: Observer<MutableMap<String, VehicleRecord>>) : ReadWriteProperty<Any, AbstractVehiclesRepository> {
+class RepositoryProperty(private val observer: Observer<MutableMap<String, VehicleRecord>>) :
+    ReadWriteProperty<Any, AbstractVehiclesRepository> {
 
     private lateinit var repository: AbstractVehiclesRepository
     override fun getValue(thisRef: Any, property: KProperty<*>): AbstractVehiclesRepository {

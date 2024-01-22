@@ -40,18 +40,20 @@ class ThisApp : Application() {
         }
     }
 
-    enum class DataSourceType {
+    enum class ActiveDataSource {
         NETWORK, STUB
     }
 
     companion object {
 
-        private val networkDataRepository: NetworkDataSource by lazy {
-            NetworkDataSource()
+        private val networkDataRepository: AbstractVehiclesRepository by lazy {
+            AbstractVehiclesRepository(
+                NetworkDataSource(), StubDataSource(), ActiveDataSource.NETWORK
+            )
         }
 
-        private val stubDataRepository: StubDataSource by lazy {
-            StubDataSource()
+        private val stubDataRepository: AbstractVehiclesRepository by lazy {
+            AbstractVehiclesRepository(NetworkDataSource(), StubDataSource(), ActiveDataSource.STUB)
         }
 
         private lateinit var currentRepository: AbstractVehiclesRepository
@@ -66,10 +68,10 @@ class ThisApp : Application() {
         /**
          * Switches the DataSource for the VehiclesRepository between Network and Stub
          */
-        fun switchActiveDataSource(type: DataSourceType): AbstractVehiclesRepository {
+        fun switchActiveDataSource(type: ActiveDataSource): AbstractVehiclesRepository {
             currentRepository = when (type) {
-                DataSourceType.STUB -> stubDataRepository
-                DataSourceType.NETWORK -> networkDataRepository
+                ActiveDataSource.STUB -> stubDataRepository
+                ActiveDataSource.NETWORK -> networkDataRepository
             }
             return currentRepository
         }

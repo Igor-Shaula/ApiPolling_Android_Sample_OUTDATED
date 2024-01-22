@@ -1,6 +1,9 @@
 package com.igor_shaula.api_polling.data_layer
 
 import androidx.lifecycle.MutableLiveData
+import com.igor_shaula.api_polling.ThisApp
+import com.igor_shaula.api_polling.data_layer.network_data_source.NetworkDataSource
+import com.igor_shaula.api_polling.data_layer.stub_data_source.StubDataSource
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -10,7 +13,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import timber.log.Timber
 
-abstract class AbstractVehiclesRepository : VehiclesRepository {
+class AbstractVehiclesRepository(
+    private val networkDataSource: NetworkDataSource,
+    private val stubDataSource: StubDataSource,
+    private val activeDataSource: ThisApp.ActiveDataSource
+) : VehiclesRepository {
 
     override val mainDataStorage = MutableLiveData<MutableMap<String, VehicleRecord>>()
 
@@ -71,9 +78,19 @@ abstract class AbstractVehiclesRepository : VehiclesRepository {
         return detectNumberOfNearVehicles(vehicleRecordsList)
     }
 
-    protected abstract suspend fun readVehiclesList(): List<VehicleRecord>
+    private suspend fun readVehiclesList(): List<VehicleRecord> =
+        if (activeDataSource == ThisApp.ActiveDataSource.NETWORK) {
+            networkDataSource.readVehiclesList()
+        } else {
+            stubDataSource.readVehiclesList()
+        }
 
-    protected abstract suspend fun readVehicleDetails(vehicleId: String): VehicleDetailsRecord?
+    private suspend fun readVehicleDetails(vehicleId: String): VehicleDetailsRecord? =
+        if (activeDataSource == ThisApp.ActiveDataSource.NETWORK) {
+            networkDataSource.readVehicleDetails(vehicleId) // may be nullable due to Retrofit
+        } else {
+            stubDataSource.readVehicleDetails(vehicleId)
+        }
 
     private suspend fun getAllDetailsForOneVehicle(
         vehicleId: String, updateViewModel: (String, VehicleDetailsRecord) -> Unit
