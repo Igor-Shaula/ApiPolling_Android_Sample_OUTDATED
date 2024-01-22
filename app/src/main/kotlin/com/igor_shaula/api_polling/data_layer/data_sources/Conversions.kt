@@ -1,4 +1,4 @@
-package com.igor_shaula.api_polling.data_layer.network_data_source
+package com.igor_shaula.api_polling.data_layer.data_sources
 
 import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.data_layer.VehicleRecord

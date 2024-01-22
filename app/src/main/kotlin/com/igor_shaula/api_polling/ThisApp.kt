@@ -9,8 +9,8 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import com.igor_shaula.api_polling.data_layer.VehiclesRepository
-import com.igor_shaula.api_polling.data_layer.network_data_source.NetworkDataSource
-import com.igor_shaula.api_polling.data_layer.stub_data_source.StubDataSource
+import com.igor_shaula.api_polling.data_layer.data_sources.NetworkDataSource
+import com.igor_shaula.api_polling.data_layer.data_sources.StubDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import timber.log.Timber

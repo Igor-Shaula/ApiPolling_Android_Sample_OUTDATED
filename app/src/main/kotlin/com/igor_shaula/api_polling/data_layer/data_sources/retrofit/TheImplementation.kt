@@ -1,8 +1,8 @@
-package com.igor_shaula.api_polling.data_layer.network_data_source.retrofit
+package com.igor_shaula.api_polling.data_layer.data_sources.retrofit
 
-import com.igor_shaula.api_polling.data_layer.network_data_source.API_BASE_URL
-import com.igor_shaula.api_polling.data_layer.network_data_source.VehicleDetailsModel
-import com.igor_shaula.api_polling.data_layer.network_data_source.VehicleModel
+import com.igor_shaula.api_polling.data_layer.data_sources.API_BASE_URL
+import com.igor_shaula.api_polling.data_layer.data_sources.VehicleDetailsModel
+import com.igor_shaula.api_polling.data_layer.data_sources.VehicleModel
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber

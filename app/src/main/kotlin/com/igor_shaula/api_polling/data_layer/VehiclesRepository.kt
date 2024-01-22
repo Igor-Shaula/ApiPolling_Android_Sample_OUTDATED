@@ -2,8 +2,8 @@ package com.igor_shaula.api_polling.data_layer
 
 import androidx.lifecycle.MutableLiveData
 import com.igor_shaula.api_polling.ThisApp
-import com.igor_shaula.api_polling.data_layer.network_data_source.NetworkDataSource
-import com.igor_shaula.api_polling.data_layer.stub_data_source.StubDataSource
+import com.igor_shaula.api_polling.data_layer.data_sources.NetworkDataSource
+import com.igor_shaula.api_polling.data_layer.data_sources.StubDataSource
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
