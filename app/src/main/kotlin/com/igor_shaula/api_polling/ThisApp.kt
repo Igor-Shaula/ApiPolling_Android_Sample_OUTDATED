@@ -9,7 +9,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import com.igor_shaula.api_polling.data_layer.AbstractVehiclesRepository
-import com.igor_shaula.api_polling.data_layer.network_data_source.NetworkRepositoryImpl
+import com.igor_shaula.api_polling.data_layer.network_data_source.NetworkDataSource
 import com.igor_shaula.api_polling.data_layer.stub_data_source.StubDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -46,8 +46,8 @@ class ThisApp : Application() {
 
     companion object {
 
-        private val networkDataRepository: NetworkRepositoryImpl by lazy {
-            NetworkRepositoryImpl()
+        private val networkDataRepository: NetworkDataSource by lazy {
+            NetworkDataSource()
         }
 
         private val stubDataRepository: StubDataSource by lazy {
@@ -71,7 +71,7 @@ class ThisApp : Application() {
                 DataSourceType.STUB -> stubDataRepository
                 DataSourceType.NETWORK -> networkDataRepository
             }
-            return currentRepository;
+            return currentRepository
         }
     }
 }
