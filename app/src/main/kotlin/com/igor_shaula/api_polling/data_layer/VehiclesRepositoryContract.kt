@@ -10,12 +10,11 @@ interface VehiclesRepositoryContract {
     suspend fun launchGetAllVehicleIdsRequest(toggleMainBusyState: (Boolean) -> Unit)
 
     suspend fun startGettingVehiclesDetails(
-        vehiclesMap: MutableMap<String, VehicleRecord>?,
         updateViewModel: (String, VehicleDetailsRecord) -> Unit,
         toggleBusyStateFor: (String, Boolean) -> Unit
     )
 
     fun stopGettingVehiclesDetails()
 
-    fun getNumberOfNearVehicles(vehiclesMap: MutableMap<String, VehicleRecord>?): Int
+    fun getNumberOfNearVehicles(): Int
 }

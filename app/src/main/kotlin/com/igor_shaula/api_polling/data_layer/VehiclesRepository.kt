@@ -23,6 +23,11 @@ class VehiclesRepository(
 
     override val mainDataStorage = MutableLiveData<MutableMap<String, VehicleRecord>>()
 
+//    val data: Flow<Map.Entry<String, VehicleRecord>>
+//        get() {
+//            TODO()
+//        }
+
     private var pollingEngine: PollingEngine? = null
 
     private lateinit var coroutineScope: CoroutineScope // lateinit is not dangerous here
@@ -50,13 +55,12 @@ class VehiclesRepository(
     }
 
     override suspend fun startGettingVehiclesDetails(
-        vehiclesMap: MutableMap<String, VehicleRecord>?,
         updateViewModel: (String, VehicleDetailsRecord) -> Unit,
         toggleBusyStateFor: (String, Boolean) -> Unit
     ) {
-        vehiclesMap?.let {
+        mainDataStorage.value?.let {
             preparePollingEngine(it.size)
-            vehiclesMap.forEach { (key, _) ->
+            it.forEach { (key, _) ->
                 pollingEngine?.launch(DEFAULT_POLLING_INTERVAL) {
                     if (!coroutineScope.isActive) {
                         createThisCoroutineScope()
@@ -75,8 +79,8 @@ class VehiclesRepository(
         coroutineScope.cancel()
     }
 
-    override fun getNumberOfNearVehicles(vehiclesMap: MutableMap<String, VehicleRecord>?): Int {
-        val vehicleRecordsList = vehiclesMap?.toList()?.toVehicleRecordList()
+    override fun getNumberOfNearVehicles(): Int {
+        val vehicleRecordsList = mainDataStorage.value?.toList()?.toVehicleRecordList()
         return detectNumberOfNearVehicles(vehicleRecordsList)
     }
 

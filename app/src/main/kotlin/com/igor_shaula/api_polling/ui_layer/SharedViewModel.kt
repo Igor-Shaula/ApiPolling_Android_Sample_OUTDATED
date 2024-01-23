@@ -6,10 +6,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.igor_shaula.api_polling.ThisApp
-import com.igor_shaula.api_polling.data_layer.VehiclesRepository
 import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
 import com.igor_shaula.api_polling.data_layer.VehicleStatus
+import com.igor_shaula.api_polling.data_layer.VehiclesRepository
 import com.igor_shaula.api_polling.data_layer.detectVehicleStatus
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Dispatchers
@@ -75,9 +75,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
 
     fun startGettingVehiclesDetails() {
         coroutineScope.launch {
-            repository.startGettingVehiclesDetails(
-                mutableVehiclesMap.value, ::updateTheViewModel, ::toggleBusyStateFor
-            )
+            repository.startGettingVehiclesDetails(::updateTheViewModel, ::toggleBusyStateFor)
         }
     }
 
@@ -85,7 +83,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         repository.stopGettingVehiclesDetails()
     }
 
-    fun getNumberOfNearVehicles() = repository.getNumberOfNearVehicles(mutableVehiclesMap.value)
+    fun getNumberOfNearVehicles() = repository.getNumberOfNearVehicles()
 
     fun getNumberOfAllVehicles() = mutableVehiclesMap.value?.size
 
