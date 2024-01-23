@@ -35,10 +35,6 @@ class VehiclesRepository(
         createThisCoroutineScope()
     }
 
-    private fun createThisCoroutineScope() {
-        coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
-    }
-
     override suspend fun launchGetAllVehicleIdsRequest(toggleMainBusyState: (Boolean) -> Unit) {
         toggleMainBusyState.invoke(true)
         val result = readVehiclesList()
@@ -85,6 +81,12 @@ class VehiclesRepository(
 
     override fun getNumberOfAllVehicles(): Int = mainDataStorage.value?.size ?: 0
 
+    // region private methods
+
+    private fun createThisCoroutineScope() {
+        coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
+    }
+
     private suspend fun readVehiclesList(): List<VehicleRecord> =
         if (activeDataSource == ThisApp.ActiveDataSource.NETWORK) {
             networkDataSource.readVehiclesList()
@@ -92,12 +94,9 @@ class VehiclesRepository(
             stubDataSource.readVehiclesList()
         }
 
-    private suspend fun readVehicleDetails(vehicleId: String): VehicleDetailsRecord? =
-        if (activeDataSource == ThisApp.ActiveDataSource.NETWORK) {
-            networkDataSource.readVehicleDetails(vehicleId) // may be nullable due to Retrofit
-        } else {
-            stubDataSource.readVehicleDetails(vehicleId)
-        }
+    private fun preparePollingEngine(size: Int) {
+        pollingEngine = JavaTPEBasedPollingEngine.prepare(size)
+    }
 
     private suspend fun getAllDetailsForOneVehicle(
         vehicleId: String, updateViewModel: (String, VehicleDetailsRecord) -> Unit
@@ -109,7 +108,12 @@ class VehiclesRepository(
         }
     }
 
-    private fun preparePollingEngine(size: Int) {
-        pollingEngine = JavaTPEBasedPollingEngine.prepare(size)
-    }
+    private suspend fun readVehicleDetails(vehicleId: String): VehicleDetailsRecord? =
+        if (activeDataSource == ThisApp.ActiveDataSource.NETWORK) {
+            networkDataSource.readVehicleDetails(vehicleId) // may be nullable due to Retrofit
+        } else {
+            stubDataSource.readVehicleDetails(vehicleId)
+        }
+
+    // endregion private methods
 }
