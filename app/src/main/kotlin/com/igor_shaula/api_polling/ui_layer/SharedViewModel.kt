@@ -85,7 +85,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
 
     fun getNumberOfNearVehicles() = repository.getNumberOfNearVehicles()
 
-    fun getNumberOfAllVehicles() = mutableVehiclesMap.value?.size
+    fun getNumberOfAllVehicles() = repository.getNumberOfAllVehicles()
 
     private fun processAlternativesForGettingData() {
         if (firstTimeLaunched) { // during the first launch showing dialog is not needed

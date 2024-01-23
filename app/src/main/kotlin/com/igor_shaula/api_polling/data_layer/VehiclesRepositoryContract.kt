@@ -17,4 +17,6 @@ interface VehiclesRepositoryContract {
     fun stopGettingVehiclesDetails()
 
     fun getNumberOfNearVehicles(): Int
+
+    fun getNumberOfAllVehicles(): Int
 }

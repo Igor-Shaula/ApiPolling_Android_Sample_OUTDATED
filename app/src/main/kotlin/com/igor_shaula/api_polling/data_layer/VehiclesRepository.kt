@@ -84,6 +84,8 @@ class VehiclesRepository(
         return detectNumberOfNearVehicles(vehicleRecordsList)
     }
 
+    override fun getNumberOfAllVehicles(): Int = mainDataStorage.value?.size ?: 0
+
     private suspend fun readVehiclesList(): List<VehicleRecord> =
         if (activeDataSource == ThisApp.ActiveDataSource.NETWORK) {
             networkDataSource.readVehiclesList()
