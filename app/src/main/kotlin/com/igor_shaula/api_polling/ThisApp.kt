@@ -8,9 +8,10 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
-import com.igor_shaula.api_polling.data_layer.AbstractVehiclesRepository
-import com.igor_shaula.api_polling.data_layer.network.NetworkRepositoryImpl
-import com.igor_shaula.api_polling.data_layer.stub_source.StubRepositoryImpl
+import com.igor_shaula.api_polling.data_layer.VehiclesRepository
+import com.igor_shaula.api_polling.data_layer.data_sources.NetworkDataSource
+import com.igor_shaula.api_polling.data_layer.data_sources.StubDataSource
+import com.igor_shaula.api_polling.data_layer.data_sources.retrofit.VehicleRetrofitNetworkServiceImpl
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
@@ -40,36 +41,48 @@ class ThisApp : Application() {
         }
     }
 
-
-    enum class RepositoryType {
+    enum class ActiveDataSource {
         NETWORK, STUB
     }
 
     companion object {
-        private val networkRepo: NetworkRepositoryImpl by lazy {
-            NetworkRepositoryImpl()
-        }
-        private val stubRepo: StubRepositoryImpl by lazy {
-            StubRepositoryImpl()
-        }
-        private lateinit var currRepo: AbstractVehiclesRepository
 
-        fun getRepository() : AbstractVehiclesRepository {
-            if (!this::currRepo.isInitialized) {
-                currRepo = networkRepo;
+// TODO: current solution is TEMPORARY - later move all DataSource usage logic into the Repository level
+
+        private val networkDataRepository: VehiclesRepository by lazy {
+            VehiclesRepository(
+                NetworkDataSource(VehicleRetrofitNetworkServiceImpl()),
+                StubDataSource(),
+                ActiveDataSource.NETWORK
+            )
+        }
+
+        private val stubDataRepository: VehiclesRepository by lazy {
+            VehiclesRepository(
+                NetworkDataSource(VehicleRetrofitNetworkServiceImpl()),
+                StubDataSource(),
+                ActiveDataSource.STUB
+            )
+        }
+
+        private lateinit var currentRepository: VehiclesRepository
+
+        fun getRepository(): VehiclesRepository {
+            if (!this::currentRepository.isInitialized) {
+                currentRepository = networkDataRepository
             }
-            return currRepo;
+            return currentRepository
         }
 
         /**
-         * Switches the Repository impl between Network and Stub
+         * Switches the DataSource for the VehiclesRepository between Network and Stub
          */
-        fun switchRepositoryBy(type: RepositoryType) : AbstractVehiclesRepository {
-            currRepo = when(type) {
-                RepositoryType.STUB -> stubRepo
-                RepositoryType.NETWORK -> networkRepo
+        fun switchActiveDataSource(type: ActiveDataSource): VehiclesRepository {
+            currentRepository = when (type) {
+                ActiveDataSource.STUB -> stubDataRepository
+                ActiveDataSource.NETWORK -> networkDataRepository
             }
-            return currRepo;
+            return currentRepository
         }
     }
 }

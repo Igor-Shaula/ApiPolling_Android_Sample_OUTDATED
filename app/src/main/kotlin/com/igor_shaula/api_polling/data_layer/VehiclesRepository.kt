@@ -1,20 +1,110 @@
 package com.igor_shaula.api_polling.data_layer
 
 import androidx.lifecycle.MutableLiveData
+import com.igor_shaula.api_polling.ThisApp
+import com.igor_shaula.api_polling.data_layer.data_sources.NetworkDataSource
+import com.igor_shaula.api_polling.data_layer.data_sources.StubDataSource
+import com.igor_shaula.api_polling.data_layer.polling_engines.JavaTPEBasedPollingEngine
+import com.igor_shaula.api_polling.data_layer.polling_engines.PollingEngine
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
+import timber.log.Timber
 
-interface VehiclesRepository {
+class VehiclesRepository(
+    private val networkDataSource: NetworkDataSource,
+    private val stubDataSource: StubDataSource,
+    private val activeDataSource: ThisApp.ActiveDataSource
+) : VehiclesRepositoryContract {
 
-    val mainDataStorage: MutableLiveData<MutableMap<String, VehicleRecord>>
+    override val mainDataStorage = MutableLiveData<MutableMap<String, VehicleRecord>>()
 
-    suspend fun launchGetAllVehicleIdsRequest(toggleMainBusyState: (Boolean) -> Unit)
+    private var pollingEngine: PollingEngine? = null
 
-    suspend fun startGettingVehiclesDetails(
+    private lateinit var coroutineScope: CoroutineScope // lateinit is not dangerous here
+
+    init {
+        createThisCoroutineScope()
+    }
+
+    private fun createThisCoroutineScope() {
+        coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
+    }
+
+    override suspend fun launchGetAllVehicleIdsRequest(toggleMainBusyState: (Boolean) -> Unit) {
+        toggleMainBusyState.invoke(true)
+        val result = readVehiclesList()
+            .also { Timber.v("launchGetAllVehicleIdsRequest() -> readVehiclesList() = $it") }
+            .associateBy(
+                { it.vehicleId },
+                { VehicleRecord(it.vehicleId, it.vehicleStatus) })
+            .toMutableMap()
+            .also { Timber.v("launchGetAllVehicleIdsRequest() -> MutableMap = $it") }
+        mainDataStorage.value = result
+        toggleMainBusyState.invoke(false)
+        Timber.v("launchGetAllVehicleIdsRequest() -> mainDataStorage.value = ${mainDataStorage.value}")
+    }
+
+    override suspend fun startGettingVehiclesDetails(
         vehiclesMap: MutableMap<String, VehicleRecord>?,
         updateViewModel: (String, VehicleDetailsRecord) -> Unit,
         toggleBusyStateFor: (String, Boolean) -> Unit
-    )
+    ) {
+        vehiclesMap?.let {
+            preparePollingEngine(it.size)
+            vehiclesMap.forEach { (key, _) ->
+                pollingEngine?.launch(DEFAULT_POLLING_INTERVAL) {
+                    if (!coroutineScope.isActive) {
+                        createThisCoroutineScope()
+                    }
+                    coroutineScope.launch {
+                        toggleBusyStateFor(key, true)
+                        getAllDetailsForOneVehicle(key, updateViewModel)
+                    }
+                }
+            }
+        }
+    }
 
-    fun stopGettingVehiclesDetails()
+    override fun stopGettingVehiclesDetails() {
+        pollingEngine?.stopAndClearItself()
+        coroutineScope.cancel()
+    }
 
-    fun getNumberOfNearVehicles(vehiclesMap: MutableMap<String, VehicleRecord>?): Int
+    override fun getNumberOfNearVehicles(vehiclesMap: MutableMap<String, VehicleRecord>?): Int {
+        val vehicleRecordsList = vehiclesMap?.toList()?.toVehicleRecordList()
+        return detectNumberOfNearVehicles(vehicleRecordsList)
+    }
+
+    private suspend fun readVehiclesList(): List<VehicleRecord> =
+        if (activeDataSource == ThisApp.ActiveDataSource.NETWORK) {
+            networkDataSource.readVehiclesList()
+        } else {
+            stubDataSource.readVehiclesList()
+        }
+
+    private suspend fun readVehicleDetails(vehicleId: String): VehicleDetailsRecord? =
+        if (activeDataSource == ThisApp.ActiveDataSource.NETWORK) {
+            networkDataSource.readVehicleDetails(vehicleId) // may be nullable due to Retrofit
+        } else {
+            stubDataSource.readVehicleDetails(vehicleId)
+        }
+
+    private suspend fun getAllDetailsForOneVehicle(
+        vehicleId: String, updateViewModel: (String, VehicleDetailsRecord) -> Unit
+    ) {
+        val vehicleDetails = readVehicleDetails(vehicleId)
+        Timber.d("vehicleDetails = $vehicleDetails")
+        if (vehicleDetails != null) {
+            updateViewModel(vehicleId, vehicleDetails)
+        }
+    }
+
+    private fun preparePollingEngine(size: Int) {
+        pollingEngine = JavaTPEBasedPollingEngine.prepare(size)
+    }
 }

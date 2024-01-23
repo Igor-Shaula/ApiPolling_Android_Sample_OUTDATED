@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.igor_shaula.api_polling.ThisApp
-import com.igor_shaula.api_polling.data_layer.AbstractVehiclesRepository
+import com.igor_shaula.api_polling.data_layer.VehiclesRepository
 import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
 import com.igor_shaula.api_polling.data_layer.VehicleStatus
@@ -48,7 +48,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         getAllVehiclesJob = null
     }
 
-    private var repository: AbstractVehiclesRepository by RepositoryProperty(repositoryObserver)
+    private var repository: VehiclesRepository by RepositoryProperty(repositoryObserver)
 
     private val coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
 
@@ -134,7 +134,8 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
 
     fun onReadyToUseStubData() {
         stopGettingVehiclesDetails() // to avoid any possible resource leaks if this one still works
-        repository = ThisApp.switchRepositoryBy(ThisApp.RepositoryType.STUB) // must be a new value - with stub data
+        repository =
+            ThisApp.switchActiveDataSource(ThisApp.ActiveDataSource.STUB) // must be a new value - with stub data
     }
 
     fun clearPreviousStubDataSelection() {
@@ -145,14 +146,15 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
             getApplication<ThisApp>().saveNeedStubDialogToLocalPrefs(false)
         }
         coroutineScope.cancel()
-        repository = ThisApp.switchRepositoryBy(ThisApp.RepositoryType.NETWORK)
+        repository = ThisApp.switchActiveDataSource(ThisApp.ActiveDataSource.NETWORK)
     }
 }
 
-class RepositoryProperty(private val observer: Observer<MutableMap<String, VehicleRecord>>) : ReadWriteProperty<Any, AbstractVehiclesRepository> {
+class RepositoryProperty(private val observer: Observer<MutableMap<String, VehicleRecord>>) :
+    ReadWriteProperty<Any, VehiclesRepository> {
 
-    private lateinit var repository: AbstractVehiclesRepository
-    override fun getValue(thisRef: Any, property: KProperty<*>): AbstractVehiclesRepository {
+    private lateinit var repository: VehiclesRepository
+    override fun getValue(thisRef: Any, property: KProperty<*>): VehiclesRepository {
         if (!this::repository.isInitialized) {
             repository = ThisApp.getRepository()
             repository.mainDataStorage.observeForever(observer)
@@ -160,7 +162,7 @@ class RepositoryProperty(private val observer: Observer<MutableMap<String, Vehic
         return repository
     }
 
-    override fun setValue(thisRef: Any, property: KProperty<*>, value: AbstractVehiclesRepository) {
+    override fun setValue(thisRef: Any, property: KProperty<*>, value: VehiclesRepository) {
         if (this::repository.isInitialized) {
             repository.mainDataStorage.removeObserver(observer)
         }

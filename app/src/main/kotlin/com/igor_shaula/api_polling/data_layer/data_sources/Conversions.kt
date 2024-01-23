@@ -1,15 +1,8 @@
-package com.igor_shaula.api_polling.data_layer
+package com.igor_shaula.api_polling.data_layer.data_sources
 
-import com.igor_shaula.api_polling.data_layer.network.VehicleDetailsModel
-import com.igor_shaula.api_polling.data_layer.network.VehicleModel
-
-fun List<Pair<String, VehicleRecord>>.toVehicleRecordList(): List<VehicleRecord> {
-    val result = mutableListOf<VehicleRecord>()
-    this.forEach {
-        result.add(it.second)
-    }
-    return result
-}
+import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
+import com.igor_shaula.api_polling.data_layer.VehicleRecord
+import com.igor_shaula.api_polling.data_layer.VehicleStatus
 
 fun List<VehicleModel>?.toVehicleItemRecords(): List<VehicleRecord> {
     val result = mutableListOf<VehicleRecord>()
