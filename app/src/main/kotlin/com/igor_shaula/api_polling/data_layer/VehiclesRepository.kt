@@ -18,7 +18,8 @@ import timber.log.Timber
 class VehiclesRepository(
     private val networkDataSource: NetworkDataSource,
     private val stubDataSource: StubDataSource,
-    private val activeDataSource: ThisApp.ActiveDataSource
+    private val activeDataSource: ThisApp.ActiveDataSource,
+    private var pollingEngine: PollingEngine? = null
 ) : VehiclesRepositoryContract {
 
     override val mainDataStorage = MutableLiveData<MutableMap<String, VehicleRecord>>()
@@ -27,8 +28,6 @@ class VehiclesRepository(
 //        get() {
 //            TODO()
 //        }
-
-    private var pollingEngine: PollingEngine? = null
 
     private lateinit var coroutineScope: CoroutineScope // lateinit is not dangerous here
 
