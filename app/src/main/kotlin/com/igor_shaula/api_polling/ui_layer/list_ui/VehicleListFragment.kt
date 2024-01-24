@@ -228,6 +228,8 @@ class VehicleListFragment : Fragment() {
     }
 
     private fun adjustTheBottomButton() {
+        binding.acivAlertIcon.setImageResource(R.drawable.ic_launcher_foreground)
+        binding.actvErrorStatePhrase.text = getString(R.string.error_state_stub_ready_text)
         binding.acbRepeatInitialRequest.text = getString(R.string.error_state_use_stub_text)
     }
 
