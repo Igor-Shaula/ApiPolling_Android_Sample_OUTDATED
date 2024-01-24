@@ -114,6 +114,9 @@ class VehicleListFragment : Fragment() {
         viewModel.timeToShowGeneralBusyState.observe(viewLifecycleOwner) { show ->
             showCentralBusyState(show)
         }
+        viewModel.timeToAdjustForStubData.observe(viewLifecycleOwner) {
+            adjustTheBottomButton()
+        }
     }
 
     override fun onResume() {
@@ -222,6 +225,10 @@ class VehicleListFragment : Fragment() {
 
     private fun showCentralBusyState(isBusy: Boolean) {
         binding.pbCentral.isVisible = isBusy
+    }
+
+    private fun adjustTheBottomButton() {
+        binding.acbRepeatInitialRequest.text = getString(R.string.error_state_use_stub_text)
     }
 
     // endregion work with the rest of UI

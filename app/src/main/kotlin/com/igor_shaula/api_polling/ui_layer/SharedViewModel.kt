@@ -39,6 +39,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     val timeToUpdateVehicleStatus = MutableLiveData<Unit>()
     val timeToShowGeneralBusyState = MutableLiveData<Boolean>()
     val timeToShowStubDataProposal = MutableLiveData<Boolean>()
+    val timeToAdjustForStubData = MutableLiveData<Unit>()
 
     private val repositoryObserver: Observer<MutableMap<String, VehicleRecord>> = Observer {
         mutableVehiclesMap.value = it
@@ -134,6 +135,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         stopGettingVehiclesDetails() // to avoid any possible resource leaks if this one still works
         repository =
             ThisApp.switchActiveDataSource(ThisApp.ActiveDataSource.STUB) // must be a new value - with stub data
+        timeToAdjustForStubData.value = Unit
     }
 
     fun clearPreviousStubDataSelection() {
