@@ -114,7 +114,6 @@ class VehicleListFragment : Fragment() {
         viewModel.timeToShowGeneralBusyState.observe(viewLifecycleOwner) { show ->
             showCentralBusyState(show)
         }
-        binding.groupWithAbsentList.isVisible = true
     }
 
     override fun onResume() {
@@ -211,7 +210,7 @@ class VehicleListFragment : Fragment() {
     }
 
     private fun hideErrorViewsDuringFirstRequest() {
-        binding.acivAlert.isVisible = false
+        binding.acivAlertIcon.isVisible = false
         binding.actvErrorStatePhrase.isVisible = false
         binding.acbLaunchInitialRequest.isEnabled = false
     }
