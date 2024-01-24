@@ -18,21 +18,21 @@ import timber.log.Timber
 class VehiclesRepository(
     private val networkDataSource: NetworkDataSource,
     private val stubDataSource: StubDataSource,
-    private val activeDataSource: ThisApp.ActiveDataSource
+    private val activeDataSource: ThisApp.ActiveDataSource,
+    private var pollingEngine: PollingEngine? = null
 ) : VehiclesRepositoryContract {
 
     override val mainDataStorage = MutableLiveData<MutableMap<String, VehicleRecord>>()
 
-    private var pollingEngine: PollingEngine? = null
+//    val data: Flow<Map.Entry<String, VehicleRecord>>
+//        get() {
+//            TODO()
+//        }
 
     private lateinit var coroutineScope: CoroutineScope // lateinit is not dangerous here
 
     init {
         createThisCoroutineScope()
-    }
-
-    private fun createThisCoroutineScope() {
-        coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
     }
 
     override suspend fun launchGetAllVehicleIdsRequest(toggleMainBusyState: (Boolean) -> Unit) {
@@ -50,13 +50,12 @@ class VehiclesRepository(
     }
 
     override suspend fun startGettingVehiclesDetails(
-        vehiclesMap: MutableMap<String, VehicleRecord>?,
         updateViewModel: (String, VehicleDetailsRecord) -> Unit,
         toggleBusyStateFor: (String, Boolean) -> Unit
     ) {
-        vehiclesMap?.let {
+        mainDataStorage.value?.let {
             preparePollingEngine(it.size)
-            vehiclesMap.forEach { (key, _) ->
+            it.forEach { (key, _) ->
                 pollingEngine?.launch(DEFAULT_POLLING_INTERVAL) {
                     if (!coroutineScope.isActive) {
                         createThisCoroutineScope()
@@ -75,9 +74,17 @@ class VehiclesRepository(
         coroutineScope.cancel()
     }
 
-    override fun getNumberOfNearVehicles(vehiclesMap: MutableMap<String, VehicleRecord>?): Int {
-        val vehicleRecordsList = vehiclesMap?.toList()?.toVehicleRecordList()
+    override fun getNumberOfNearVehicles(): Int {
+        val vehicleRecordsList = mainDataStorage.value?.toList()?.toVehicleRecordList()
         return detectNumberOfNearVehicles(vehicleRecordsList)
+    }
+
+    override fun getNumberOfAllVehicles(): Int = mainDataStorage.value?.size ?: 0
+
+    // region private methods
+
+    private fun createThisCoroutineScope() {
+        coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
     }
 
     private suspend fun readVehiclesList(): List<VehicleRecord> =
@@ -87,12 +94,9 @@ class VehiclesRepository(
             stubDataSource.readVehiclesList()
         }
 
-    private suspend fun readVehicleDetails(vehicleId: String): VehicleDetailsRecord? =
-        if (activeDataSource == ThisApp.ActiveDataSource.NETWORK) {
-            networkDataSource.readVehicleDetails(vehicleId) // may be nullable due to Retrofit
-        } else {
-            stubDataSource.readVehicleDetails(vehicleId)
-        }
+    private fun preparePollingEngine(size: Int) {
+        pollingEngine = JavaTPEBasedPollingEngine.prepare(size)
+    }
 
     private suspend fun getAllDetailsForOneVehicle(
         vehicleId: String, updateViewModel: (String, VehicleDetailsRecord) -> Unit
@@ -104,7 +108,12 @@ class VehiclesRepository(
         }
     }
 
-    private fun preparePollingEngine(size: Int) {
-        pollingEngine = JavaTPEBasedPollingEngine.prepare(size)
-    }
+    private suspend fun readVehicleDetails(vehicleId: String): VehicleDetailsRecord? =
+        if (activeDataSource == ThisApp.ActiveDataSource.NETWORK) {
+            networkDataSource.readVehicleDetails(vehicleId) // may be nullable due to Retrofit
+        } else {
+            stubDataSource.readVehicleDetails(vehicleId)
+        }
+
+    // endregion private methods
 }
