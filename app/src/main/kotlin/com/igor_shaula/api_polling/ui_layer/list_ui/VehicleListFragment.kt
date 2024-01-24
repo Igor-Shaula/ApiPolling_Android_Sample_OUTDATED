@@ -32,10 +32,7 @@ class VehicleListFragment : Fragment() {
 
     private lateinit var rvAdapter: VehicleListAdapter
 
-    private val animatedStringProgress: AnimatedStringProgress by lazy {
-        Timber.v("lazy animatedStringProgress init")
-        AnimatedStringProgress(binding.acbLaunchInitialRequest)
-    }
+    private var animatedStringProgress: AnimatedStringProgress? = null
 
     // region standard lifecycle androidx.fragment.app.Fragment callbacks
 
@@ -102,7 +99,7 @@ class VehicleListFragment : Fragment() {
         super.onStart()
         Timber.v("onStart - 10")
         viewModel.vehiclesMap.observe(viewLifecycleOwner) { thisMap ->
-            animatedStringProgress.stopShowingDynamicDottedText()
+            animatedStringProgress?.stopShowingDynamicDottedText()
             prepareUIForListWithDetails(thisMap.toList())
         }
         viewModel.timeToUpdateVehicleStatus.observe(viewLifecycleOwner) {
@@ -127,11 +124,13 @@ class VehicleListFragment : Fragment() {
             else viewModel.stopGettingVehiclesDetails()
         }
         binding.acbLaunchInitialRequest.setOnClickListener {
-            animatedStringProgress.startShowing5DynamicDots()
+            animatedStringProgress = AnimatedStringProgress(binding.acbLaunchInitialRequest)
+            animatedStringProgress?.startShowing5DynamicDots()
             viewModel.getAllVehiclesIds()
         }
         binding.acbRepeatInitialRequest.setOnClickListener {
-            animatedStringProgress.startShowing5DynamicDots()
+            animatedStringProgress = AnimatedStringProgress(binding.acbRepeatInitialRequest)
+            animatedStringProgress?.startShowing5DynamicDots()
             viewModel.getAllVehiclesIds()
             hideErrorViewsDuringAnotherTryAttempt()
         }
