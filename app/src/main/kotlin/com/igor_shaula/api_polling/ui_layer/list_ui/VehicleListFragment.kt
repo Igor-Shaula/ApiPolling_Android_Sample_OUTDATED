@@ -126,7 +126,11 @@ class VehicleListFragment : Fragment() {
         binding.acbLaunchInitialRequest.setOnClickListener {
             animatedStringProgress.startShowing5DynamicDots()
             viewModel.getAllVehiclesIds()
-            hideErrorViewsDuringFirstRequest()
+        }
+        binding.acbRepeatInitialRequest.setOnClickListener {
+            animatedStringProgress.startShowing5DynamicDots()
+            viewModel.getAllVehiclesIds()
+            hideErrorViewsDuringAnotherTryAttempt()
         }
     }
 
@@ -196,10 +200,11 @@ class VehicleListFragment : Fragment() {
     }
 
     private fun prepareUIForListWithDetails(list: List<Pair<String, VehicleRecord>>) {
+        binding.groupInitial.isVisible = false
         if (list.isEmpty()) {
             binding.groupWithProperList.isVisible = false
             binding.groupWithAbsentList.isVisible = true
-            binding.acbLaunchInitialRequest.isEnabled = true
+            binding.acbRepeatInitialRequest.isEnabled = true
         } else {
             binding.groupWithProperList.isVisible = true
             binding.groupWithAbsentList.isVisible = false
@@ -209,10 +214,10 @@ class VehicleListFragment : Fragment() {
         }
     }
 
-    private fun hideErrorViewsDuringFirstRequest() {
+    private fun hideErrorViewsDuringAnotherTryAttempt() {
         binding.acivAlertIcon.isVisible = false
         binding.actvErrorStatePhrase.isVisible = false
-        binding.acbLaunchInitialRequest.isEnabled = false
+        binding.acbRepeatInitialRequest.isEnabled = false
     }
 
     private fun showCentralBusyState(isBusy: Boolean) {
