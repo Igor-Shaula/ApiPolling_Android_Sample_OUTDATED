@@ -32,10 +32,7 @@ class VehicleListFragment : Fragment() {
 
     private lateinit var rvAdapter: VehicleListAdapter
 
-    private val animatedStringProgress: AnimatedStringProgress by lazy {
-        Timber.v("lazy animatedStringProgress init")
-        AnimatedStringProgress(binding.acbLaunchInitialRequest)
-    }
+    private var animatedStringProgress: AnimatedStringProgress? = null
 
     // region standard lifecycle androidx.fragment.app.Fragment callbacks
 
@@ -102,7 +99,7 @@ class VehicleListFragment : Fragment() {
         super.onStart()
         Timber.v("onStart - 10")
         viewModel.vehiclesMap.observe(viewLifecycleOwner) { thisMap ->
-            animatedStringProgress.stopShowingDynamicDottedText()
+            animatedStringProgress?.stopShowingDynamicDottedText()
             prepareUIForListWithDetails(thisMap.toList())
         }
         viewModel.timeToUpdateVehicleStatus.observe(viewLifecycleOwner) {
@@ -114,7 +111,9 @@ class VehicleListFragment : Fragment() {
         viewModel.timeToShowGeneralBusyState.observe(viewLifecycleOwner) { show ->
             showCentralBusyState(show)
         }
-        binding.groupWithAbsentList.isVisible = true
+        viewModel.timeToAdjustForStubData.observe(viewLifecycleOwner) {
+            adjustTheBottomButton()
+        }
     }
 
     override fun onResume() {
@@ -125,9 +124,15 @@ class VehicleListFragment : Fragment() {
             else viewModel.stopGettingVehiclesDetails()
         }
         binding.acbLaunchInitialRequest.setOnClickListener {
-            animatedStringProgress.startShowing5DynamicDots()
+            animatedStringProgress = AnimatedStringProgress(binding.acbLaunchInitialRequest)
+            animatedStringProgress?.startShowing5DynamicDots()
             viewModel.getAllVehiclesIds()
-            hideErrorViewsDuringFirstRequest()
+        }
+        binding.acbRepeatInitialRequest.setOnClickListener {
+            animatedStringProgress = AnimatedStringProgress(binding.acbRepeatInitialRequest)
+            animatedStringProgress?.startShowing5DynamicDots()
+            viewModel.getAllVehiclesIds()
+            hideErrorViewsDuringAnotherTryAttempt()
         }
     }
 
@@ -197,10 +202,11 @@ class VehicleListFragment : Fragment() {
     }
 
     private fun prepareUIForListWithDetails(list: List<Pair<String, VehicleRecord>>) {
+        binding.groupInitial.isVisible = false
         if (list.isEmpty()) {
             binding.groupWithProperList.isVisible = false
             binding.groupWithAbsentList.isVisible = true
-            binding.acbLaunchInitialRequest.isEnabled = true
+            binding.acbRepeatInitialRequest.isEnabled = true
         } else {
             binding.groupWithProperList.isVisible = true
             binding.groupWithAbsentList.isVisible = false
@@ -210,14 +216,20 @@ class VehicleListFragment : Fragment() {
         }
     }
 
-    private fun hideErrorViewsDuringFirstRequest() {
-        binding.acivAlert.isVisible = false
+    private fun hideErrorViewsDuringAnotherTryAttempt() {
+        binding.acivAlertIcon.isVisible = false
         binding.actvErrorStatePhrase.isVisible = false
-        binding.acbLaunchInitialRequest.isEnabled = false
+        binding.acbRepeatInitialRequest.isEnabled = false
     }
 
     private fun showCentralBusyState(isBusy: Boolean) {
         binding.pbCentral.isVisible = isBusy
+    }
+
+    private fun adjustTheBottomButton() {
+        binding.acivAlertIcon.setImageResource(R.drawable.ic_launcher_foreground)
+        binding.actvErrorStatePhrase.text = getString(R.string.error_state_stub_ready_text)
+        binding.acbRepeatInitialRequest.text = getString(R.string.error_state_use_stub_text)
     }
 
     // endregion work with the rest of UI

@@ -14,8 +14,13 @@
     <string name="toggle_button_off_text">start API polling</string>
     <string name="toggle_button_on_text">stop API polling</string>
 
+    <string name="initial_state_central_text">Hi and welcome!\n\nYou\'re about to see how API polling works.\n\nAt first please click the button to get initial Vehicles list. Later details will be updated for its every item.</string>
+    <string name="initial_state_launch_text">get the list</string>
+
     <string name="error_state_central_text">looks like selected API does not provide us with proper list of results - but you can try again by pressing given button some later</string>
     <string name="error_state_try_again_text">try again</string>
+    <string name="error_state_stub_ready_text">You selected stub data source which will provide you with Vehicles list to launch fake polling on it.</string>
+    <string name="error_state_use_stub_text">show me stub data</string>
 
     <string name="stubDataProposalTitle">there is a good stub data to use</string>
     <string name="stubDataProposalMessage">switch to working with the stub data? you can later switch back (in the app bar menu)</string>
