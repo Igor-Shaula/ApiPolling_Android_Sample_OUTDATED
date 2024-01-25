@@ -10,6 +10,8 @@ import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
@@ -24,10 +26,7 @@ class VehiclesRepository(
 
     override val mainDataStorage = MutableLiveData<MutableMap<String, VehicleRecord>>()
 
-//    val data: Flow<Map.Entry<String, VehicleRecord>>
-//        get() {
-//            TODO()
-//        }
+    var vehiclesDataFlow: Flow<MutableMap<String, VehicleRecord>?> = flowOf(mainDataStorage.value)
 
     private lateinit var coroutineScope: CoroutineScope // lateinit is not dangerous here
 

@@ -28,7 +28,7 @@ class VehicleListFragment : Fragment() {
 
     private lateinit var binding: FragmentVehiclesListBinding
 
-    private val viewModel: SharedViewModel by activityViewModels()
+    private val viewModel: SharedViewModel by activityViewModels{ SharedViewModel.Factory }
 
     private lateinit var rvAdapter: VehicleListAdapter
 

@@ -17,7 +17,7 @@ class DetailFragment : DialogFragment() {
 
     private lateinit var binding: FragmentDetailBinding
 
-    private val viewModel: SharedViewModel by activityViewModels()
+    private val viewModel: SharedViewModel by activityViewModels{ SharedViewModel.Factory }
 
     private lateinit var vehicleId: String
 
