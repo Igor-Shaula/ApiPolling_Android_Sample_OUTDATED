@@ -4,14 +4,15 @@ plugins {
 }
 
 android {
+
     namespace 'com.igor_shaula.utilities'
     compileSdk 34
 
     defaultConfig {
         minSdk 23
         targetSdk 34
-        versionCode 1
-        versionName "0.0.1"
+//        versionCode 1
+//        versionName "0.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
