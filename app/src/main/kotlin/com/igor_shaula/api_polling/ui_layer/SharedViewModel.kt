@@ -12,7 +12,7 @@ import com.igor_shaula.api_polling.ThisApp
 import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
 import com.igor_shaula.api_polling.data_layer.VehicleStatus
-import com.igor_shaula.api_polling.data_layer.VehiclesRepository
+import com.igor_shaula.api_polling.data_layer.DefaultVehiclesRepository
 import com.igor_shaula.api_polling.data_layer.detectVehicleStatus
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +26,7 @@ import timber.log.Timber
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-class SharedViewModel(repository: VehiclesRepository) : ViewModel() {
+class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
 
     @Suppress("UNCHECKED_CAST")
     companion object {
@@ -75,7 +75,7 @@ class SharedViewModel(repository: VehiclesRepository) : ViewModel() {
         getAllVehiclesJob = null
     }
 
-    private var repository: VehiclesRepository by RepositoryProperty(repositoryObserver)
+    private var repository: DefaultVehiclesRepository by RepositoryProperty(repositoryObserver)
 
     private val coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
 
@@ -170,10 +170,10 @@ class SharedViewModel(repository: VehiclesRepository) : ViewModel() {
 }
 
 class RepositoryProperty(private val observer: Observer<MutableMap<String, VehicleRecord>>) :
-    ReadWriteProperty<Any, VehiclesRepository> {
+    ReadWriteProperty<Any, DefaultVehiclesRepository> {
 
-    private lateinit var repository: VehiclesRepository
-    override fun getValue(thisRef: Any, property: KProperty<*>): VehiclesRepository {
+    private lateinit var repository: DefaultVehiclesRepository
+    override fun getValue(thisRef: Any, property: KProperty<*>): DefaultVehiclesRepository {
         if (!this::repository.isInitialized) {
             repository = ThisApp.getRepository()
             repository.mainDataStorage.observeForever(observer)
@@ -181,7 +181,7 @@ class RepositoryProperty(private val observer: Observer<MutableMap<String, Vehic
         return repository
     }
 
-    override fun setValue(thisRef: Any, property: KProperty<*>, value: VehiclesRepository) {
+    override fun setValue(thisRef: Any, property: KProperty<*>, value: DefaultVehiclesRepository) {
         if (this::repository.isInitialized) {
             repository.mainDataStorage.removeObserver(observer)
         }

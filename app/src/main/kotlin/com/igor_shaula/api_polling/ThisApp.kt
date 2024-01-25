@@ -2,7 +2,7 @@ package com.igor_shaula.api_polling
 
 import android.app.Application
 import android.os.StrictMode
-import com.igor_shaula.api_polling.data_layer.VehiclesRepository
+import com.igor_shaula.api_polling.data_layer.DefaultVehiclesRepository
 import com.igor_shaula.api_polling.data_layer.data_sources.NetworkDataSource
 import com.igor_shaula.api_polling.data_layer.data_sources.FakeDataSource
 import com.igor_shaula.api_polling.data_layer.data_sources.retrofit.VehicleRetrofitNetworkServiceImpl
@@ -22,7 +22,7 @@ class ThisApp : Application() {
         }
     }
 
-    fun getRepository(): VehiclesRepository = Companion.getRepository()
+    fun getRepository(): DefaultVehiclesRepository = Companion.getRepository()
 
 //    fun readNeedFakeDialogFromLocalPrefs(): Flow<Boolean> =
 //        dataStore.data.map { preferences ->
@@ -43,25 +43,25 @@ class ThisApp : Application() {
 
 // TODO: current solution is TEMPORARY - later move all DataSource usage logic into the Repository level
 
-        private val networkDataRepository: VehiclesRepository by lazy {
-            VehiclesRepository(
+        private val networkDataRepository: DefaultVehiclesRepository by lazy {
+            DefaultVehiclesRepository(
                 NetworkDataSource(VehicleRetrofitNetworkServiceImpl()),
                 FakeDataSource(),
                 ActiveDataSource.NETWORK
             )
         }
 
-        private val fakeDataRepository: VehiclesRepository by lazy {
-            VehiclesRepository(
+        private val fakeDataRepository: DefaultVehiclesRepository by lazy {
+            DefaultVehiclesRepository(
                 NetworkDataSource(VehicleRetrofitNetworkServiceImpl()),
                 FakeDataSource(),
                 ActiveDataSource.FAKE
             )
         }
 
-        private lateinit var currentRepository: VehiclesRepository
+        private lateinit var currentRepository: DefaultVehiclesRepository
 
-        fun getRepository(): VehiclesRepository {
+        fun getRepository(): DefaultVehiclesRepository {
             if (!this::currentRepository.isInitialized) {
                 currentRepository = networkDataRepository
             }
@@ -69,9 +69,9 @@ class ThisApp : Application() {
         }
 
         /**
-         * Switches the DataSource for the VehiclesRepository between Network and Fake
+         * Switches the DataSource for the DefaultVehiclesRepository between Network and Fake
          */
-        fun switchActiveDataSource(type: ActiveDataSource): VehiclesRepository {
+        fun switchActiveDataSource(type: ActiveDataSource): DefaultVehiclesRepository {
             currentRepository = when (type) {
                 ActiveDataSource.FAKE -> fakeDataRepository
                 ActiveDataSource.NETWORK -> networkDataRepository
