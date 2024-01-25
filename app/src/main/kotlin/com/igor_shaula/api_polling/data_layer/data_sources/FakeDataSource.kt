@@ -4,16 +4,16 @@ import com.igor_shaula.api_polling.data_layer.TARGET_LATITUDE
 import com.igor_shaula.api_polling.data_layer.TARGET_LONGITUDE
 import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
-import com.igor_shaula.stub_data_generator.StubVehicleGenerator
+import com.igor_shaula.stub_data_generator.FakeVehicleGenerator
 import kotlinx.coroutines.delay
 import kotlin.random.Random
 import kotlin.random.nextInt
 
-class StubDataSource {
+class FakeDataSource {
 
     suspend fun readVehiclesList(): List<VehicleRecord> {
         delay(Random.nextInt(50..5_000).toLong())
-        val generator = StubVehicleGenerator("stub vehicle #")
+        val generator = FakeVehicleGenerator("fake vehicle #")
         val result: MutableList<VehicleModel> = mutableListOf()
         (0..Random.nextInt(30)).forEach { _ ->
             result.add(VehicleModel(generator.createNextVehicleModelString()))

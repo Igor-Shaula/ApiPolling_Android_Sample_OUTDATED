@@ -3,7 +3,7 @@ package com.igor_shaula.api_polling.data_layer
 import androidx.lifecycle.MutableLiveData
 import com.igor_shaula.api_polling.ThisApp
 import com.igor_shaula.api_polling.data_layer.data_sources.NetworkDataSource
-import com.igor_shaula.api_polling.data_layer.data_sources.StubDataSource
+import com.igor_shaula.api_polling.data_layer.data_sources.FakeDataSource
 import com.igor_shaula.api_polling.data_layer.polling_engines.JavaTPEBasedPollingEngine
 import com.igor_shaula.api_polling.data_layer.polling_engines.PollingEngine
 import kotlinx.coroutines.CoroutineName
@@ -19,7 +19,7 @@ import timber.log.Timber
 
 class VehiclesRepository(
     private val networkDataSource: NetworkDataSource,
-    private val stubDataSource: StubDataSource,
+    private val fakeDataSource: FakeDataSource,
     private val activeDataSource: ThisApp.ActiveDataSource,
     private var pollingEngine: PollingEngine? = null
 ) : VehiclesRepositoryContract {
@@ -90,7 +90,7 @@ class VehiclesRepository(
         if (activeDataSource == ThisApp.ActiveDataSource.NETWORK) {
             networkDataSource.readVehiclesList()
         } else {
-            stubDataSource.readVehiclesList()
+            fakeDataSource.readVehiclesList()
         }
 
     private fun preparePollingEngine(size: Int) {
@@ -111,7 +111,7 @@ class VehiclesRepository(
         if (activeDataSource == ThisApp.ActiveDataSource.NETWORK) {
             networkDataSource.readVehicleDetails(vehicleId) // may be nullable due to Retrofit
         } else {
-            stubDataSource.readVehicleDetails(vehicleId)
+            fakeDataSource.readVehicleDetails(vehicleId)
         }
 
     // endregion private methods

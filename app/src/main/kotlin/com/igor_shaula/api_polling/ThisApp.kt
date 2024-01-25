@@ -4,7 +4,7 @@ import android.app.Application
 import android.os.StrictMode
 import com.igor_shaula.api_polling.data_layer.VehiclesRepository
 import com.igor_shaula.api_polling.data_layer.data_sources.NetworkDataSource
-import com.igor_shaula.api_polling.data_layer.data_sources.StubDataSource
+import com.igor_shaula.api_polling.data_layer.data_sources.FakeDataSource
 import com.igor_shaula.api_polling.data_layer.data_sources.retrofit.VehicleRetrofitNetworkServiceImpl
 import timber.log.Timber
 
@@ -46,7 +46,7 @@ class ThisApp : Application() {
         private val networkDataRepository: VehiclesRepository by lazy {
             VehiclesRepository(
                 NetworkDataSource(VehicleRetrofitNetworkServiceImpl()),
-                StubDataSource(),
+                FakeDataSource(),
                 ActiveDataSource.NETWORK
             )
         }
@@ -54,7 +54,7 @@ class ThisApp : Application() {
         private val stubDataRepository: VehiclesRepository by lazy {
             VehiclesRepository(
                 NetworkDataSource(VehicleRetrofitNetworkServiceImpl()),
-                StubDataSource(),
+                FakeDataSource(),
                 ActiveDataSource.STUB
             )
         }
