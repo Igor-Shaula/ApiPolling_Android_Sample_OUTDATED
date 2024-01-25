@@ -36,7 +36,7 @@ class ThisApp : Application() {
 //    }
 
     enum class ActiveDataSource {
-        NETWORK, STUB
+        NETWORK, FAKE
     }
 
     companion object {
@@ -51,11 +51,11 @@ class ThisApp : Application() {
             )
         }
 
-        private val stubDataRepository: VehiclesRepository by lazy {
+        private val fakeDataRepository: VehiclesRepository by lazy {
             VehiclesRepository(
                 NetworkDataSource(VehicleRetrofitNetworkServiceImpl()),
                 FakeDataSource(),
-                ActiveDataSource.STUB
+                ActiveDataSource.FAKE
             )
         }
 
@@ -73,7 +73,7 @@ class ThisApp : Application() {
          */
         fun switchActiveDataSource(type: ActiveDataSource): VehiclesRepository {
             currentRepository = when (type) {
-                ActiveDataSource.STUB -> stubDataRepository
+                ActiveDataSource.FAKE -> fakeDataRepository
                 ActiveDataSource.NETWORK -> networkDataRepository
             }
             return currentRepository

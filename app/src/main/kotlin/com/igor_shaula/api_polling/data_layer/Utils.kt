@@ -21,7 +21,7 @@ fun detectVehicleStatus(vehicleDetails: VehicleDetailsRecord): VehicleStatus {
 
 fun detectNumberOfNearVehicles(vehicleRecordsList: List<VehicleRecord>?): Int {
     if (vehicleRecordsList.isNullOrEmpty()) {
-        return STUB_FOR_DEFAULT_NUMBER_OF_NEAR_VEHICLES
+        return FAKE_FOR_DEFAULT_NUMBER_OF_NEAR_VEHICLES
     }
     return vehicleRecordsList.filter {
         it.vehicleStatus == VehicleStatus.IN_PLACE || it.vehicleStatus == VehicleStatus.NEAR

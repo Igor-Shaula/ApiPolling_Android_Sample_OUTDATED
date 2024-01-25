@@ -64,8 +64,8 @@ class SharedViewModel(repository: VehiclesRepository) : ViewModel() {
     // no need to make this LiveData private - it's only a trigger for update action
     val timeToUpdateVehicleStatus = MutableLiveData<Unit>()
     val timeToShowGeneralBusyState = MutableLiveData<Boolean>()
-    val timeToShowStubDataProposal = MutableLiveData<Boolean>()
-    val timeToAdjustForStubData = MutableLiveData<Unit>()
+    val timeToShowFakeDataProposal = MutableLiveData<Boolean>()
+    val timeToAdjustForFakeData = MutableLiveData<Unit>()
 
     private val repositoryObserver: Observer<MutableMap<String, VehicleRecord>> = Observer {
         mutableVehiclesMap.value = it
@@ -125,7 +125,7 @@ class SharedViewModel(repository: VehiclesRepository) : ViewModel() {
             return // optimization for avoiding excess IO request to the storage
         }
         coroutineScope.launch(Dispatchers.Main) {
-            timeToShowStubDataProposal.value = true
+            timeToShowFakeDataProposal.value = true
         }
     }
 
@@ -153,16 +153,16 @@ class SharedViewModel(repository: VehiclesRepository) : ViewModel() {
         }
     }
 
-    fun onReadyToUseStubData() {
+    fun onReadyToUseFakeData() {
         stopGettingVehiclesDetails() // to avoid any possible resource leaks if this one still works
         repository =
-            ThisApp.switchActiveDataSource(ThisApp.ActiveDataSource.STUB) // must be a new value - with stub data
-        timeToAdjustForStubData.value = Unit
+            ThisApp.switchActiveDataSource(ThisApp.ActiveDataSource.FAKE) // must be a new value - with stub data
+        timeToAdjustForFakeData.value = Unit
     }
 
-    fun clearPreviousStubDataSelection() {
+    fun clearPreviousFakeDataSelection() {
         firstTimeLaunched = true
-        timeToShowStubDataProposal.value = false
+        timeToShowFakeDataProposal.value = false
         mutableVehiclesMap.value?.clear()
         coroutineScope.cancel()
         repository = ThisApp.switchActiveDataSource(ThisApp.ActiveDataSource.NETWORK)

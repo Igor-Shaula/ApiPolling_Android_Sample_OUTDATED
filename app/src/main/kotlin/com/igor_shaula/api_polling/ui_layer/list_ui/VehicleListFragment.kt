@@ -111,7 +111,7 @@ class VehicleListFragment : Fragment() {
         viewModel.timeToShowGeneralBusyState.observe(viewLifecycleOwner) { show ->
             showCentralBusyState(show)
         }
-        viewModel.timeToAdjustForStubData.observe(viewLifecycleOwner) {
+        viewModel.timeToAdjustForFakeData.observe(viewLifecycleOwner) {
             adjustTheBottomButton()
         }
     }
@@ -139,7 +139,7 @@ class VehicleListFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         viewModel.stopGettingVehiclesDetails()
-        viewModel.clearPreviousStubDataSelection()
+        viewModel.clearPreviousFakeDataSelection()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
