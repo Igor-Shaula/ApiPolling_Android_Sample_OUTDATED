@@ -1,4 +1,4 @@
-package com.igor_shaula.api_polling.ui_layer.detail_ui
+package com.igor_shaula.api_polling.ui_layer.dialogs_ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
