@@ -5,7 +5,7 @@ plugins {
 
 android {
 
-    namespace 'com.igor_shaula.stub_data_generator'
+    namespace 'com.igor_shaula.fake_data_generator'
     compileSdk 34
 
     defaultConfig {

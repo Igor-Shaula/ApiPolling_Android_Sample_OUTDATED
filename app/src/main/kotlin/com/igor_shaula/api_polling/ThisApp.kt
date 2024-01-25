@@ -8,7 +8,7 @@ import com.igor_shaula.api_polling.data_layer.data_sources.FakeDataSource
 import com.igor_shaula.api_polling.data_layer.data_sources.retrofit.VehicleRetrofitNetworkServiceImpl
 import timber.log.Timber
 
-//val TIME_TO_SHOW_GOTO_STUB_DIALOG = booleanPreferencesKey("timeToShowGoToStubDialog")
+//val TIME_TO_SHOW_GOTO_FAKE_DIALOG = booleanPreferencesKey("timeToShowGoToFakeDialog")
 
 //private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "localDataStore")
 
@@ -24,14 +24,14 @@ class ThisApp : Application() {
 
     fun getRepository(): VehiclesRepository = Companion.getRepository()
 
-//    fun readNeedStubDialogFromLocalPrefs(): Flow<Boolean> =
+//    fun readNeedFakeDialogFromLocalPrefs(): Flow<Boolean> =
 //        dataStore.data.map { preferences ->
-//            preferences[TIME_TO_SHOW_GOTO_STUB_DIALOG] ?: false
+//            preferences[TIME_TO_SHOW_GOTO_FAKE_DIALOG] ?: false
 //        }
 
-//    suspend fun saveNeedStubDialogToLocalPrefs(showStubDataNextTime: Boolean) {
+//    suspend fun saveNeedFakeDialogToLocalPrefs(showFakeDataNextTime: Boolean) {
 //        dataStore.edit { preferences ->
-//            preferences[TIME_TO_SHOW_GOTO_STUB_DIALOG] = showStubDataNextTime
+//            preferences[TIME_TO_SHOW_GOTO_FAKE_DIALOG] = showFakeDataNextTime
 //        }
 //    }
 
@@ -69,7 +69,7 @@ class ThisApp : Application() {
         }
 
         /**
-         * Switches the DataSource for the VehiclesRepository between Network and Stub
+         * Switches the DataSource for the VehiclesRepository between Network and Fake
          */
         fun switchActiveDataSource(type: ActiveDataSource): VehiclesRepository {
             currentRepository = when (type) {

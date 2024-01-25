@@ -156,7 +156,7 @@ class SharedViewModel(repository: VehiclesRepository) : ViewModel() {
     fun onReadyToUseFakeData() {
         stopGettingVehiclesDetails() // to avoid any possible resource leaks if this one still works
         repository =
-            ThisApp.switchActiveDataSource(ThisApp.ActiveDataSource.FAKE) // must be a new value - with stub data
+            ThisApp.switchActiveDataSource(ThisApp.ActiveDataSource.FAKE) // must be a new value - with fake data
         timeToAdjustForFakeData.value = Unit
     }
 
