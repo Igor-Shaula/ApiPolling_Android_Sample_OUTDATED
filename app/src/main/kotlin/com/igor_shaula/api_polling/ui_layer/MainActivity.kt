@@ -48,15 +48,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun createAlertDialogForProvidingWithFakeData(onReadyToUseFakeData: () -> Unit): AlertDialog =
         AlertDialog.Builder(this)
-            .setTitle(R.string.stubDataProposalTitle)
-            .setMessage(R.string.stubDataProposalMessage)
-            .setPositiveButton(R.string.stubDataProposalPositiveButtonText) { thisDialog, _ ->
+            .setTitle(R.string.fakeDataProposalTitle)
+            .setMessage(R.string.fakeDataProposalMessage)
+            .setPositiveButton(R.string.fakeDataProposalPositiveButtonText) { thisDialog, _ ->
                 onReadyToUseFakeData.invoke() // invoke() instead of () - just to be more visible
                 thisDialog.dismiss()
                 alertDialog?.dismiss()
                 alertDialog = null
             }
-            .setNegativeButton(R.string.stubDataProposalNegativeButtonText) { thisDialog, _ ->
+            .setNegativeButton(R.string.fakeDataProposalNegativeButtonText) { thisDialog, _ ->
                 thisDialog.dismiss()
                 alertDialog?.dismiss()
                 alertDialog = null
