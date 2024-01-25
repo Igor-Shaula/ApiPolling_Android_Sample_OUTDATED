@@ -4,6 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.createSavedStateHandle
+import androidx.lifecycle.viewmodel.CreationExtras
 import com.igor_shaula.api_polling.ThisApp
 import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
@@ -15,13 +19,36 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import timber.log.Timber
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-class SharedViewModel : ViewModel() {
+class SharedViewModel(repository: VehiclesRepository) : ViewModel() {
+
+    @Suppress("UNCHECKED_CAST")
+    companion object {
+        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            override fun <SharedViewModelType : ViewModel> create(
+                modelClass: Class<SharedViewModelType>,
+                extras: CreationExtras
+            ): SharedViewModelType {
+                // Get the Application object from extras
+                val application = checkNotNull(extras[APPLICATION_KEY])
+                // Create a SavedStateHandle for this ViewModel from extras
+                val savedStateHandle = extras.createSavedStateHandle()
+                return SharedViewModel(
+                    (application as ThisApp).getRepository()
+                ) as SharedViewModelType
+            }
+        }
+    }
+
+    // todo: use data from vehiclesMapFlow on the UI layer
+    val vehiclesMapFlow: Flow<MutableMap<String, VehicleRecord>?> = repository.vehiclesDataFlow
+        .also { Timber.v("vehiclesMapFlow updated") }
 
     // for inner use - only inside this ViewModel - as Google recommends in its examples
     private val mutableVehiclesMap = MutableLiveData<MutableMap<String, VehicleRecord>>()
@@ -58,6 +85,11 @@ class SharedViewModel : ViewModel() {
 
     init {
         mutableVehiclesDetailsMap.value = mutableMapOf()
+        coroutineScope.launch {
+            vehiclesMapFlow.collect {
+                Timber.v("vehiclesMapFlow new value = $it")
+            }
+        }
     }
 
     override fun onCleared() {

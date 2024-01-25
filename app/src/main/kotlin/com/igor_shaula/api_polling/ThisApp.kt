@@ -22,6 +22,8 @@ class ThisApp : Application() {
         }
     }
 
+    fun getRepository(): VehiclesRepository = Companion.getRepository()
+
 //    fun readNeedStubDialogFromLocalPrefs(): Flow<Boolean> =
 //        dataStore.data.map { preferences ->
 //            preferences[TIME_TO_SHOW_GOTO_STUB_DIALOG] ?: false
