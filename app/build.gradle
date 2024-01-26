@@ -48,7 +48,6 @@ android {
 
 dependencies {
     implementation project(':utilities')
-    implementation project(':fakeDataGenerator')
 
     implementation 'androidx.fragment:fragment-ktx:1.6.2'
 

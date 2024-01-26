@@ -4,7 +4,7 @@ import com.igor_shaula.api_polling.data_layer.TARGET_LATITUDE
 import com.igor_shaula.api_polling.data_layer.TARGET_LONGITUDE
 import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
-import com.igor_shaula.fake_data_generator.FakeVehicleGenerator
+import com.igor_shaula.api_polling.data_layer.data_sources.fake_api_client.FakeVehicleGenerator
 import kotlinx.coroutines.delay
 import kotlin.random.Random
 import kotlin.random.nextInt
