@@ -19,12 +19,12 @@
 
     <string name="error_state_central_text">looks like selected API does not provide us with proper list of results - but you can try again by pressing given button some later</string>
     <string name="error_state_try_again_text">try again</string>
-    <string name="error_state_stub_ready_text">You selected stub data source which will provide you with Vehicles list to launch fake polling on it.</string>
-    <string name="error_state_use_stub_text">show me stub data</string>
+    <string name="error_state_fake_ready_text">You selected fake data source which will provide you with Vehicles list to launch fake polling on it.</string>
+    <string name="error_state_use_fake_text">show me fake data</string>
 
-    <string name="stubDataProposalTitle">there is a good stub data to use</string>
-    <string name="stubDataProposalMessage">switch to working with the stub data? you can later switch back (in the app bar menu)</string>
-    <string name="stubDataProposalPositiveButtonText">yes, use the stub</string>
-    <string name="stubDataProposalNegativeButtonText">no, just cancel</string>
+    <string name="fakeDataProposalTitle">there is a good fake data to use</string>
+    <string name="fakeDataProposalMessage">switch to working with the fake data? you can later switch back (in the app bar menu)</string>
+    <string name="fakeDataProposalPositiveButtonText">yes, use fake data</string>
+    <string name="fakeDataProposalNegativeButtonText">no, just cancel</string>
 
 </resources>

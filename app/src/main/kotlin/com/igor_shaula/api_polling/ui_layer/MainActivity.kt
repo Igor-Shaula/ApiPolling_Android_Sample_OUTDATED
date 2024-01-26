@@ -24,13 +24,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        viewModel.timeToShowStubDataProposal.observe(this) { show ->
+        viewModel.timeToShowFakeDataProposal.observe(this) { show ->
             if (show) {
                 if (alertDialog?.isShowing == true) { // this shouldn't ever happen, but anyway
                     alertDialog?.dismiss()
                 }
-                alertDialog = createAlertDialogForProvidingWithStubData {
-                    viewModel.onReadyToUseStubData()
+                alertDialog = createAlertDialogForProvidingWithFakeData {
+                    viewModel.onReadyToUseFakeData()
                 }
                 alertDialog?.show()
             } else {
@@ -46,17 +46,17 @@ class MainActivity : AppCompatActivity() {
         alertDialog = null
     }
 
-    private fun createAlertDialogForProvidingWithStubData(onReadyToUseStubData: () -> Unit): AlertDialog =
+    private fun createAlertDialogForProvidingWithFakeData(onReadyToUseFakeData: () -> Unit): AlertDialog =
         AlertDialog.Builder(this)
-            .setTitle(R.string.stubDataProposalTitle)
-            .setMessage(R.string.stubDataProposalMessage)
-            .setPositiveButton(R.string.stubDataProposalPositiveButtonText) { thisDialog, _ ->
-                onReadyToUseStubData.invoke() // invoke() instead of () - just to be more visible
+            .setTitle(R.string.fakeDataProposalTitle)
+            .setMessage(R.string.fakeDataProposalMessage)
+            .setPositiveButton(R.string.fakeDataProposalPositiveButtonText) { thisDialog, _ ->
+                onReadyToUseFakeData.invoke() // invoke() instead of () - just to be more visible
                 thisDialog.dismiss()
                 alertDialog?.dismiss()
                 alertDialog = null
             }
-            .setNegativeButton(R.string.stubDataProposalNegativeButtonText) { thisDialog, _ ->
+            .setNegativeButton(R.string.fakeDataProposalNegativeButtonText) { thisDialog, _ ->
                 thisDialog.dismiss()
                 alertDialog?.dismiss()
                 alertDialog = null

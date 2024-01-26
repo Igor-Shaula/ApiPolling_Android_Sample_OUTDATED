@@ -19,7 +19,7 @@ import com.igor_shaula.api_polling.data_layer.VehicleRecord
 import com.igor_shaula.api_polling.data_layer.toVehicleRecordList
 import com.igor_shaula.api_polling.databinding.FragmentVehiclesListBinding
 import com.igor_shaula.api_polling.ui_layer.SharedViewModel
-import com.igor_shaula.api_polling.ui_layer.detail_ui.DetailFragment
+import com.igor_shaula.api_polling.ui_layer.dialogs_ui.DetailFragment
 import com.igor_shaula.api_polling.ui_layer.list_ui.all_for_list.VehicleListAdapter
 import com.igor_shaula.utilities.AnimatedStringProgress
 import timber.log.Timber
@@ -111,7 +111,7 @@ class VehicleListFragment : Fragment() {
         viewModel.timeToShowGeneralBusyState.observe(viewLifecycleOwner) { show ->
             showCentralBusyState(show)
         }
-        viewModel.timeToAdjustForStubData.observe(viewLifecycleOwner) {
+        viewModel.timeToAdjustForFakeData.observe(viewLifecycleOwner) {
             adjustTheBottomButton()
         }
     }
@@ -139,7 +139,7 @@ class VehicleListFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         viewModel.stopGettingVehiclesDetails()
-        viewModel.clearPreviousStubDataSelection()
+        viewModel.clearPreviousFakeDataSelection()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -228,8 +228,8 @@ class VehicleListFragment : Fragment() {
 
     private fun adjustTheBottomButton() {
         binding.acivAlertIcon.setImageResource(R.drawable.ic_launcher_foreground)
-        binding.actvErrorStatePhrase.text = getString(R.string.error_state_stub_ready_text)
-        binding.acbRepeatInitialRequest.text = getString(R.string.error_state_use_stub_text)
+        binding.actvErrorStatePhrase.text = getString(R.string.error_state_fake_ready_text)
+        binding.acbRepeatInitialRequest.text = getString(R.string.error_state_use_fake_text)
     }
 
     // endregion work with the rest of UI

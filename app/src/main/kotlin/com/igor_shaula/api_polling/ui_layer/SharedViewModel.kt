@@ -12,7 +12,7 @@ import com.igor_shaula.api_polling.ThisApp
 import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
 import com.igor_shaula.api_polling.data_layer.VehicleStatus
-import com.igor_shaula.api_polling.data_layer.VehiclesRepository
+import com.igor_shaula.api_polling.data_layer.DefaultVehiclesRepository
 import com.igor_shaula.api_polling.data_layer.detectVehicleStatus
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +26,7 @@ import timber.log.Timber
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-class SharedViewModel(repository: VehiclesRepository) : ViewModel() {
+class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
 
     @Suppress("UNCHECKED_CAST")
     companion object {
@@ -64,8 +64,8 @@ class SharedViewModel(repository: VehiclesRepository) : ViewModel() {
     // no need to make this LiveData private - it's only a trigger for update action
     val timeToUpdateVehicleStatus = MutableLiveData<Unit>()
     val timeToShowGeneralBusyState = MutableLiveData<Boolean>()
-    val timeToShowStubDataProposal = MutableLiveData<Boolean>()
-    val timeToAdjustForStubData = MutableLiveData<Unit>()
+    val timeToShowFakeDataProposal = MutableLiveData<Boolean>()
+    val timeToAdjustForFakeData = MutableLiveData<Unit>()
 
     private val repositoryObserver: Observer<MutableMap<String, VehicleRecord>> = Observer {
         mutableVehiclesMap.value = it
@@ -75,7 +75,7 @@ class SharedViewModel(repository: VehiclesRepository) : ViewModel() {
         getAllVehiclesJob = null
     }
 
-    private var repository: VehiclesRepository by RepositoryProperty(repositoryObserver)
+    private var repository: DefaultVehiclesRepository by RepositoryProperty(repositoryObserver)
 
     private val coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
 
@@ -125,7 +125,7 @@ class SharedViewModel(repository: VehiclesRepository) : ViewModel() {
             return // optimization for avoiding excess IO request to the storage
         }
         coroutineScope.launch(Dispatchers.Main) {
-            timeToShowStubDataProposal.value = true
+            timeToShowFakeDataProposal.value = true
         }
     }
 
@@ -153,16 +153,16 @@ class SharedViewModel(repository: VehiclesRepository) : ViewModel() {
         }
     }
 
-    fun onReadyToUseStubData() {
+    fun onReadyToUseFakeData() {
         stopGettingVehiclesDetails() // to avoid any possible resource leaks if this one still works
         repository =
-            ThisApp.switchActiveDataSource(ThisApp.ActiveDataSource.STUB) // must be a new value - with stub data
-        timeToAdjustForStubData.value = Unit
+            ThisApp.switchActiveDataSource(ThisApp.ActiveDataSource.FAKE) // must be a new value - with fake data
+        timeToAdjustForFakeData.value = Unit
     }
 
-    fun clearPreviousStubDataSelection() {
+    fun clearPreviousFakeDataSelection() {
         firstTimeLaunched = true
-        timeToShowStubDataProposal.value = false
+        timeToShowFakeDataProposal.value = false
         mutableVehiclesMap.value?.clear()
         coroutineScope.cancel()
         repository = ThisApp.switchActiveDataSource(ThisApp.ActiveDataSource.NETWORK)
@@ -170,10 +170,10 @@ class SharedViewModel(repository: VehiclesRepository) : ViewModel() {
 }
 
 class RepositoryProperty(private val observer: Observer<MutableMap<String, VehicleRecord>>) :
-    ReadWriteProperty<Any, VehiclesRepository> {
+    ReadWriteProperty<Any, DefaultVehiclesRepository> {
 
-    private lateinit var repository: VehiclesRepository
-    override fun getValue(thisRef: Any, property: KProperty<*>): VehiclesRepository {
+    private lateinit var repository: DefaultVehiclesRepository
+    override fun getValue(thisRef: Any, property: KProperty<*>): DefaultVehiclesRepository {
         if (!this::repository.isInitialized) {
             repository = ThisApp.getRepository()
             repository.mainDataStorage.observeForever(observer)
@@ -181,7 +181,7 @@ class RepositoryProperty(private val observer: Observer<MutableMap<String, Vehic
         return repository
     }
 
-    override fun setValue(thisRef: Any, property: KProperty<*>, value: VehiclesRepository) {
+    override fun setValue(thisRef: Any, property: KProperty<*>, value: DefaultVehiclesRepository) {
         if (this::repository.isInitialized) {
             repository.mainDataStorage.removeObserver(observer)
         }

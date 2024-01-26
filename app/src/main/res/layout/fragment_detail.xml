@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/holo_green_light"
     android:padding="@dimen/default_indentation_size"
-    tools:context=".ui_layer.detail_ui.DetailFragment">
+    tools:context=".ui_layer.dialogs_ui.DetailFragment">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/actvCounterOfNearVehicles"
