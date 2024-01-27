@@ -33,7 +33,9 @@ class VehicleRetrofitNetworkServiceImpl {
         val result: Result<List<VehicleModel>> = if (response.isSuccessful) {
             val responseBody = response.body()
             if (responseBody == null) {
-                Result.failure(NetworkGeneralFailure(0, "response.body() is null"))
+                Result.failure(
+                    NetworkGeneralFailure(EMPTY_RESPONSE_BODY_CODE, EMPTY_RESPONSE_BODY_MESSAGE)
+                )
             } else {
                 val listOfData: MutableList<VehicleModel> = mutableListOf()
                 listOfData.addAll(responseBody)
@@ -44,7 +46,6 @@ class VehicleRetrofitNetworkServiceImpl {
             val errorBody = response.errorBody()?.string()
             Timber.i("getVehiclesList: errorCode = $errorCode")
             Timber.i("getVehiclesList: errorBody = $errorBody")
-            Timber.i("getVehiclesList: errorBody.toString = ${response.errorBody()?.toString()}")
             Result.failure(NetworkGeneralFailure(errorCode, errorBody))
         }
         return result
@@ -58,19 +59,23 @@ class VehicleRetrofitNetworkServiceImpl {
         return if (response.isSuccessful) {
             val responseBody = response.body()
             if (responseBody == null) {
-                Result.failure(NetworkGeneralFailure(0, "response.body() is null"))
+                Result.failure(
+                    NetworkGeneralFailure(EMPTY_RESPONSE_BODY_CODE, EMPTY_RESPONSE_BODY_MESSAGE)
+                )
             } else {
                 Result.success(responseBody)
             }
         } else {
             val errorCode = response.code()
-            val errorBody = response.errorBody()?.string()
+            val errorBody = response.errorBody()?.string() + " for vehicleId: $vehicleId"
             Timber.v("getVehicleDetails: errorCode = $errorCode")
             Timber.v("getVehicleDetails: errorBody = $errorBody")
-            Timber.v("getVehicleDetails: errorBody.toString = ${response.errorBody()?.toString()}")
             Result.failure(NetworkGeneralFailure(errorCode, errorBody))
         }
     }
 }
 
-data class NetworkGeneralFailure(val code: Int, val string: String?) : Throwable()
+private const val EMPTY_RESPONSE_BODY_CODE = -1
+private const val EMPTY_RESPONSE_BODY_MESSAGE = "response.body() is null"
+
+data class NetworkGeneralFailure(val errorCode: Int, val errorMessage: String?) : Throwable()
