@@ -28,6 +28,30 @@ class VehicleRetrofitNetworkServiceImpl {
         return result
     }
 
+    suspend fun getVehiclesListResult(): Result<List<VehicleModel>> {
+        val response = retrofitNetworkService.getVehiclesList()
+        val result: Result<List<VehicleModel>> = if (response.isSuccessful) {
+            val responseBody = response.body()
+            if (responseBody == null) {
+                Result.failure(NetworkGeneralFailure(0, "response.body() is null"))
+            } else {
+                val listOfData: MutableList<VehicleModel> = mutableListOf()
+                listOfData.addAll(responseBody)
+                Result.success(listOfData)
+            }
+        } else {
+            val errorCode = response.code()
+            val errorBody = response.errorBody()?.string()
+            Timber.i("getVehiclesList: errorCode = $errorCode")
+            Timber.i("getVehiclesList: errorBody = $errorBody")
+            Timber.i("getVehiclesList: errorBody.toString = ${response.errorBody()?.toString()}")
+            Result.failure(NetworkGeneralFailure(errorCode, errorBody))
+        }
+        return result
+    }
+
     suspend fun getVehicleDetails(vehicleId: String): VehicleDetailsModel? =
         retrofitNetworkService.getVehicleDetails(vehicleId).body()
 }
+
+data class NetworkGeneralFailure(val code: Int, val string: String?) : Throwable()
