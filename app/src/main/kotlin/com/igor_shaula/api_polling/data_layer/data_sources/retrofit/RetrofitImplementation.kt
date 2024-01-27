@@ -52,6 +52,25 @@ class VehicleRetrofitNetworkServiceImpl {
 
     suspend fun getVehicleDetails(vehicleId: String): VehicleDetailsModel? =
         retrofitNetworkService.getVehicleDetails(vehicleId).body()
+
+    suspend fun getVehicleDetailsResult(vehicleId: String): Result<VehicleDetailsModel> {
+        val response = retrofitNetworkService.getVehicleDetails(vehicleId)
+        return if (response.isSuccessful) {
+            val responseBody = response.body()
+            if (responseBody == null) {
+                Result.failure(NetworkGeneralFailure(0, "response.body() is null"))
+            } else {
+                Result.success(responseBody)
+            }
+        } else {
+            val errorCode = response.code()
+            val errorBody = response.errorBody()?.string()
+            Timber.v("getVehicleDetails: errorCode = $errorCode")
+            Timber.v("getVehicleDetails: errorBody = $errorBody")
+            Timber.v("getVehicleDetails: errorBody.toString = ${response.errorBody()?.toString()}")
+            Result.failure(NetworkGeneralFailure(errorCode, errorBody))
+        }
+    }
 }
 
 data class NetworkGeneralFailure(val code: Int, val string: String?) : Throwable()
