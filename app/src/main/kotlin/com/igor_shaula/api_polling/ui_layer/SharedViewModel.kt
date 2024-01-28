@@ -54,10 +54,10 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
         .also { Timber.v("vehiclesMapFlow updated") }
 
     // for inner use - only inside this ViewModel - as Google recommends in its examples
-    private val mutableVehiclesMap = MutableLiveData<MutableMap<String, VehicleRecord>>()
+    private val mldVehiclesMap = MutableLiveData<MutableMap<String, VehicleRecord>>()
 
     // for outer use - mostly in Fragments & Activities - as Google recommends in its examples
-    val vehiclesMap: LiveData<MutableMap<String, VehicleRecord>> get() = mutableVehiclesMap
+    val vehiclesMap: LiveData<MutableMap<String, VehicleRecord>> get() = mldVehiclesMap
 
     private val mutableVehiclesDetailsMap =
         MutableLiveData<MutableMap<String, VehicleDetailsRecord>>()
@@ -72,10 +72,10 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
     val timeToShowFakeDataProposal = MutableLiveData<Boolean>()
     val timeToAdjustForFakeData = MutableLiveData<Unit>()
 
-    private val repositoryObserver: Observer<MutableMap<String, VehicleRecord>> = Observer {
-        mutableVehiclesMap.value = it
-        Timber.i("mutableVehiclesMap.value = ${mutableVehiclesMap.value}")
-        if (mutableVehiclesMap.value?.isEmpty() == true) processAlternativesForGettingData()
+    private val vehiclesMapObserver = Observer<MutableMap<String, VehicleRecord>> {
+        mldVehiclesMap.value = it
+        Timber.v("mldVehiclesMap.value = ${mldVehiclesMap.value}")
+        if (mldVehiclesMap.value?.isEmpty() == true) processAlternativesForGettingData()
         getAllVehiclesJob?.cancel()
         getAllVehiclesJob = null
     }
@@ -85,7 +85,7 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
         mldMainErrorStateInfo.value = Pair(it ?: ABSENT_FAILURE_EXPLANATION_MESSAGE, true)
     }
 
-    private var repository: DefaultVehiclesRepository by RepositoryProperty(repositoryObserver)
+    private var repository: DefaultVehiclesRepository by RepositoryProperty(vehiclesMapObserver)
 
     private val coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
 
@@ -142,7 +142,7 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
     }
 
     private fun updateTheViewModel(vehicleId: String, vehicleDetails: VehicleDetailsRecord) {
-        mutableVehiclesMap.value?.put(
+        mldVehiclesMap.value?.put(
             vehicleId,
             VehicleRecord(vehicleId, detectVehicleStatus(vehicleDetails), false)
         )
@@ -153,7 +153,7 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
     }
 
     private fun toggleBusyStateFor(vehicleId: String, isBusy: Boolean) {
-        mutableVehiclesMap.value?.put(
+        mldVehiclesMap.value?.put(
             vehicleId,
             VehicleRecord(vehicleId, VehicleStatus.NEW_ROUND, isBusy)
         )
@@ -175,7 +175,7 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
     fun clearPreviousFakeDataSelection() {
         firstTimeLaunched = true
         timeToShowFakeDataProposal.value = false
-        mutableVehiclesMap.value?.clear()
+        mldVehiclesMap.value?.clear()
         coroutineScope.cancel()
         repository = ThisApp.switchActiveDataSource(ThisApp.ActiveDataSource.NETWORK)
     }
