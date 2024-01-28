@@ -56,15 +56,35 @@
 
     <!-- region set of views for second group -->
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/acivAlertIcon"
-        android:layout_width="@dimen/central_icon_size"
-        android:layout_height="@dimen/central_icon_size"
-        android:src="@android:drawable/stat_notify_error"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/llcErrorInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/acivAlertIcon"
+            android:layout_width="@dimen/central_icon_size_x2"
+            android:layout_height="@dimen/central_icon_size"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_launcher_foreground"
+            android:tint="@android:color/holo_red_dark" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/actvErrorStateInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="10"
+            android:text="@string/error_state_absent_info_text"
+            android:textStyle="bold" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/actvErrorStatePhrase"
@@ -90,8 +110,7 @@
         android:id="@+id/groupWithAbsentList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        app:constraint_referenced_ids="acivAlertIcon, actvErrorStatePhrase, acbRepeatInitialRequest" />
+        app:constraint_referenced_ids="llcErrorInfo, actvErrorStatePhrase, acbRepeatInitialRequest" />
 
     <!-- region set of views for the initial group -->
 
@@ -132,6 +151,7 @@
         android:id="@+id/groupInitial"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         app:constraint_referenced_ids="acivInitialPicture, actvInitialPhrase, acbLaunchInitialRequest" />
 
     <ProgressBar
