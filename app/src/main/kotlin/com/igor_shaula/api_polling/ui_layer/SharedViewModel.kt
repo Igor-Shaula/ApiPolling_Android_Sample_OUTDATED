@@ -9,10 +9,10 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.igor_shaula.api_polling.ThisApp
+import com.igor_shaula.api_polling.data_layer.DefaultVehiclesRepository
 import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
 import com.igor_shaula.api_polling.data_layer.VehicleStatus
-import com.igor_shaula.api_polling.data_layer.DefaultVehiclesRepository
 import com.igor_shaula.api_polling.data_layer.detectVehicleStatus
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +25,9 @@ import kotlinx.coroutines.plus
 import timber.log.Timber
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
+
+private const val ABSENT_FAILURE_EXPLANATION_MESSAGE =
+    "no failure explanation from the Repository level"
 
 class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
 
@@ -61,6 +64,8 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
     val vehiclesDetailsMap: LiveData<MutableMap<String, VehicleDetailsRecord>>
         get() = mutableVehiclesDetailsMap
 
+    val mldMainErrorStateInfo = MutableLiveData<Pair<String, Boolean>>()
+
     // no need to make this LiveData private - it's only a trigger for update action
     val timeToUpdateVehicleStatus = MutableLiveData<Unit>()
     val timeToShowGeneralBusyState = MutableLiveData<Boolean>()
@@ -75,6 +80,11 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
         getAllVehiclesJob = null
     }
 
+    private val mainErrorStateInfoObserver = Observer<String?> {
+        Timber.v("mainErrorStateInfoObserver: $it")
+        mldMainErrorStateInfo.value = Pair(it ?: ABSENT_FAILURE_EXPLANATION_MESSAGE, true)
+    }
+
     private var repository: DefaultVehiclesRepository by RepositoryProperty(repositoryObserver)
 
     private val coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
@@ -85,6 +95,7 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
 
     init {
         mutableVehiclesDetailsMap.value = mutableMapOf()
+        repository.mainErrorStateInfo.observeForever(mainErrorStateInfoObserver)
         coroutineScope.launch {
             vehiclesMapFlow.collect {
                 Timber.v("vehiclesMapFlow new value = $it")
@@ -96,6 +107,7 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
         super.onCleared()
         getAllVehiclesJob?.cancel()
         coroutineScope.cancel()
+        repository.mainErrorStateInfo.removeObserver(mainErrorStateInfoObserver)
     }
 
     fun getAllVehiclesIds() {
