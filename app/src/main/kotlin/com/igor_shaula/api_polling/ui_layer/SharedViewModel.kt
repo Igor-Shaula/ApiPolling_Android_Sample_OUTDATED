@@ -64,7 +64,8 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
     val vehiclesDetailsMap: LiveData<MutableMap<String, VehicleDetailsRecord>>
         get() = mutableVehiclesDetailsMap
 
-    val mldMainErrorStateInfo = MutableLiveData<Pair<String, Boolean>>()
+    private val mldMainErrorStateInfo = MutableLiveData<Pair<String, Boolean>>()
+    val mainErrorStateInfo: LiveData<Pair<String, Boolean>> get() = mldMainErrorStateInfo
 
     // no need to make this LiveData private - it's only a trigger for update action
     val timeToUpdateVehicleStatus = MutableLiveData<Unit>()
@@ -81,7 +82,12 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
     }
 
     private val mainErrorStateInfoObserver = Observer<String?> {
-        mldMainErrorStateInfo.value = Pair(it ?: ABSENT_FAILURE_EXPLANATION_MESSAGE, true)
+        val pair = if (it == null) {
+            Pair(ABSENT_FAILURE_EXPLANATION_MESSAGE, false)
+        } else {
+            Pair(it, true)
+        }
+        mldMainErrorStateInfo.value = pair
         Timber.v("mldMainErrorStateInfo.value: ${mldMainErrorStateInfo.value}")
     }
 
