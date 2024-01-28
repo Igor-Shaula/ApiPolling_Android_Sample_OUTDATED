@@ -3,6 +3,7 @@ package com.igor_shaula.api_polling.data_layer.data_sources
 import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
 import com.igor_shaula.api_polling.data_layer.VehicleStatus
+import com.igor_shaula.api_polling.data_layer.data_sources.retrofit.NetworkGeneralFailure
 
 fun List<VehicleModel>?.toVehicleItemRecords(): List<VehicleRecord> {
     val result = mutableListOf<VehicleRecord>()
@@ -14,9 +15,14 @@ fun List<VehicleModel>?.toVehicleItemRecords(): List<VehicleRecord> {
 
 fun Result<List<VehicleModel>>.toVehicleItemRecordsResult(): Result<List<VehicleRecord>> =
     if (this.isFailure) {
-        Result.failure(
-            this.exceptionOrNull() ?: Throwable(message = ABSENT_FAILURE_INSTANCE_MESSAGE)
-        )
+        val networkLevelException = this.exceptionOrNull() as NetworkGeneralFailure?
+        val explanation = if (networkLevelException == null) {
+            ABSENT_FAILURE_INSTANCE_MESSAGE
+        } else {
+            "network error code = " + networkLevelException.errorCode + ",\n" +
+                    "received network error message is:\n" + networkLevelException.errorMessage
+        }
+        Result.failure(DataLayerGeneralFailure(explanation))
     } else {
         val resultList = mutableListOf<VehicleRecord>()
         this.getOrNull()?.forEach {
@@ -37,3 +43,5 @@ fun VehicleDetailsModel.toVehicleItemRecords(): VehicleDetailsRecord =
     )
 
 private const val ABSENT_FAILURE_INSTANCE_MESSAGE = "absent failure instance in Network API Result"
+
+data class DataLayerGeneralFailure(val explanation: String) : Throwable()
