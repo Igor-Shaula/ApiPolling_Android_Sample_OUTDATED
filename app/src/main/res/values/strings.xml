@@ -17,11 +17,11 @@
     <string name="initial_state_central_text">Hi and welcome!\n\nYou\'re about to see how API polling works.\n\nAt first please click the button to get initial Vehicles list. Later details will be updated for its every item.</string>
     <string name="initial_state_launch_text">get the list</string>
 
-    <string name="error_state_central_text">looks like selected API does not provide us with proper list of results - but you can try again by pressing given button some later</string>
+    <string name="error_state_central_text">looks like selected API does not provide us with proper list of results - but you can try again by pressing given button some later (maybe right now)</string>
     <string name="error_state_absent_info_text">no network error info - user should not ever see that</string>
-    <string name="error_state_try_again_text">TRY AGAIN…\n(and see what happens)</string>
+    <string name="error_state_try_again_text">TRY AGAIN\n(and see what happens)</string>
     <string name="error_state_fake_ready_text">You selected fake data source which will provide you with Vehicles list to launch fake polling on it.</string>
-    <string name="error_state_use_fake_text">show me fake data</string>
+    <string name="error_state_use_fake_text">Show me the FAKE DATA</string>
 
     <string name="fakeDataProposalTitle">there is a good fake data to use</string>
     <string name="fakeDataProposalMessage">switch to working with the fake data? you can later switch back (in the app bar menu)</string>

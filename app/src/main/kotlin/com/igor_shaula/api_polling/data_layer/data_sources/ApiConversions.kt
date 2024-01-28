@@ -19,8 +19,8 @@ fun Result<List<VehicleModel>>.toVehicleItemRecordsResult(): Result<List<Vehicle
         val explanation = if (networkLevelException == null) {
             ABSENT_FAILURE_INSTANCE_MESSAGE
         } else {
-            "network error code = " + networkLevelException.errorCode + ",\n" +
-                    "received network error message is:\n" + networkLevelException.errorMessage
+            "remote API error code: " + networkLevelException.errorCode + ",\n" +
+                    "remote API error message:\n" + networkLevelException.errorMessage
         }
         Result.failure(DataLayerGeneralFailure(explanation))
     } else {
