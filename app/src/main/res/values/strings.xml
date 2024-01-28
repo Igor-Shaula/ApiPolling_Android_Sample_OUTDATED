@@ -19,7 +19,7 @@
 
     <string name="error_state_central_text">looks like selected API does not provide us with proper list of results - but you can try again by pressing given button some later</string>
     <string name="error_state_absent_info_text">no network error info - user should not ever see that</string>
-    <string name="error_state_try_again_text">try again</string>
+    <string name="error_state_try_again_text">TRY AGAIN…\n(and see what happens)</string>
     <string name="error_state_fake_ready_text">You selected fake data source which will provide you with Vehicles list to launch fake polling on it.</string>
     <string name="error_state_use_fake_text">show me fake data</string>
 

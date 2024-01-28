@@ -102,6 +102,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_indentation_size"
         android:text="@string/error_state_try_again_text"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <!-- endregion set of views for second group -->
@@ -110,6 +111,7 @@
         android:id="@+id/groupWithAbsentList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         app:constraint_referenced_ids="llcErrorInfo, actvErrorStatePhrase, acbRepeatInitialRequest" />
 
     <!-- region set of views for the initial group -->
@@ -151,7 +153,6 @@
         android:id="@+id/groupInitial"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
         app:constraint_referenced_ids="acivInitialPicture, actvInitialPhrase, acbLaunchInitialRequest" />
 
     <ProgressBar
