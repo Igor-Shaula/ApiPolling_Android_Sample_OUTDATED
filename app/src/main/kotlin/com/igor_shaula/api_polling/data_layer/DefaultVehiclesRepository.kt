@@ -2,8 +2,9 @@ package com.igor_shaula.api_polling.data_layer
 
 import androidx.lifecycle.MutableLiveData
 import com.igor_shaula.api_polling.ThisApp
-import com.igor_shaula.api_polling.data_layer.data_sources.NetworkDataSource
+import com.igor_shaula.api_polling.data_layer.data_sources.DataLayerGeneralFailure
 import com.igor_shaula.api_polling.data_layer.data_sources.FakeDataSource
+import com.igor_shaula.api_polling.data_layer.data_sources.NetworkDataSource
 import com.igor_shaula.api_polling.data_layer.polling_engines.JavaTPEBasedPollingEngine
 import com.igor_shaula.api_polling.data_layer.polling_engines.PollingEngine
 import kotlinx.coroutines.CoroutineName
@@ -25,6 +26,8 @@ class DefaultVehiclesRepository(
 ) : VehiclesRepository {
 
     override val mainDataStorage = MutableLiveData<MutableMap<String, VehicleRecord>>()
+
+    val mainErrorStateInfo = MutableLiveData<String?>(null)
 
     var vehiclesDataFlow: Flow<MutableMap<String, VehicleRecord>?> = flowOf(mainDataStorage.value)
 
@@ -88,7 +91,16 @@ class DefaultVehiclesRepository(
 
     private suspend fun readVehiclesList(): List<VehicleRecord> =
         if (activeDataSource == ThisApp.ActiveDataSource.NETWORK) {
-            networkDataSource.readVehiclesList()
+            val result = networkDataSource.readVehiclesListResult()
+            if (result.isFailure) {
+                val exception = result.exceptionOrNull() as DataLayerGeneralFailure
+                Timber.i("readVehiclesList: explanation = ${exception.explanation}")
+                mainErrorStateInfo.value = exception.explanation
+                emptyList()
+            } else {
+                result.getOrDefault(listOf())
+            }
+//            networkDataSource.readVehiclesList()
         } else {
             fakeDataSource.readVehiclesList()
         }

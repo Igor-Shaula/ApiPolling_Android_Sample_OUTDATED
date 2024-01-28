@@ -9,6 +9,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -28,7 +29,7 @@ class VehicleListFragment : Fragment() {
 
     private lateinit var binding: FragmentVehiclesListBinding
 
-    private val viewModel: SharedViewModel by activityViewModels{ SharedViewModel.Factory }
+    private val viewModel: SharedViewModel by activityViewModels { SharedViewModel.Factory }
 
     private lateinit var rvAdapter: VehicleListAdapter
 
@@ -101,6 +102,13 @@ class VehicleListFragment : Fragment() {
         viewModel.vehiclesMap.observe(viewLifecycleOwner) { thisMap ->
             animatedStringProgress?.stopShowingDynamicDottedText()
             prepareUIForListWithDetails(thisMap.toList())
+        }
+        viewModel.mainErrorStateInfo.observe(viewLifecycleOwner) { pair ->
+            if (pair.second) {
+                Toast.makeText(context, pair.first, Toast.LENGTH_LONG).show()
+            } else {
+                Timber.v("mainErrorStateInfo: HIDDEN, message is: ${pair.first}")
+            }
         }
         viewModel.timeToUpdateVehicleStatus.observe(viewLifecycleOwner) {
             viewModel.vehiclesMap.value?.toList()?.let {

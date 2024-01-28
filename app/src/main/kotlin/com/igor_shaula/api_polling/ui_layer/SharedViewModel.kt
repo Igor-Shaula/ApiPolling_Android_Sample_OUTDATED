@@ -9,10 +9,10 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.igor_shaula.api_polling.ThisApp
+import com.igor_shaula.api_polling.data_layer.DefaultVehiclesRepository
 import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
 import com.igor_shaula.api_polling.data_layer.VehicleStatus
-import com.igor_shaula.api_polling.data_layer.DefaultVehiclesRepository
 import com.igor_shaula.api_polling.data_layer.detectVehicleStatus
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +25,9 @@ import kotlinx.coroutines.plus
 import timber.log.Timber
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
+
+private const val ABSENT_FAILURE_EXPLANATION_MESSAGE =
+    "no failure explanation from the Repository level"
 
 class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
 
@@ -51,15 +54,18 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
         .also { Timber.v("vehiclesMapFlow updated") }
 
     // for inner use - only inside this ViewModel - as Google recommends in its examples
-    private val mutableVehiclesMap = MutableLiveData<MutableMap<String, VehicleRecord>>()
+    private val mldVehiclesMap = MutableLiveData<MutableMap<String, VehicleRecord>>()
 
     // for outer use - mostly in Fragments & Activities - as Google recommends in its examples
-    val vehiclesMap: LiveData<MutableMap<String, VehicleRecord>> get() = mutableVehiclesMap
+    val vehiclesMap: LiveData<MutableMap<String, VehicleRecord>> get() = mldVehiclesMap
 
     private val mutableVehiclesDetailsMap =
         MutableLiveData<MutableMap<String, VehicleDetailsRecord>>()
     val vehiclesDetailsMap: LiveData<MutableMap<String, VehicleDetailsRecord>>
         get() = mutableVehiclesDetailsMap
+
+    private val mldMainErrorStateInfo = MutableLiveData<Pair<String, Boolean>>()
+    val mainErrorStateInfo: LiveData<Pair<String, Boolean>> get() = mldMainErrorStateInfo
 
     // no need to make this LiveData private - it's only a trigger for update action
     val timeToUpdateVehicleStatus = MutableLiveData<Unit>()
@@ -67,15 +73,26 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
     val timeToShowFakeDataProposal = MutableLiveData<Boolean>()
     val timeToAdjustForFakeData = MutableLiveData<Unit>()
 
-    private val repositoryObserver: Observer<MutableMap<String, VehicleRecord>> = Observer {
-        mutableVehiclesMap.value = it
-        Timber.i("mutableVehiclesMap.value = ${mutableVehiclesMap.value}")
-        if (mutableVehiclesMap.value?.isEmpty() == true) processAlternativesForGettingData()
+    private val vehiclesMapObserver = Observer<MutableMap<String, VehicleRecord>> {
+        mldVehiclesMap.value = it // all new data from the Repository comes in only in this place
+        Timber.v("mldVehiclesMap.value = ${mldVehiclesMap.value}")
+        if (mldVehiclesMap.value?.isEmpty() == true) processAlternativesForGettingData()
         getAllVehiclesJob?.cancel()
         getAllVehiclesJob = null
     }
 
-    private var repository: DefaultVehiclesRepository by RepositoryProperty(repositoryObserver)
+    private val mainErrorStateInfoObserver = Observer<String?> {
+        val pair = if (it == null) {
+            Pair(ABSENT_FAILURE_EXPLANATION_MESSAGE, false)
+        } else {
+            Pair(it, true)
+        }
+        mldMainErrorStateInfo.value = pair
+        Timber.v("mldMainErrorStateInfo.value: ${mldMainErrorStateInfo.value}")
+    }
+
+    private var repository: DefaultVehiclesRepository
+            by RepositoryProperty(vehiclesMapObserver, mainErrorStateInfoObserver)
 
     private val coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
 
@@ -93,9 +110,12 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
     }
 
     override fun onCleared() {
-        super.onCleared()
+        // for some reason these observers work once during the app is closed
+        repository.mainDataStorage.removeObserver(vehiclesMapObserver)
+        repository.mainErrorStateInfo.removeObserver(mainErrorStateInfoObserver)
         getAllVehiclesJob?.cancel()
         coroutineScope.cancel()
+        super.onCleared()
     }
 
     fun getAllVehiclesIds() {
@@ -130,7 +150,7 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
     }
 
     private fun updateTheViewModel(vehicleId: String, vehicleDetails: VehicleDetailsRecord) {
-        mutableVehiclesMap.value?.put(
+        mldVehiclesMap.value?.put(
             vehicleId,
             VehicleRecord(vehicleId, detectVehicleStatus(vehicleDetails), false)
         )
@@ -141,7 +161,7 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
     }
 
     private fun toggleBusyStateFor(vehicleId: String, isBusy: Boolean) {
-        mutableVehiclesMap.value?.put(
+        mldVehiclesMap.value?.put(
             vehicleId,
             VehicleRecord(vehicleId, VehicleStatus.NEW_ROUND, isBusy)
         )
@@ -163,29 +183,35 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
     fun clearPreviousFakeDataSelection() {
         firstTimeLaunched = true
         timeToShowFakeDataProposal.value = false
-        mutableVehiclesMap.value?.clear()
+        mldVehiclesMap.value?.clear() // hoist up to the repository level - data must be cleared there as well
         coroutineScope.cancel()
         repository = ThisApp.switchActiveDataSource(ThisApp.ActiveDataSource.NETWORK)
     }
 }
 
-class RepositoryProperty(private val observer: Observer<MutableMap<String, VehicleRecord>>) :
-    ReadWriteProperty<Any, DefaultVehiclesRepository> {
+class RepositoryProperty(
+    private val vehiclesMapObserver: Observer<MutableMap<String, VehicleRecord>>,
+    private val mainErrorStateInfoObserver: Observer<String?>
+) : ReadWriteProperty<Any, DefaultVehiclesRepository> {
 
     private lateinit var repository: DefaultVehiclesRepository
+
     override fun getValue(thisRef: Any, property: KProperty<*>): DefaultVehiclesRepository {
         if (!this::repository.isInitialized) {
             repository = ThisApp.getRepository()
-            repository.mainDataStorage.observeForever(observer)
+            repository.mainDataStorage.observeForever(vehiclesMapObserver)
+            repository.mainErrorStateInfo.observeForever(mainErrorStateInfoObserver)
         }
         return repository
     }
 
     override fun setValue(thisRef: Any, property: KProperty<*>, value: DefaultVehiclesRepository) {
         if (this::repository.isInitialized) {
-            repository.mainDataStorage.removeObserver(observer)
+            repository.mainDataStorage.removeObserver(vehiclesMapObserver)
+            repository.mainErrorStateInfo.removeObserver(mainErrorStateInfoObserver)
         }
         repository = value
-        repository.mainDataStorage.observeForever(observer)
+        repository.mainDataStorage.observeForever(vehiclesMapObserver)
+        repository.mainErrorStateInfo.observeForever(mainErrorStateInfoObserver)
     }
 }
