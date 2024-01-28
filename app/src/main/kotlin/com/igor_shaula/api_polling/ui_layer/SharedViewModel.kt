@@ -73,7 +73,7 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
     val timeToAdjustForFakeData = MutableLiveData<Unit>()
 
     private val vehiclesMapObserver = Observer<MutableMap<String, VehicleRecord>> {
-        mldVehiclesMap.value = it
+        mldVehiclesMap.value = it // all new data from the Repository comes in only in this place
         Timber.v("mldVehiclesMap.value = ${mldVehiclesMap.value}")
         if (mldVehiclesMap.value?.isEmpty() == true) processAlternativesForGettingData()
         getAllVehiclesJob?.cancel()
@@ -81,11 +81,12 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
     }
 
     private val mainErrorStateInfoObserver = Observer<String?> {
-        Timber.v("mainErrorStateInfoObserver: $it")
         mldMainErrorStateInfo.value = Pair(it ?: ABSENT_FAILURE_EXPLANATION_MESSAGE, true)
+        Timber.v("mldMainErrorStateInfo.value: ${mldMainErrorStateInfo.value}")
     }
 
-    private var repository: DefaultVehiclesRepository by RepositoryProperty(vehiclesMapObserver)
+    private var repository: DefaultVehiclesRepository
+            by RepositoryProperty(vehiclesMapObserver, mainErrorStateInfoObserver)
 
     private val coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
 
@@ -95,7 +96,6 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
 
     init {
         mutableVehiclesDetailsMap.value = mutableMapOf()
-        repository.mainErrorStateInfo.observeForever(mainErrorStateInfoObserver)
         coroutineScope.launch {
             vehiclesMapFlow.collect {
                 Timber.v("vehiclesMapFlow new value = $it")
@@ -104,10 +104,12 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
     }
 
     override fun onCleared() {
-        super.onCleared()
+        // for some reason these observers work once during the app is closed
+        repository.mainDataStorage.removeObserver(vehiclesMapObserver)
+        repository.mainErrorStateInfo.removeObserver(mainErrorStateInfoObserver)
         getAllVehiclesJob?.cancel()
         coroutineScope.cancel()
-        repository.mainErrorStateInfo.removeObserver(mainErrorStateInfoObserver)
+        super.onCleared()
     }
 
     fun getAllVehiclesIds() {
@@ -175,29 +177,35 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
     fun clearPreviousFakeDataSelection() {
         firstTimeLaunched = true
         timeToShowFakeDataProposal.value = false
-        mldVehiclesMap.value?.clear()
+        mldVehiclesMap.value?.clear() // hoist up to the repository level - data must be cleared there as well
         coroutineScope.cancel()
         repository = ThisApp.switchActiveDataSource(ThisApp.ActiveDataSource.NETWORK)
     }
 }
 
-class RepositoryProperty(private val observer: Observer<MutableMap<String, VehicleRecord>>) :
-    ReadWriteProperty<Any, DefaultVehiclesRepository> {
+class RepositoryProperty(
+    private val vehiclesMapObserver: Observer<MutableMap<String, VehicleRecord>>,
+    private val mainErrorStateInfoObserver: Observer<String?>
+) : ReadWriteProperty<Any, DefaultVehiclesRepository> {
 
     private lateinit var repository: DefaultVehiclesRepository
+
     override fun getValue(thisRef: Any, property: KProperty<*>): DefaultVehiclesRepository {
         if (!this::repository.isInitialized) {
             repository = ThisApp.getRepository()
-            repository.mainDataStorage.observeForever(observer)
+            repository.mainDataStorage.observeForever(vehiclesMapObserver)
+            repository.mainErrorStateInfo.observeForever(mainErrorStateInfoObserver)
         }
         return repository
     }
 
     override fun setValue(thisRef: Any, property: KProperty<*>, value: DefaultVehiclesRepository) {
         if (this::repository.isInitialized) {
-            repository.mainDataStorage.removeObserver(observer)
+            repository.mainDataStorage.removeObserver(vehiclesMapObserver)
+            repository.mainErrorStateInfo.removeObserver(mainErrorStateInfoObserver)
         }
         repository = value
-        repository.mainDataStorage.observeForever(observer)
+        repository.mainDataStorage.observeForever(vehiclesMapObserver)
+        repository.mainErrorStateInfo.observeForever(mainErrorStateInfoObserver)
     }
 }
