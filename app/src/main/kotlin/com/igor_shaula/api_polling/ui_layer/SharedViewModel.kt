@@ -13,6 +13,7 @@ import com.igor_shaula.api_polling.data_layer.DefaultVehiclesRepository
 import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
 import com.igor_shaula.api_polling.data_layer.VehicleStatus
+import com.igor_shaula.api_polling.data_layer.data_sources.RepositoryProperty
 import com.igor_shaula.api_polling.data_layer.detectVehicleStatus
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Dispatchers
@@ -23,8 +24,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import timber.log.Timber
-import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.KProperty
 
 private const val ABSENT_FAILURE_EXPLANATION_MESSAGE =
     "no failure explanation from the Repository level"
@@ -186,32 +185,5 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
         mldVehiclesMap.value?.clear() // hoist up to the repository level - data must be cleared there as well
         coroutineScope.cancel()
         repository = ThisApp.switchActiveDataSource(ThisApp.ActiveDataSource.NETWORK)
-    }
-}
-
-class RepositoryProperty(
-    private val vehiclesMapObserver: Observer<MutableMap<String, VehicleRecord>>,
-    private val mainErrorStateInfoObserver: Observer<String?>
-) : ReadWriteProperty<Any, DefaultVehiclesRepository> {
-
-    private lateinit var repository: DefaultVehiclesRepository
-
-    override fun getValue(thisRef: Any, property: KProperty<*>): DefaultVehiclesRepository {
-        if (!this::repository.isInitialized) {
-            repository = ThisApp.getRepository()
-            repository.mainDataStorage.observeForever(vehiclesMapObserver)
-            repository.mainErrorStateInfo.observeForever(mainErrorStateInfoObserver)
-        }
-        return repository
-    }
-
-    override fun setValue(thisRef: Any, property: KProperty<*>, value: DefaultVehiclesRepository) {
-        if (this::repository.isInitialized) {
-            repository.mainDataStorage.removeObserver(vehiclesMapObserver)
-            repository.mainErrorStateInfo.removeObserver(mainErrorStateInfoObserver)
-        }
-        repository = value
-        repository.mainDataStorage.observeForever(vehiclesMapObserver)
-        repository.mainErrorStateInfo.observeForever(mainErrorStateInfoObserver)
     }
 }
