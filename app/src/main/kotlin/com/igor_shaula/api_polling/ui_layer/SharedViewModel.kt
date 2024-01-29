@@ -11,7 +11,6 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.igor_shaula.api_polling.ThisApp
 import com.igor_shaula.api_polling.data_layer.CurrentLocation
 import com.igor_shaula.api_polling.data_layer.DefaultVehiclesRepository
-import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
 import com.igor_shaula.api_polling.data_layer.VehicleStatus
 import com.igor_shaula.api_polling.data_layer.data_sources.RepositoryProperty
@@ -140,11 +139,10 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
         }
     }
 
-    private fun updateTheViewModel(vehicleId: String, vehicleDetails: VehicleDetailsRecord) {
-        val vehicleLocation = CurrentLocation(vehicleDetails.latitude, vehicleDetails.longitude)
+    private fun updateTheViewModel(vehicleId: String, currentLocation: CurrentLocation) {
         mldVehiclesMap.value?.put(
             vehicleId, VehicleRecord(
-                vehicleId, detectVehicleStatus(vehicleDetails), false, vehicleLocation
+                vehicleId, detectVehicleStatus(currentLocation), false, currentLocation
             )
         )
         // why postValue instead of setValue() -> https://www.geeksforgeeks.org/livedata-setvalue-vs-postvalue-in-android/

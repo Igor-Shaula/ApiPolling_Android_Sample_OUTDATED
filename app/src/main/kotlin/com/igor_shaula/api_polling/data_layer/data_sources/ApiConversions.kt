@@ -1,6 +1,6 @@
 package com.igor_shaula.api_polling.data_layer.data_sources
 
-import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
+import com.igor_shaula.api_polling.data_layer.CurrentLocation
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
 import com.igor_shaula.api_polling.data_layer.VehicleStatus
 import com.igor_shaula.api_polling.data_layer.data_sources.retrofit.NetworkGeneralFailure
@@ -35,12 +35,10 @@ fun Result<List<VehicleModel>>.toVehicleItemRecordsResult(): Result<List<Vehicle
         // here i don't emit Result.failure instance for nullable case - because in fact it cannot happen
     }
 
-fun VehicleDetailsModel.toVehicleItemRecords(): VehicleDetailsRecord =
-    VehicleDetailsRecord(
-        vehicleId = this.vehicleId,
-        latitude = this.location.latitude,
-        longitude = this.location.longitude
-    )
+fun VehicleDetailsModel.toVehicleItemRecords() = CurrentLocation(
+    latitude = this.location.latitude,
+    longitude = this.location.longitude
+)
 
 private const val ABSENT_FAILURE_INSTANCE_MESSAGE = "absent failure instance in Network API Result"
 

@@ -1,6 +1,6 @@
 package com.igor_shaula.api_polling.data_layer.data_sources
 
-import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
+import com.igor_shaula.api_polling.data_layer.CurrentLocation
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
 import com.igor_shaula.api_polling.data_layer.data_sources.retrofit.VehicleRetrofitNetworkServiceImpl
 
@@ -16,6 +16,6 @@ class NetworkDataSource(
     suspend fun readVehiclesListResult(): Result<List<VehicleRecord>> =
         vehicleDataNetworkService.getVehiclesListResult().toVehicleItemRecordsResult()
 
-    suspend fun readVehicleDetails(vehicleId: String): VehicleDetailsRecord? =
+    suspend fun readVehicleDetails(vehicleId: String): CurrentLocation? =
         vehicleDataNetworkService.getVehicleDetails(vehicleId)?.toVehicleItemRecords()
 }
