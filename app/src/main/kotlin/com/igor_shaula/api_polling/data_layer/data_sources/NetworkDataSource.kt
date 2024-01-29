@@ -10,9 +10,6 @@ class NetworkDataSource(
     // add other network API clients as dependencies here
 ) {
 
-    suspend fun readVehiclesList(): List<VehicleRecord> =
-        vehicleDataNetworkService.getVehiclesList().toVehicleItemRecords()
-
     suspend fun readVehiclesListResult(): Result<List<VehicleRecord>> =
         vehicleDataNetworkService.getVehiclesListResult().toVehicleItemRecordsResult()
 
