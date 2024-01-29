@@ -41,7 +41,7 @@ class AnimatedStringProgress(private val textView: TextView) {
         textTypefaceBeforeAnimation = textView.typeface
         val textLength = textView.text.length
         val animationFrameTime = TOTAL_ANIMATION_TIME / textLength
-        textView.setTypeface(textView.typeface, Typeface.BOLD)
+        textView.setTypeface(Typeface.MONOSPACE, Typeface.BOLD)
         textView.setTextColor(Color.MAGENTA)
 //        textDotsCoroutineScope.launch { // text is not updated for unknown reason
         textAnimationJob = (GlobalScope + CoroutineName(textView.text.toString()))
