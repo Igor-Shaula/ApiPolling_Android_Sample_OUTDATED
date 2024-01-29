@@ -63,9 +63,11 @@ class AnimatedStringProgress(private val textView: TextView) {
         // now obviously it will be nice to restore initial text in the given view
         if (textBeforeAnimation.isNotEmpty()) {
             textView.text = textBeforeAnimation
-            textView.setTypeface(textView.typeface, Typeface.NORMAL)
-            textView.setTextColor(Color.WHITE)
         }
+
+        // restoring initial text settings - not relative to text length
+        textView.setTypeface(textView.typeface, Typeface.NORMAL)
+        textView.setTextColor(Color.WHITE)
     }
 
     private fun getStringForThisTick(indexOfStep: Int): String {
