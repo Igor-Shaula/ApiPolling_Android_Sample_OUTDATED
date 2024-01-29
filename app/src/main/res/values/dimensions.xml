@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="half_central_icon_size">80dp</dimen>
     <dimen name="central_icon_size">80dp</dimen>
+    <dimen name="central_icon_size_x2">160dp</dimen>
+    <dimen name="central_icon_size_x3">240dp</dimen>
+    <dimen name="central_icon_size_x4">320dp</dimen>
+    <dimen name="central_icon_size_x5">400dp</dimen>
     <dimen name="default_indentation_size">16dp</dimen>
     <dimen name="double_indentation_size">32dp</dimen>
+    <dimen name="anti_double_indentation_size">-32dp</dimen>
     <dimen name="item_line_height">20dp</dimen>
 </resources>

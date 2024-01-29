@@ -56,12 +56,44 @@
 
     <!-- region set of views for second group -->
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/acivAlertIcon"
-        android:layout_width="@dimen/central_icon_size"
-        android:layout_height="@dimen/central_icon_size"
-        android:src="@android:drawable/stat_notify_error"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/llcErrorInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/acivAlertIcon"
+            android:layout_width="@dimen/central_icon_size_x2"
+            android:layout_height="@dimen/central_icon_size"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_launcher_foreground"
+            android:tint="@android:color/holo_red_dark" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/actvErrorStateInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="10"
+            android:text="@string/error_state_absent_info_text"
+            android:textStyle="bold" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/acivAlertIconForFakeData"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/central_icon_size_x5"
+        android:background="@android:color/transparent"
+        android:src="@drawable/use_fake_data_image"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/actvErrorStatePhrase"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -82,6 +114,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_indentation_size"
         android:text="@string/error_state_try_again_text"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <!-- endregion set of views for second group -->
@@ -91,19 +124,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
-        app:constraint_referenced_ids="acivAlertIcon, actvErrorStatePhrase, acbRepeatInitialRequest" />
+        app:constraint_referenced_ids="llcErrorInfo, actvErrorStatePhrase, acbRepeatInitialRequest" />
 
     <!-- region set of views for the initial group -->
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/acivInitialPicture"
-        android:layout_width="@dimen/central_icon_size"
-        android:layout_height="@dimen/central_icon_size"
-        android:layout_marginBottom="@dimen/double_indentation_size"
-        android:src="@android:drawable/ic_dialog_info"
+        android:layout_width="@dimen/central_icon_size_x4"
+        android:layout_height="@dimen/central_icon_size_x4"
+        android:src="@drawable/welcome_image"
         app:layout_constraintBottom_toTopOf="@+id/actvInitialPhrase"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/actvInitialPhrase"
@@ -112,17 +145,18 @@
         android:gravity="center"
         android:text="@string/initial_state_central_text"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/acbLaunchInitialRequest"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/acivInitialPicture" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/acbLaunchInitialRequest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/double_indentation_size"
+        android:layout_margin="@dimen/default_indentation_size"
         android:text="@string/initial_state_launch_text"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/actvInitialPhrase" />
 
     <!-- endregion set of views for the initial group -->
