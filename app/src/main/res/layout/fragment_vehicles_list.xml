@@ -41,8 +41,8 @@
         android:layout_margin="@dimen/default_indentation_size"
         android:checked="false"
         android:enabled="false"
-        android:textOff="@string/toggle_button_off_text"
-        android:textOn="@string/toggle_button_on_text"
+        android:textOff="@string/toggle_button_off_text_initial"
+        android:textOn="@string/toggle_button_on_text_initial"
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <!-- endregion set of views for the first group -->

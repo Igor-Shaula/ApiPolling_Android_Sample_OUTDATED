@@ -11,8 +11,8 @@
     <string name="vehicleStatus">vehicleStatus: %1$s</string>
     <string name="location_text_base">latitude: %1$f\nlongitude: %2$f</string>
 
-    <string name="toggle_button_off_text">start API polling</string>
-    <string name="toggle_button_on_text">stop API polling</string>
+    <string name="toggle_button_off_text_initial">start API polling</string>
+    <string name="toggle_button_on_text_initial">stop API polling</string>
 
     <string name="initial_state_central_text">Hi and welcome!\n\nYou\'re about to see how API polling works.\n\nAt first please click the button to get initial Vehicles list. Later details will be updated for its every item.</string>
     <string name="initial_state_launch_text">get the list</string>
