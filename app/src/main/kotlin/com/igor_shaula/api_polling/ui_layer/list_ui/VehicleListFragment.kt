@@ -9,7 +9,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -105,7 +104,7 @@ class VehicleListFragment : Fragment() {
         }
         viewModel.mainErrorStateInfo.observe(viewLifecycleOwner) { pair ->
             if (pair.second) {
-                Toast.makeText(context, pair.first, Toast.LENGTH_LONG).show()
+                binding.actvErrorStateInfo.text = pair.first
             } else {
                 Timber.v("mainErrorStateInfo: HIDDEN, message is: ${pair.first}")
             }
@@ -117,6 +116,7 @@ class VehicleListFragment : Fragment() {
             }
         }
         viewModel.timeToShowGeneralBusyState.observe(viewLifecycleOwner) { show ->
+            binding.acivAlertIconForFakeData.isVisible = false
             showCentralBusyState(show)
         }
         viewModel.timeToAdjustForFakeData.observe(viewLifecycleOwner) {
@@ -214,6 +214,8 @@ class VehicleListFragment : Fragment() {
         if (list.isEmpty()) {
             binding.groupWithProperList.isVisible = false
             binding.groupWithAbsentList.isVisible = true
+            binding.acivAlertIcon.isVisible = true
+            binding.actvErrorStateInfo.isVisible = true
             binding.acbRepeatInitialRequest.isEnabled = true
         } else {
             binding.groupWithProperList.isVisible = true
@@ -226,16 +228,18 @@ class VehicleListFragment : Fragment() {
 
     private fun hideErrorViewsDuringAnotherTryAttempt() {
         binding.acivAlertIcon.isVisible = false
+        binding.actvErrorStateInfo.isVisible = false
         binding.actvErrorStatePhrase.isVisible = false
-        binding.acbRepeatInitialRequest.isEnabled = false
     }
 
     private fun showCentralBusyState(isBusy: Boolean) {
         binding.pbCentral.isVisible = isBusy
     }
 
-    private fun adjustTheBottomButton() {
-        binding.acivAlertIcon.setImageResource(R.drawable.ic_launcher_foreground)
+    private fun adjustTheBottomButtonForFakeData() {
+        binding.acivAlertIcon.isVisible = false
+        binding.acivAlertIconForFakeData.isVisible = true
+        binding.actvErrorStateInfo.isVisible = false
         binding.actvErrorStatePhrase.text = getString(R.string.error_state_fake_ready_text)
         binding.acbRepeatInitialRequest.text = getString(R.string.error_state_use_fake_text)
     }
