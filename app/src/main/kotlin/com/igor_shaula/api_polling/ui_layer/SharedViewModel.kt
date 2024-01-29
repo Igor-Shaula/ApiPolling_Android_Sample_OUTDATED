@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.igor_shaula.api_polling.ThisApp
+import com.igor_shaula.api_polling.data_layer.CurrentLocation
 import com.igor_shaula.api_polling.data_layer.DefaultVehiclesRepository
 import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
@@ -52,16 +53,8 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
     val vehiclesMapFlow: Flow<MutableMap<String, VehicleRecord>?> = repository.vehiclesDataFlow
         .also { Timber.v("vehiclesMapFlow updated") }
 
-    // for inner use - only inside this ViewModel - as Google recommends in its examples
     private val mldVehiclesMap = MutableLiveData<MutableMap<String, VehicleRecord>>()
-
-    // for outer use - mostly in Fragments & Activities - as Google recommends in its examples
     val vehiclesMap: LiveData<MutableMap<String, VehicleRecord>> get() = mldVehiclesMap
-
-    private val mutableVehiclesDetailsMap =
-        MutableLiveData<MutableMap<String, VehicleDetailsRecord>>()
-    val vehiclesDetailsMap: LiveData<MutableMap<String, VehicleDetailsRecord>>
-        get() = mutableVehiclesDetailsMap
 
     private val mldMainErrorStateInfo = MutableLiveData<Pair<String, Boolean>>()
     val mainErrorStateInfo: LiveData<Pair<String, Boolean>> get() = mldMainErrorStateInfo
@@ -100,7 +93,6 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
     private var firstTimeLaunched = true
 
     init {
-        mutableVehiclesDetailsMap.value = mutableMapOf()
         coroutineScope.launch {
             vehiclesMapFlow.collect {
                 Timber.v("vehiclesMapFlow new value = $it")
@@ -149,12 +141,12 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
     }
 
     private fun updateTheViewModel(vehicleId: String, vehicleDetails: VehicleDetailsRecord) {
+        val vehicleLocation = CurrentLocation(vehicleDetails.latitude, vehicleDetails.longitude)
         mldVehiclesMap.value?.put(
-            vehicleId,
-            VehicleRecord(vehicleId, detectVehicleStatus(vehicleDetails), false)
+            vehicleId, VehicleRecord(
+                vehicleId, detectVehicleStatus(vehicleDetails), false, vehicleLocation
+            )
         )
-        mutableVehiclesDetailsMap.value?.put(vehicleId, vehicleDetails)
-        mutableVehiclesDetailsMap.postValue(mutableVehiclesDetailsMap.value)
         // why postValue instead of setValue() -> https://www.geeksforgeeks.org/livedata-setvalue-vs-postvalue-in-android/
         timeToUpdateVehicleStatus.value = Unit // just to show new statuses on UI
     }

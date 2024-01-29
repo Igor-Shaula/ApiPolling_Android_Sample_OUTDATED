@@ -8,7 +8,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import com.igor_shaula.api_polling.R
-import com.igor_shaula.api_polling.data_layer.VehicleDetailsRecord
+import com.igor_shaula.api_polling.data_layer.VehicleRecord
 import com.igor_shaula.api_polling.databinding.FragmentDetailBinding
 import com.igor_shaula.api_polling.ui_layer.SharedViewModel
 import timber.log.Timber
@@ -17,7 +17,7 @@ class DetailFragment : DialogFragment() {
 
     private lateinit var binding: FragmentDetailBinding
 
-    private val viewModel: SharedViewModel by activityViewModels{ SharedViewModel.Factory }
+    private val viewModel: SharedViewModel by activityViewModels { SharedViewModel.Factory }
 
     private lateinit var vehicleId: String
 
@@ -38,12 +38,12 @@ class DetailFragment : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        viewModel.vehiclesDetailsMap.observe(viewLifecycleOwner) {
+        viewModel.vehiclesMap.observe(viewLifecycleOwner) {
             updateUI(it[vehicleId])
         }
     }
 
-    private fun updateUI(vehicleDetailsRecord: VehicleDetailsRecord?) {
+    private fun updateUI(vehicleRecord: VehicleRecord?) {
         binding.apply {
             actvCounterOfNearVehicles.text = getString(
                 R.string.close_distance_counter_text_base,
@@ -59,8 +59,8 @@ class DetailFragment : DialogFragment() {
             )
             actvLiveCoordinates.text = getString(
                 R.string.location_text_base,
-                vehicleDetailsRecord?.latitude,
-                vehicleDetailsRecord?.longitude
+                vehicleRecord?.currentLocation?.latitude,
+                vehicleRecord?.currentLocation?.longitude
             )
         }
     }
