@@ -40,6 +40,15 @@ fun VehicleDetailsModel.toVehicleItemRecords() = CurrentLocation(
     longitude = this.location.longitude
 )
 
+fun Result<VehicleDetailsModel>.toVehicleItemRecords(): CurrentLocation? {
+    val value = this.getOrNull()
+    return if (this.isFailure || value == null) {
+        null
+    } else {
+        CurrentLocation(latitude = value.location.latitude, longitude = value.location.longitude)
+    }
+}
+
 private const val ABSENT_FAILURE_INSTANCE_MESSAGE = "absent failure instance in Network API Result"
 
 data class DataLayerGeneralFailure(val explanation: String) : Throwable()

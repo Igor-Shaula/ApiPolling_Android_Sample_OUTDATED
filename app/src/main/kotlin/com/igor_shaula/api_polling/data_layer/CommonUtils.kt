@@ -2,7 +2,10 @@ package com.igor_shaula.api_polling.data_layer
 
 import android.location.Location
 
-fun detectVehicleStatus(vehicleDetails: CurrentLocation): VehicleStatus {
+fun detectVehicleStatus(vehicleDetails: CurrentLocation?): VehicleStatus {
+    if (vehicleDetails == null) {
+        return VehicleStatus.UNKNOWN
+    }
     val resultHolder = FloatArray(1)
     Location.distanceBetween(
         vehicleDetails.latitude, vehicleDetails.longitude,

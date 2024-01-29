@@ -139,7 +139,7 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
         }
     }
 
-    private fun updateTheViewModel(vehicleId: String, currentLocation: CurrentLocation) {
+    private fun updateTheViewModel(vehicleId: String, currentLocation: CurrentLocation?) {
         mldVehiclesMap.value?.put(
             vehicleId, VehicleRecord(
                 vehicleId, detectVehicleStatus(currentLocation), false, currentLocation

@@ -13,6 +13,6 @@ class NetworkDataSource(
     suspend fun readVehiclesListResult(): Result<List<VehicleRecord>> =
         vehicleDataNetworkService.getVehiclesListResult().toVehicleItemRecordsResult()
 
-    suspend fun readVehicleDetails(vehicleId: String): CurrentLocation? =
-        vehicleDataNetworkService.getVehicleDetails(vehicleId)?.toVehicleItemRecords()
+    suspend fun getVehicleDetailsResult(vehicleId: String): CurrentLocation? =
+        vehicleDataNetworkService.getVehicleDetailsResult(vehicleId).toVehicleItemRecords()
 }
