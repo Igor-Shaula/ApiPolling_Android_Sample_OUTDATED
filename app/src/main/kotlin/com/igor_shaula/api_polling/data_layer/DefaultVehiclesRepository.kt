@@ -52,7 +52,7 @@ class DefaultVehiclesRepository(
     }
 
     override suspend fun startGettingVehiclesDetails(
-        updateViewModel: (String, VehicleDetailsRecord) -> Unit,
+        updateViewModel: (String, CurrentLocation?) -> Unit,
         toggleBusyStateFor: (String, Boolean) -> Unit
     ) {
         mainDataStorage.value?.let {
@@ -100,7 +100,6 @@ class DefaultVehiclesRepository(
             } else {
                 result.getOrDefault(listOf())
             }
-//            networkDataSource.readVehiclesList()
         } else {
             fakeDataSource.readVehiclesList()
         }
@@ -110,18 +109,16 @@ class DefaultVehiclesRepository(
     }
 
     private suspend fun getAllDetailsForOneVehicle(
-        vehicleId: String, updateViewModel: (String, VehicleDetailsRecord) -> Unit
+        vehicleId: String, updateViewModel: (String, CurrentLocation?) -> Unit
     ) {
         val vehicleDetails = readVehicleDetails(vehicleId)
         Timber.d("vehicleDetails = $vehicleDetails")
-        if (vehicleDetails != null) {
-            updateViewModel(vehicleId, vehicleDetails)
-        }
+        updateViewModel(vehicleId, vehicleDetails)
     }
 
-    private suspend fun readVehicleDetails(vehicleId: String): VehicleDetailsRecord? =
+    private suspend fun readVehicleDetails(vehicleId: String): CurrentLocation? =
         if (activeDataSource == ThisApp.ActiveDataSource.NETWORK) {
-            networkDataSource.readVehicleDetails(vehicleId) // may be nullable due to Retrofit
+            networkDataSource.getVehicleDetailsResult(vehicleId) // may be nullable due to Retrofit
         } else {
             fakeDataSource.readVehicleDetails(vehicleId)
         }

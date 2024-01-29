@@ -128,8 +128,13 @@ class VehicleListFragment : Fragment() {
         super.onResume()
         Timber.v("onResume - 11")
         binding.actbPolling.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) viewModel.startGettingVehiclesDetails()
-            else viewModel.stopGettingVehiclesDetails()
+            binding.actbPolling.textOff = getString(R.string.toggle_button_off_text)
+            binding.actbPolling.textOn = getString(R.string.toggle_button_on_text)
+            if (isChecked) {
+                viewModel.startGettingVehiclesDetails()
+            } else {
+                viewModel.stopGettingVehiclesDetails()
+            }
         }
         binding.acbLaunchInitialRequest.setOnClickListener {
             animatedStringProgress = AnimatedStringProgress(binding.acbLaunchInitialRequest)

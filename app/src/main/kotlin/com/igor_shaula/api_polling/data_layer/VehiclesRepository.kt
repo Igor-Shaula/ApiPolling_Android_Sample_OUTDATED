@@ -10,7 +10,7 @@ interface VehiclesRepository {
     suspend fun launchGetAllVehicleIdsRequest(toggleMainBusyState: (Boolean) -> Unit)
 
     suspend fun startGettingVehiclesDetails(
-        updateViewModel: (String, VehicleDetailsRecord) -> Unit,
+        updateViewModel: (String, CurrentLocation?) -> Unit,
         toggleBusyStateFor: (String, Boolean) -> Unit
     )
 
