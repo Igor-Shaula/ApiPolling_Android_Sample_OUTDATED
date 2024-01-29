@@ -6,6 +6,7 @@ import android.widget.TextView
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
@@ -14,6 +15,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
+import kotlinx.coroutines.withContext
 
 private const val BASE_CHAR = ':'
 private const val HIGH_CHAR = '|'
@@ -47,7 +49,9 @@ class AnimatedStringProgress(private val textView: TextView) {
                 var indexOfStep = 0
                 while (isActive) {
                     repeat(textLength) {
-                        textView.text = getStringForThisTick(indexOfStep)
+                        withContext(Dispatchers.Main) {
+                            textView.text = getStringForThisTick(indexOfStep)
+                        }
                         delay(animationFrameTime)
                         if (indexOfStep < textLength) indexOfStep++
                         else indexOfStep = 0
@@ -63,6 +67,7 @@ class AnimatedStringProgress(private val textView: TextView) {
         if (textDotsCoroutineScope.isActive)
             textDotsCoroutineScope.cancel()
         textAnimationJob?.cancel()
+        textAnimationJob = null
 
         // now obviously it will be nice to restore initial text in the given view
         if (textBeforeAnimation.isNotEmpty()) {
