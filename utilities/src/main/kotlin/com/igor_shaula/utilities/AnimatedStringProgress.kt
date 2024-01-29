@@ -27,12 +27,16 @@ class AnimatedStringProgress(private val textView: TextView) {
 
     private var textAnimationJob: Job? = null
     private var textBeforeAnimation: String = ""
+    private var textColorBeforeAnimation: Int = Color.BLACK // in fact this value is never used
+    private var textTypefaceBeforeAnimation: Typeface? = null
     private val stringBuilder = StringBuilder()
     private var nextChar: Char = BASE_CHAR
 
     @OptIn(DelicateCoroutinesApi::class)
-    fun startShowing5DynamicDots() {
+    fun startShowingDynamicDottedText() {
         textBeforeAnimation = textView.text.toString()
+        textColorBeforeAnimation = textView.currentTextColor
+        textTypefaceBeforeAnimation = textView.typeface
         val textLength = textView.text.length
         val animationFrameTime = TOTAL_ANIMATION_TIME / textLength
         textView.setTypeface(textView.typeface, Typeface.BOLD)
@@ -66,8 +70,8 @@ class AnimatedStringProgress(private val textView: TextView) {
         }
 
         // restoring initial text settings - not relative to text length
-        textView.setTypeface(textView.typeface, Typeface.NORMAL)
-        textView.setTextColor(Color.WHITE)
+        textView.typeface = textTypefaceBeforeAnimation
+        textView.setTextColor(textColorBeforeAnimation)
     }
 
     private fun getStringForThisTick(indexOfStep: Int): String {

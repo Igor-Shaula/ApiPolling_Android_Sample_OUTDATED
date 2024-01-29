@@ -120,7 +120,7 @@ class VehicleListFragment : Fragment() {
             showCentralBusyState(show)
         }
         viewModel.timeToAdjustForFakeData.observe(viewLifecycleOwner) {
-            adjustTheBottomButton()
+            adjustTheBottomButtonForFakeData()
         }
     }
 
@@ -133,12 +133,12 @@ class VehicleListFragment : Fragment() {
         }
         binding.acbLaunchInitialRequest.setOnClickListener {
             animatedStringProgress = AnimatedStringProgress(binding.acbLaunchInitialRequest)
-            animatedStringProgress?.startShowing5DynamicDots()
+            animatedStringProgress?.startShowingDynamicDottedText()
             viewModel.getAllVehiclesIds()
         }
         binding.acbRepeatInitialRequest.setOnClickListener {
             animatedStringProgress = AnimatedStringProgress(binding.acbRepeatInitialRequest)
-            animatedStringProgress?.startShowing5DynamicDots()
+            animatedStringProgress?.startShowingDynamicDottedText()
             viewModel.getAllVehiclesIds()
             hideErrorViewsDuringAnotherTryAttempt()
         }
