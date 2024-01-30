@@ -12,6 +12,6 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "HomeTask_ApiPolling"
+rootProject.name = "ApiPolling_Sample_Android"
 include ':app'
 include ':utilities'
