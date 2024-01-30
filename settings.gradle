@@ -15,4 +15,3 @@ dependencyResolutionManagement {
 rootProject.name = "HomeTask_ApiPolling"
 include ':app'
 include ':utilities'
-include ':fakeDataGenerator'
