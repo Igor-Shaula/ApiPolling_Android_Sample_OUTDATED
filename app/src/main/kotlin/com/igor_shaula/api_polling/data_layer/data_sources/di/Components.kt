@@ -1,21 +1,25 @@
 package com.igor_shaula.api_polling.data_layer.data_sources.di
 
+import com.igor_shaula.api_polling.ui_layer.SharedViewModel
 import dagger.Component
 
-@Component(dependencies = [FakeDSComponent::class, NetworkDSComponent::class])
+@Component(
+//    dependencies = [FakeDSComponent::class, NetworkDSComponent::class],
+    modules = [RepositoryModule::class, RetrofitModule::class]
+)
 @RepositoryScope
 interface RepositoryComponent {
-    // TODO: add inject() here
+    fun inject(sharedViewModel: SharedViewModel)
 }
 
-@Component
-@FakeDSScope
-interface FakeDSComponent
-
-@Component(dependencies = [RetrofitComponent::class])
-@NetworkDSScope
-interface NetworkDSComponent
-
-@Component(modules = [RetrofitModule::class])
-@RetrofitScope
-interface RetrofitComponent
+//@Component(dependencies = [RepositoryComponent::class])
+//@FakeDSScope
+//interface FakeDSComponent
+//
+//@Component(dependencies = [RepositoryComponent::class])
+//@NetworkDSScope
+//interface NetworkDSComponent
+//
+//@Component(dependencies = [NetworkDSComponent::class], modules = [RetrofitModule::class])
+//@RetrofitScope
+//interface RetrofitComponent
