@@ -84,6 +84,8 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
 
     private var repository: DefaultVehiclesRepository
             by RepositoryProperty(vehiclesMapObserver, mainErrorStateInfoObserver)
+//    @Inject
+//    lateinit var repository: DefaultVehiclesRepository
 
     private val coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
 
@@ -92,6 +94,7 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
     private var firstTimeLaunched = true
 
     init {
+//        ThisApp.getRepositoryComponent().inject(this)
         coroutineScope.launch {
             vehiclesMapFlow.collect {
                 Timber.v("vehiclesMapFlow new value = $it")
