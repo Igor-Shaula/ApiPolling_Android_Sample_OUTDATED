@@ -3,9 +3,10 @@ package com.igor_shaula.api_polling.data_layer.data_sources
 import com.igor_shaula.api_polling.data_layer.CurrentLocation
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
 import com.igor_shaula.api_polling.data_layer.data_sources.retrofit.VehicleRetrofitNetworkServiceImpl
+import javax.inject.Inject
 
 // this class should consume several different API clients - not only Retrofit
-class NetworkDataSource(
+class NetworkDataSource @Inject constructor(
     private val vehicleDataNetworkService: VehicleRetrofitNetworkServiceImpl
     // add other network API clients as dependencies here
 ) {
