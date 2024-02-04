@@ -9,17 +9,6 @@ class VehicleRetrofitNetworkServiceImpl @Inject constructor(
     private val retrofitNetworkService: VehiclesRetrofitNetworkService
 ) {
 
-    suspend fun getVehiclesList(): List<VehicleModel> {
-        val response = retrofitNetworkService.getVehiclesList()
-        if (!response.isSuccessful) {
-            Timber.w("getVehiclesList: errorCode = ${response.code()}")
-            Timber.w("getVehiclesList: errorBody = ${response.errorBody()?.string()}")
-        }
-        val result: MutableList<VehicleModel> = mutableListOf()
-        response.body()?.let { result.addAll(it) }
-        return result
-    }
-
     suspend fun getVehiclesListResult(): Result<List<VehicleModel>> {
         val response = retrofitNetworkService.getVehiclesList()
         val result: Result<List<VehicleModel>> = if (response.isSuccessful) {
@@ -42,9 +31,6 @@ class VehicleRetrofitNetworkServiceImpl @Inject constructor(
         }
         return result
     }
-
-    suspend fun getVehicleDetails(vehicleId: String): VehicleDetailsModel? =
-        retrofitNetworkService.getVehicleDetails(vehicleId).body()
 
     suspend fun getVehicleDetailsResult(vehicleId: String): Result<VehicleDetailsModel> {
         val response = retrofitNetworkService.getVehicleDetails(vehicleId)
