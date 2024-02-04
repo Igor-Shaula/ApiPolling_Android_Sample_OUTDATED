@@ -3,9 +3,14 @@ package com.igor_shaula.api_polling
 import android.app.Application
 import android.os.StrictMode
 import com.igor_shaula.api_polling.data_layer.DefaultVehiclesRepository
-import com.igor_shaula.api_polling.data_layer.data_sources.NetworkDataSource
+import com.igor_shaula.api_polling.data_layer.data_sources.API_BASE_URL
 import com.igor_shaula.api_polling.data_layer.data_sources.FakeDataSource
+import com.igor_shaula.api_polling.data_layer.data_sources.NetworkDataSource
+import com.igor_shaula.api_polling.data_layer.data_sources.di.RepositoryComponent
 import com.igor_shaula.api_polling.data_layer.data_sources.retrofit.VehicleRetrofitNetworkServiceImpl
+import com.igor_shaula.api_polling.data_layer.data_sources.retrofit.VehiclesRetrofitNetworkService
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
 
 //val TIME_TO_SHOW_GOTO_FAKE_DIALOG = booleanPreferencesKey("timeToShowGoToFakeDialog")
@@ -20,7 +25,12 @@ class ThisApp : Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
+//        repositoryComponent = buildRepositoryComponent()
     }
+
+//    private fun buildRepositoryComponent(): RepositoryComponent =
+//        DaggerRepositoryComponent.builder()
+//            .build()
 
     fun getRepository(): DefaultVehiclesRepository = Companion.getRepository()
 
@@ -41,11 +51,22 @@ class ThisApp : Application() {
 
     companion object {
 
-// TODO: current solution is TEMPORARY - later move all DataSource usage logic into the Repository level
+        private lateinit var repositoryComponent: RepositoryComponent
+
+        fun getRepositoryComponent(): RepositoryComponent = repositoryComponent
+
+        // TODO: current solution is TEMPORARY - later move all DataSource usage logic into the Repository level
+
+        private val vrns: VehiclesRetrofitNetworkService =
+            Retrofit.Builder()
+                .baseUrl(API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(VehiclesRetrofitNetworkService::class.java)
 
         private val networkDataRepository: DefaultVehiclesRepository by lazy {
             DefaultVehiclesRepository(
-                NetworkDataSource(VehicleRetrofitNetworkServiceImpl()),
+                NetworkDataSource(VehicleRetrofitNetworkServiceImpl(vrns)),
                 FakeDataSource(),
                 ActiveDataSource.NETWORK
             )
@@ -53,7 +74,7 @@ class ThisApp : Application() {
 
         private val fakeDataRepository: DefaultVehiclesRepository by lazy {
             DefaultVehiclesRepository(
-                NetworkDataSource(VehicleRetrofitNetworkServiceImpl()),
+                NetworkDataSource(VehicleRetrofitNetworkServiceImpl(vrns)),
                 FakeDataSource(),
                 ActiveDataSource.FAKE
             )
