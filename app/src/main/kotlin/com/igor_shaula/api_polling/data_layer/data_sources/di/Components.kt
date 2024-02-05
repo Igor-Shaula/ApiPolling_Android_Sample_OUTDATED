@@ -11,6 +11,8 @@ import dagger.Component
 interface RepositoryComponent {
 
     fun inject(sharedViewModel: SharedViewModel)
+
+//    fun getVehiclesRepository(): VehiclesRepository // this instance is not provided for some reason
 }
 
 //@Component(dependencies = [RepositoryComponent::class])
