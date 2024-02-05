@@ -14,6 +14,7 @@ import com.igor_shaula.api_polling.data_layer.data_sources.di.REPOSITORY_TYPE_FA
 import com.igor_shaula.api_polling.data_layer.data_sources.di.REPOSITORY_TYPE_NETWORK
 import com.igor_shaula.api_polling.data_layer.data_sources.di.RepositoryQualifier
 import com.igor_shaula.api_polling.data_layer.detectVehicleStatus
+import dagger.Lazy
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -85,11 +86,11 @@ class SharedViewModel(/*repository: DefaultVehiclesRepository*/) : ViewModel() {
 
     @Inject
     @RepositoryQualifier(REPOSITORY_TYPE_NETWORK)
-    lateinit var networkBasedRepository: VehiclesRepository
+    lateinit var networkBasedRepository: Lazy<VehiclesRepository>
 
     @Inject
     @RepositoryQualifier(REPOSITORY_TYPE_FAKE)
-    lateinit var fakeBasedRepository: VehiclesRepository
+    lateinit var fakeBasedRepository: Lazy<VehiclesRepository>
 
     private val coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
 
@@ -104,7 +105,7 @@ class SharedViewModel(/*repository: DefaultVehiclesRepository*/) : ViewModel() {
 //                Timber.v("vehiclesMapFlow new value = $it")
 //            }
 //        }
-        this@SharedViewModel.repository = networkBasedRepository as DefaultVehiclesRepository
+        this@SharedViewModel.repository = networkBasedRepository.get() as DefaultVehiclesRepository
         this@SharedViewModel.repository.mainDataStorage.observeForever(vehiclesMapObserver)
         this@SharedViewModel.repository.mainErrorStateInfo.observeForever(mainErrorStateInfoObserver)
     }
@@ -174,7 +175,7 @@ class SharedViewModel(/*repository: DefaultVehiclesRepository*/) : ViewModel() {
 
     fun onReadyToUseFakeData() {
         stopGettingVehiclesDetails() // to avoid any possible resource leaks if this one still works
-        switchCurrentRepositoryTo(fakeBasedRepository)
+        switchCurrentRepositoryTo(fakeBasedRepository.get())
         timeToAdjustForFakeData.value = Unit
     }
 
@@ -183,7 +184,7 @@ class SharedViewModel(/*repository: DefaultVehiclesRepository*/) : ViewModel() {
         timeToShowFakeDataProposal.value = false
         mldVehiclesMap.value?.clear() // hoist up to the repository level - data must be cleared there as well
         coroutineScope.cancel()
-        switchCurrentRepositoryTo(networkBasedRepository)
+        switchCurrentRepositoryTo(networkBasedRepository.get())
     }
 
     private fun switchCurrentRepositoryTo(newRepository: VehiclesRepository) {
