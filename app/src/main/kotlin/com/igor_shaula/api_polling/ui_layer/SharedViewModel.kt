@@ -4,10 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.createSavedStateHandle
-import androidx.lifecycle.viewmodel.CreationExtras
 import com.igor_shaula.api_polling.ThisApp
 import com.igor_shaula.api_polling.data_layer.CurrentLocation
 import com.igor_shaula.api_polling.data_layer.DefaultVehiclesRepository
@@ -178,12 +174,7 @@ class SharedViewModel(/*repository: DefaultVehiclesRepository*/) : ViewModel() {
 
     fun onReadyToUseFakeData() {
         stopGettingVehiclesDetails() // to avoid any possible resource leaks if this one still works
-        repository.mainDataStorage.removeObserver(vehiclesMapObserver)
-        repository.mainErrorStateInfo.removeObserver(mainErrorStateInfoObserver)
-        repository = fakeBasedRepository as DefaultVehiclesRepository
-        repository.mainDataStorage.observeForever(vehiclesMapObserver)
-        repository.mainErrorStateInfo.observeForever(mainErrorStateInfoObserver)
-//            ThisApp.switchActiveDataSource(ThisApp.ActiveDataSource.FAKE) // must be a new value - with fake data
+        switchCurrentRepositoryTo(fakeBasedRepository)
         timeToAdjustForFakeData.value = Unit
     }
 
@@ -192,11 +183,14 @@ class SharedViewModel(/*repository: DefaultVehiclesRepository*/) : ViewModel() {
         timeToShowFakeDataProposal.value = false
         mldVehiclesMap.value?.clear() // hoist up to the repository level - data must be cleared there as well
         coroutineScope.cancel()
+        switchCurrentRepositoryTo(networkBasedRepository)
+    }
+
+    private fun switchCurrentRepositoryTo(newRepository: VehiclesRepository) {
         repository.mainDataStorage.removeObserver(vehiclesMapObserver)
         repository.mainErrorStateInfo.removeObserver(mainErrorStateInfoObserver)
-        repository = networkBasedRepository as DefaultVehiclesRepository
+        repository = newRepository as DefaultVehiclesRepository
         repository.mainDataStorage.observeForever(vehiclesMapObserver)
         repository.mainErrorStateInfo.observeForever(mainErrorStateInfoObserver)
-//        ThisApp.switchActiveDataSource(ThisApp.ActiveDataSource.NETWORK)
     }
 }
