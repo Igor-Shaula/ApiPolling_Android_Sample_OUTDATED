@@ -15,6 +15,9 @@ import dagger.Provides
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+const val REPOSITORY_TYPE_NETWORK = "using data from NETWORK source"
+const val REPOSITORY_TYPE_FAKE = "using data from FAKE source"
+
 @Module
 class RepositoryModule {
 
@@ -25,8 +28,8 @@ class RepositoryModule {
     fun providePollingEngine(): PollingEngine =
         JavaTPEBasedPollingEngine(5)
 
-    @[Provides RepositoryScope]
-    fun provideRepository(): VehiclesRepository {
+    @[Provides RepositoryScope RepositoryQualifier(REPOSITORY_TYPE_FAKE)]
+    fun provideFakeRepository(): VehiclesRepository {
         val vrns: VehiclesRetrofitNetworkService =
             Retrofit.Builder()
                 .baseUrl(API_BASE_URL)
@@ -37,6 +40,21 @@ class RepositoryModule {
             NetworkDataSource(VehicleRetrofitNetworkServiceImpl(vrns)),
             FakeDataSource(),
             ThisApp.ActiveDataSource.FAKE
+        )
+    }
+
+    @[Provides RepositoryScope RepositoryQualifier(REPOSITORY_TYPE_NETWORK)]
+    fun provideNetworkRepository(): VehiclesRepository {
+        val vrns: VehiclesRetrofitNetworkService =
+            Retrofit.Builder()
+                .baseUrl(API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(VehiclesRetrofitNetworkService::class.java)
+        return DefaultVehiclesRepository(
+            NetworkDataSource(VehicleRetrofitNetworkServiceImpl(vrns)),
+            FakeDataSource(),
+            ThisApp.ActiveDataSource.NETWORK
         )
     }
 }
