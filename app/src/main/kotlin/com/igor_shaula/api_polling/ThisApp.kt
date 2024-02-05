@@ -6,6 +6,7 @@ import com.igor_shaula.api_polling.data_layer.DefaultVehiclesRepository
 import com.igor_shaula.api_polling.data_layer.data_sources.API_BASE_URL
 import com.igor_shaula.api_polling.data_layer.data_sources.FakeDataSource
 import com.igor_shaula.api_polling.data_layer.data_sources.NetworkDataSource
+import com.igor_shaula.api_polling.data_layer.data_sources.di.DaggerRepositoryComponent
 import com.igor_shaula.api_polling.data_layer.data_sources.di.RepositoryComponent
 import com.igor_shaula.api_polling.data_layer.data_sources.retrofit.VehicleRetrofitNetworkServiceImpl
 import com.igor_shaula.api_polling.data_layer.data_sources.retrofit.VehiclesRetrofitNetworkService
@@ -25,12 +26,12 @@ class ThisApp : Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
-//        repositoryComponent = buildRepositoryComponent()
+        repositoryComponent = buildRepositoryComponent()
     }
 
-//    private fun buildRepositoryComponent(): RepositoryComponent =
-//        DaggerRepositoryComponent.builder()
-//            .build()
+    private fun buildRepositoryComponent(): RepositoryComponent =
+        DaggerRepositoryComponent.builder()
+            .build()
 
     fun getRepository(): DefaultVehiclesRepository = Companion.getRepository()
 
