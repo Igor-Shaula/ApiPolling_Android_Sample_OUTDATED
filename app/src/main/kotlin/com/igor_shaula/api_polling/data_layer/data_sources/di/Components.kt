@@ -5,7 +5,7 @@ import dagger.Component
 
 @Component(
 //    dependencies = [FakeDSComponent::class, NetworkDSComponent::class],
-    modules = [RepositoryModule::class, RetrofitModule::class]
+    modules = [RepositoryModule::class, RetrofitModule::class, ContextModule::class]
 )
 @RepositoryScope
 interface RepositoryComponent {
