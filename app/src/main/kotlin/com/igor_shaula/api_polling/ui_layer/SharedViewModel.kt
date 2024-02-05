@@ -23,7 +23,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import timber.log.Timber
@@ -32,29 +31,29 @@ import javax.inject.Inject
 private const val ABSENT_FAILURE_EXPLANATION_MESSAGE =
     "no failure explanation from the Repository level"
 
-class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
+class SharedViewModel(/*repository: DefaultVehiclesRepository*/) : ViewModel() {
 
-    @Suppress("UNCHECKED_CAST")
-    companion object {
-        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            override fun <SharedViewModelType : ViewModel> create(
-                modelClass: Class<SharedViewModelType>,
-                extras: CreationExtras
-            ): SharedViewModelType {
-                // Get the Application object from extras
-                val application = checkNotNull(extras[APPLICATION_KEY])
-                // Create a SavedStateHandle for this ViewModel from extras
-                val savedStateHandle = extras.createSavedStateHandle()
-                return SharedViewModel(
-                    (application as ThisApp).getRepository()
-                ) as SharedViewModelType
-            }
-        }
-    }
+//    @Suppress("UNCHECKED_CAST")
+//    companion object {
+//        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+//            override fun <SharedViewModelType : ViewModel> create(
+//                modelClass: Class<SharedViewModelType>,
+//                extras: CreationExtras
+//            ): SharedViewModelType {
+//                // Get the Application object from extras
+//                val application = checkNotNull(extras[APPLICATION_KEY])
+//                // Create a SavedStateHandle for this ViewModel from extras
+//                val savedStateHandle = extras.createSavedStateHandle()
+//                return SharedViewModel(
+//                    (application as ThisApp).getRepository() // this is the problem
+//                ) as SharedViewModelType
+//            }
+//        }
+//    }
 
     // todo: use data from vehiclesMapFlow on the UI layer
-    val vehiclesMapFlow: Flow<MutableMap<String, VehicleRecord>?> = repository.vehiclesDataFlow
-        .also { Timber.v("vehiclesMapFlow updated") }
+//    val vehiclesMapFlow: Flow<MutableMap<String, VehicleRecord>?> = repository.vehiclesDataFlow
+//        .also { Timber.v("vehiclesMapFlow updated") }
 
     private val mldVehiclesMap = MutableLiveData<MutableMap<String, VehicleRecord>>()
     val vehiclesMap: LiveData<MutableMap<String, VehicleRecord>> get() = mldVehiclesMap
@@ -104,11 +103,11 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
 
     init {
         ThisApp.getRepositoryComponent().inject(this)
-        coroutineScope.launch {
-            vehiclesMapFlow.collect {
-                Timber.v("vehiclesMapFlow new value = $it")
-            }
-        }
+//        coroutineScope.launch {
+//            vehiclesMapFlow.collect {
+//                Timber.v("vehiclesMapFlow new value = $it")
+//            }
+//        }
         this@SharedViewModel.repository = networkBasedRepository as DefaultVehiclesRepository
         this@SharedViewModel.repository.mainDataStorage.observeForever(vehiclesMapObserver)
         this@SharedViewModel.repository.mainErrorStateInfo.observeForever(mainErrorStateInfoObserver)
