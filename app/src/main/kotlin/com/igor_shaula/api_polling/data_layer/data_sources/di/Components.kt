@@ -1,6 +1,5 @@
 package com.igor_shaula.api_polling.data_layer.data_sources.di
 
-import com.igor_shaula.api_polling.data_layer.data_sources.RepositoryProperty
 import com.igor_shaula.api_polling.ui_layer.SharedViewModel
 import dagger.Component
 
@@ -12,8 +11,6 @@ import dagger.Component
 interface RepositoryComponent {
 
     fun inject(sharedViewModel: SharedViewModel)
-
-    fun inject(repositoryProperty: RepositoryProperty)
 }
 
 //@Component(dependencies = [RepositoryComponent::class])

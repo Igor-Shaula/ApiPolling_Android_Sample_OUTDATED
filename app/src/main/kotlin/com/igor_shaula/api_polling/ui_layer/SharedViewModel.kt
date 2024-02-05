@@ -13,7 +13,10 @@ import com.igor_shaula.api_polling.data_layer.CurrentLocation
 import com.igor_shaula.api_polling.data_layer.DefaultVehiclesRepository
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
 import com.igor_shaula.api_polling.data_layer.VehicleStatus
-import com.igor_shaula.api_polling.data_layer.data_sources.RepositoryProperty
+import com.igor_shaula.api_polling.data_layer.VehiclesRepository
+import com.igor_shaula.api_polling.data_layer.data_sources.di.REPOSITORY_TYPE_FAKE
+import com.igor_shaula.api_polling.data_layer.data_sources.di.REPOSITORY_TYPE_NETWORK
+import com.igor_shaula.api_polling.data_layer.data_sources.di.RepositoryQualifier
 import com.igor_shaula.api_polling.data_layer.detectVehicleStatus
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +27,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import timber.log.Timber
+import javax.inject.Inject
 
 private const val ABSENT_FAILURE_EXPLANATION_MESSAGE =
     "no failure explanation from the Repository level"
@@ -83,9 +87,14 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
     }
 
     private var repository: DefaultVehiclesRepository
-            by RepositoryProperty(vehiclesMapObserver, mainErrorStateInfoObserver)
-//    @Inject
-//    lateinit var repository: DefaultVehiclesRepository
+
+    @Inject
+    @RepositoryQualifier(REPOSITORY_TYPE_NETWORK)
+    lateinit var networkBasedRepository: VehiclesRepository
+
+    @Inject
+    @RepositoryQualifier(REPOSITORY_TYPE_FAKE)
+    lateinit var fakeBasedRepository: VehiclesRepository
 
     private val coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
 
@@ -94,12 +103,15 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
     private var firstTimeLaunched = true
 
     init {
-//        ThisApp.getRepositoryComponent().inject(this)
+        ThisApp.getRepositoryComponent().inject(this)
         coroutineScope.launch {
             vehiclesMapFlow.collect {
                 Timber.v("vehiclesMapFlow new value = $it")
             }
         }
+        this@SharedViewModel.repository = networkBasedRepository as DefaultVehiclesRepository
+        this@SharedViewModel.repository.mainDataStorage.observeForever(vehiclesMapObserver)
+        this@SharedViewModel.repository.mainErrorStateInfo.observeForever(mainErrorStateInfoObserver)
     }
 
     override fun onCleared() {
@@ -167,8 +179,12 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
 
     fun onReadyToUseFakeData() {
         stopGettingVehiclesDetails() // to avoid any possible resource leaks if this one still works
-        repository =
-            ThisApp.switchActiveDataSource(ThisApp.ActiveDataSource.FAKE) // must be a new value - with fake data
+        repository.mainDataStorage.removeObserver(vehiclesMapObserver)
+        repository.mainErrorStateInfo.removeObserver(mainErrorStateInfoObserver)
+        repository = fakeBasedRepository as DefaultVehiclesRepository
+        repository.mainDataStorage.observeForever(vehiclesMapObserver)
+        repository.mainErrorStateInfo.observeForever(mainErrorStateInfoObserver)
+//            ThisApp.switchActiveDataSource(ThisApp.ActiveDataSource.FAKE) // must be a new value - with fake data
         timeToAdjustForFakeData.value = Unit
     }
 
@@ -177,6 +193,11 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
         timeToShowFakeDataProposal.value = false
         mldVehiclesMap.value?.clear() // hoist up to the repository level - data must be cleared there as well
         coroutineScope.cancel()
-        repository = ThisApp.switchActiveDataSource(ThisApp.ActiveDataSource.NETWORK)
+        repository.mainDataStorage.removeObserver(vehiclesMapObserver)
+        repository.mainErrorStateInfo.removeObserver(mainErrorStateInfoObserver)
+        repository = networkBasedRepository as DefaultVehiclesRepository
+        repository.mainDataStorage.observeForever(vehiclesMapObserver)
+        repository.mainErrorStateInfo.observeForever(mainErrorStateInfoObserver)
+//        ThisApp.switchActiveDataSource(ThisApp.ActiveDataSource.NETWORK)
     }
 }
