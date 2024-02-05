@@ -10,14 +10,15 @@ import javax.inject.Inject
 import kotlin.random.Random
 import kotlin.random.nextInt
 
-class FakeDataSource @Inject constructor() {
+class FakeDataSource @Inject constructor(
+    private val fakeVehicleGenerator: FakeVehicleGenerator
+) {
 
     suspend fun readVehiclesList(): List<VehicleRecord> {
         delay(Random.nextInt(50..5_000).toLong())
-        val generator = FakeVehicleGenerator("fake vehicle #")
         val result: MutableList<VehicleModel> = mutableListOf()
         (0..Random.nextInt(30)).forEach { _ ->
-            result.add(VehicleModel(generator.createNextVehicleModelString()))
+            result.add(VehicleModel(fakeVehicleGenerator.createNextVehicleModelString()))
         }
         return result.toVehicleItemRecords()
     }

@@ -7,6 +7,7 @@ import com.igor_shaula.api_polling.data_layer.VehiclesRepository
 import com.igor_shaula.api_polling.data_layer.data_sources.API_BASE_URL
 import com.igor_shaula.api_polling.data_layer.data_sources.FakeDataSource
 import com.igor_shaula.api_polling.data_layer.data_sources.NetworkDataSource
+import com.igor_shaula.api_polling.data_layer.data_sources.fake_api_client.FakeVehicleGenerator
 import com.igor_shaula.api_polling.data_layer.data_sources.retrofit.VehiclesRetrofitNetworkService
 import dagger.Module
 import dagger.Provides
@@ -39,6 +40,13 @@ class RepositoryModule {
             networkDataSource, fakeDataSource, ThisApp.ActiveDataSource.NETWORK
         )
     }
+}
+
+@Module
+class FakeVehicleGeneratorModule {
+
+    @[Provides RepositoryScope]
+    fun provideFakeVehicleGenerator() = FakeVehicleGenerator("fake vehicle")
 }
 
 @Module
