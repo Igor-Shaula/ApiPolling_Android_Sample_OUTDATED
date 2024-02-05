@@ -21,21 +21,8 @@ const val REPOSITORY_TYPE_FAKE = "using data from FAKE source"
 @Module
 class RepositoryModule {
 
-//    @[Provides RepositoryScope]
-//    fun provideActiveDataStore(): ThisApp.ActiveDataSource = ThisApp.ActiveDataSource.FAKE
-
-//    @[Provides RepositoryScope]
-//    fun providePollingEngine(): PollingEngine =
-//        JavaTPEBasedPollingEngine(5)
-
     @[Provides RepositoryScope RepositoryQualifier(REPOSITORY_TYPE_FAKE)]
-    fun provideFakeRepository(): VehiclesRepository {
-        val vrns: VehiclesRetrofitNetworkService =
-            Retrofit.Builder()
-                .baseUrl(API_BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(VehiclesRetrofitNetworkService::class.java)
+    fun provideFakeRepository(vrns: VehiclesRetrofitNetworkService): VehiclesRepository {
         return DefaultVehiclesRepository(
             NetworkDataSource(VehicleRetrofitNetworkServiceImpl(vrns)),
             FakeDataSource(),
@@ -44,13 +31,7 @@ class RepositoryModule {
     }
 
     @[Provides RepositoryScope RepositoryQualifier(REPOSITORY_TYPE_NETWORK)]
-    fun provideNetworkRepository(): VehiclesRepository {
-        val vrns: VehiclesRetrofitNetworkService =
-            Retrofit.Builder()
-                .baseUrl(API_BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(VehiclesRetrofitNetworkService::class.java)
+    fun provideNetworkRepository(vrns: VehiclesRetrofitNetworkService): VehiclesRepository {
         return DefaultVehiclesRepository(
             NetworkDataSource(VehicleRetrofitNetworkServiceImpl(vrns)),
             FakeDataSource(),
