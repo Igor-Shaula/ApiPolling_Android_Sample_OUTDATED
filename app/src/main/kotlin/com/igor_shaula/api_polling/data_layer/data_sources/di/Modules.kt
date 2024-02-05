@@ -7,7 +7,6 @@ import com.igor_shaula.api_polling.data_layer.VehiclesRepository
 import com.igor_shaula.api_polling.data_layer.data_sources.API_BASE_URL
 import com.igor_shaula.api_polling.data_layer.data_sources.FakeDataSource
 import com.igor_shaula.api_polling.data_layer.data_sources.NetworkDataSource
-import com.igor_shaula.api_polling.data_layer.data_sources.retrofit.VehicleRetrofitNetworkServiceImpl
 import com.igor_shaula.api_polling.data_layer.data_sources.retrofit.VehiclesRetrofitNetworkService
 import dagger.Module
 import dagger.Provides
@@ -22,20 +21,22 @@ const val REPOSITORY_TYPE_FAKE = "using data from FAKE source"
 class RepositoryModule {
 
     @[Provides RepositoryScope RepositoryQualifier(REPOSITORY_TYPE_FAKE)]
-    fun provideFakeRepository(vrns: VehiclesRetrofitNetworkService): VehiclesRepository {
+    fun provideFakeRepository(
+        networkDataSource: NetworkDataSource,
+        fakeDataSource: FakeDataSource
+    ): VehiclesRepository {
         return DefaultVehiclesRepository(
-            NetworkDataSource(VehicleRetrofitNetworkServiceImpl(vrns)),
-            FakeDataSource(),
-            ThisApp.ActiveDataSource.FAKE
+            networkDataSource, fakeDataSource, ThisApp.ActiveDataSource.FAKE
         )
     }
 
     @[Provides RepositoryScope RepositoryQualifier(REPOSITORY_TYPE_NETWORK)]
-    fun provideNetworkRepository(vrns: VehiclesRetrofitNetworkService): VehiclesRepository {
+    fun provideNetworkRepository(
+        networkDataSource: NetworkDataSource,
+        fakeDataSource: FakeDataSource
+    ): VehiclesRepository {
         return DefaultVehiclesRepository(
-            NetworkDataSource(VehicleRetrofitNetworkServiceImpl(vrns)),
-            FakeDataSource(),
-            ThisApp.ActiveDataSource.NETWORK
+            networkDataSource, fakeDataSource, ThisApp.ActiveDataSource.NETWORK
         )
     }
 }
