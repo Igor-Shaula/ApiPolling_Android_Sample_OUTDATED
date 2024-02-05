@@ -4,6 +4,11 @@ import androidx.lifecycle.Observer
 import com.igor_shaula.api_polling.ThisApp
 import com.igor_shaula.api_polling.data_layer.DefaultVehiclesRepository
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
+import com.igor_shaula.api_polling.data_layer.VehiclesRepository
+import com.igor_shaula.api_polling.data_layer.data_sources.di.REPOSITORY_TYPE_FAKE
+import com.igor_shaula.api_polling.data_layer.data_sources.di.REPOSITORY_TYPE_NETWORK
+import com.igor_shaula.api_polling.data_layer.data_sources.di.RepositoryQualifier
+import javax.inject.Inject
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -13,6 +18,18 @@ class RepositoryProperty(
 ) : ReadWriteProperty<Any, DefaultVehiclesRepository> {
 
     private lateinit var repository: DefaultVehiclesRepository
+
+    @Inject
+    @RepositoryQualifier(REPOSITORY_TYPE_NETWORK)
+    lateinit var networkBasedRepository: VehiclesRepository
+
+    @Inject
+    @RepositoryQualifier(REPOSITORY_TYPE_FAKE)
+    lateinit var fakeBasedRepository: VehiclesRepository
+
+    init {
+        ThisApp.getRepositoryComponent().inject(this)
+    }
 
     override fun getValue(thisRef: Any, property: KProperty<*>): DefaultVehiclesRepository {
         if (!this::repository.isInitialized) {
