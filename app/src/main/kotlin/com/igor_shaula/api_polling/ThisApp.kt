@@ -5,6 +5,8 @@ import android.os.StrictMode
 import com.igor_shaula.api_polling.data_layer.data_sources.di.ContextModule
 import com.igor_shaula.api_polling.data_layer.data_sources.di.DaggerContextComponent
 import com.igor_shaula.api_polling.data_layer.data_sources.di.DaggerFakeApiComponent
+import com.igor_shaula.api_polling.data_layer.data_sources.di.DaggerFakeDSComponent
+import com.igor_shaula.api_polling.data_layer.data_sources.di.DaggerNetworkDSComponent
 import com.igor_shaula.api_polling.data_layer.data_sources.di.DaggerRepositoryComponent
 import com.igor_shaula.api_polling.data_layer.data_sources.di.DaggerRetrofitComponent
 import com.igor_shaula.api_polling.data_layer.data_sources.di.FakeApiModule
@@ -34,12 +36,18 @@ class ThisApp : Application() {
         val fakeApiComponent = DaggerFakeApiComponent.builder()
             .fakeApiModule(FakeApiModule())
             .build()
+        val fakeDSComponent = DaggerFakeDSComponent.builder()
+            .fakeApiComponent(fakeApiComponent)
+            .build()
         val retrofitComponent = DaggerRetrofitComponent.builder()
             .retrofitModule(RetrofitModule())
             .build()
-        return DaggerRepositoryComponent.builder()
-            .fakeApiComponent(fakeApiComponent)
+        val networkDSComponent = DaggerNetworkDSComponent.builder()
             .retrofitComponent(retrofitComponent)
+            .build()
+        return DaggerRepositoryComponent.builder()
+            .fakeDSComponent(fakeDSComponent)
+            .networkDSComponent(networkDSComponent)
 //            .repositoryModule(RepositoryModule()) // not needed - works even without this line
             .build()
     }

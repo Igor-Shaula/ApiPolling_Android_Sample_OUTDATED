@@ -14,8 +14,9 @@ interface ContextComponent {
 }
 
 @Component(
-    dependencies = [FakeApiComponent::class, RetrofitComponent::class],
-    modules = [RepositoryModule::class /*FakeApiModule::class, RetrofitModule::class, ContextModule::class*/]
+    dependencies = [FakeDSComponent::class, NetworkDSComponent::class],
+//    dependencies = [FakeApiComponent::class, RetrofitComponent::class], // very simplified version
+    modules = [RepositoryModule::class]
 )
 @RepositoryScope
 interface RepositoryComponent {
@@ -23,21 +24,25 @@ interface RepositoryComponent {
     fun inject(sharedViewModel: SharedViewModel)
 }
 
-//@Component(dependencies = [RepositoryComponent::class])
-//@FakeDSScope
-//interface FakeDSComponent
+@Component(dependencies = [FakeApiComponent::class])
+@FakeDSScope
+interface FakeDSComponent {
+    fun getFakeVehicleGenerator(): FakeVehicleGenerator
+}
 
-@Component(/*dependencies = [RepositoryComponent::class], */modules = [FakeApiModule::class])
+@Component(modules = [FakeApiModule::class])
 @FakeApiScope
 interface FakeApiComponent {
     fun getFakeVehicleGenerator(): FakeVehicleGenerator
 }
 
-//@Component(dependencies = [RepositoryComponent::class])
-//@NetworkDSScope
-//interface NetworkDSComponent
+@Component(dependencies = [RetrofitComponent::class])
+@NetworkDSScope
+interface NetworkDSComponent {
+    fun getVehiclesRetrofitNetworkService(): VehiclesRetrofitNetworkService
+}
 
-@Component(/*dependencies = [RepositoryComponent::class], */modules = [RetrofitModule::class])
+@Component(modules = [RetrofitModule::class])
 @RetrofitScope
 interface RetrofitComponent {
     fun getVehiclesRetrofitNetworkService(): VehiclesRetrofitNetworkService
