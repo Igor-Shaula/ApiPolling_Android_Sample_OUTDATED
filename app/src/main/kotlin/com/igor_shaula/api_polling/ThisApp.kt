@@ -3,8 +3,13 @@ package com.igor_shaula.api_polling
 import android.app.Application
 import android.os.StrictMode
 import com.igor_shaula.api_polling.data_layer.data_sources.di.ContextModule
+import com.igor_shaula.api_polling.data_layer.data_sources.di.DaggerContextComponent
+import com.igor_shaula.api_polling.data_layer.data_sources.di.DaggerFakeApiComponent
 import com.igor_shaula.api_polling.data_layer.data_sources.di.DaggerRepositoryComponent
+import com.igor_shaula.api_polling.data_layer.data_sources.di.DaggerRetrofitComponent
+import com.igor_shaula.api_polling.data_layer.data_sources.di.FakeApiModule
 import com.igor_shaula.api_polling.data_layer.data_sources.di.RepositoryComponent
+import com.igor_shaula.api_polling.data_layer.data_sources.di.RetrofitModule
 import timber.log.Timber
 
 //val TIME_TO_SHOW_GOTO_FAKE_DIALOG = booleanPreferencesKey("timeToShowGoToFakeDialog")
@@ -22,13 +27,22 @@ class ThisApp : Application() {
         repositoryComponent = buildRepositoryComponent()
     }
 
-    private fun buildRepositoryComponent(): RepositoryComponent =
-        DaggerRepositoryComponent.builder()
-//            .repositoryModule(RepositoryModule()) // not needed - works even without this line
-//            .retrofitModule(RetrofitModule())
-            .contextModule(ContextModule(this)) // change this to remove deprecation
+    private fun buildRepositoryComponent(): RepositoryComponent {
+        val contextComponent = DaggerContextComponent.builder()
+            .contextModule(ContextModule(this))
             .build()
-
+        val fakeApiComponent = DaggerFakeApiComponent.builder()
+            .fakeApiModule(FakeApiModule())
+            .build()
+        val retrofitComponent = DaggerRetrofitComponent.builder()
+            .retrofitModule(RetrofitModule())
+            .build()
+        return DaggerRepositoryComponent.builder()
+            .fakeApiComponent(fakeApiComponent)
+            .retrofitComponent(retrofitComponent)
+//            .repositoryModule(RepositoryModule()) // not needed - works even without this line
+            .build()
+    }
 //    fun readNeedFakeDialogFromLocalPrefs(): Flow<Boolean> =
 //        dataStore.data.map { preferences ->
 //            preferences[TIME_TO_SHOW_GOTO_FAKE_DIALOG] ?: false
