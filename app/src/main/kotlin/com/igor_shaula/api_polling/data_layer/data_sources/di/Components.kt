@@ -7,20 +7,13 @@ import com.igor_shaula.api_polling.ui_layer.SharedViewModel
 import dagger.Component
 import javax.inject.Singleton
 
-@Component(modules = [ContextModule::class])
-@Singleton
-interface ContextComponent {
-    fun getContext(): Context
-}
-
 @Component(
-    dependencies = [FakeDSComponent::class, NetworkDSComponent::class],
+    dependencies = [FakeDSComponent::class, NetworkDSComponent::class, ContextComponent::class],
 //    dependencies = [FakeApiComponent::class, RetrofitComponent::class], // very simplified version
     modules = [RepositoryModule::class]
 )
 @RepositoryScope
 interface RepositoryComponent {
-
     fun inject(sharedViewModel: SharedViewModel)
 }
 
@@ -46,4 +39,10 @@ interface NetworkDSComponent {
 @RetrofitScope
 interface RetrofitComponent {
     fun getVehiclesRetrofitNetworkService(): VehiclesRetrofitNetworkService
+}
+
+@Component(modules = [ContextModule::class])
+@Singleton
+interface ContextComponent {
+    fun getContext(): Context
 }

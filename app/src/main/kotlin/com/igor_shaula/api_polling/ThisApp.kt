@@ -9,9 +9,7 @@ import com.igor_shaula.api_polling.data_layer.data_sources.di.DaggerFakeDSCompon
 import com.igor_shaula.api_polling.data_layer.data_sources.di.DaggerNetworkDSComponent
 import com.igor_shaula.api_polling.data_layer.data_sources.di.DaggerRepositoryComponent
 import com.igor_shaula.api_polling.data_layer.data_sources.di.DaggerRetrofitComponent
-import com.igor_shaula.api_polling.data_layer.data_sources.di.FakeApiModule
 import com.igor_shaula.api_polling.data_layer.data_sources.di.RepositoryComponent
-import com.igor_shaula.api_polling.data_layer.data_sources.di.RetrofitModule
 import timber.log.Timber
 
 //val TIME_TO_SHOW_GOTO_FAKE_DIALOG = booleanPreferencesKey("timeToShowGoToFakeDialog")
@@ -30,24 +28,25 @@ class ThisApp : Application() {
     }
 
     private fun buildRepositoryComponent(): RepositoryComponent {
+//        val fakeApiComponent = DaggerFakeApiComponent.builder()
+//            .fakeApiModule(FakeApiModule())
+//            .build()
+        val fakeDSComponent = DaggerFakeDSComponent.builder()
+            .fakeApiComponent(DaggerFakeApiComponent.create())
+            .build()
+//        val retrofitComponent = DaggerRetrofitComponent.builder()
+//            .retrofitModule(RetrofitModule())
+//            .build()
+        val networkDSComponent = DaggerNetworkDSComponent.builder()
+            .retrofitComponent(DaggerRetrofitComponent.create())
+            .build()
         val contextComponent = DaggerContextComponent.builder()
             .contextModule(ContextModule(this))
-            .build()
-        val fakeApiComponent = DaggerFakeApiComponent.builder()
-            .fakeApiModule(FakeApiModule())
-            .build()
-        val fakeDSComponent = DaggerFakeDSComponent.builder()
-            .fakeApiComponent(fakeApiComponent)
-            .build()
-        val retrofitComponent = DaggerRetrofitComponent.builder()
-            .retrofitModule(RetrofitModule())
-            .build()
-        val networkDSComponent = DaggerNetworkDSComponent.builder()
-            .retrofitComponent(retrofitComponent)
             .build()
         return DaggerRepositoryComponent.builder()
             .fakeDSComponent(fakeDSComponent)
             .networkDSComponent(networkDSComponent)
+            .contextComponent(contextComponent)
 //            .repositoryModule(RepositoryModule()) // not needed - works even without this line
             .build()
     }
