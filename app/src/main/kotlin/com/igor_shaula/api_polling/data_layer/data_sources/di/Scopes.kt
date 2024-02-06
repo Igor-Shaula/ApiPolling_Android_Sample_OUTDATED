@@ -8,11 +8,15 @@ annotation class RepositoryScope
 
 @Scope
 @Retention(AnnotationRetention.RUNTIME)
-annotation class NetworkDSScope
+annotation class FakeDSScope
 
 @Scope
 @Retention(AnnotationRetention.RUNTIME)
-annotation class FakeDSScope
+annotation class FakeApiScope
+
+@Scope
+@Retention(AnnotationRetention.RUNTIME)
+annotation class NetworkDSScope
 
 @Scope
 @Retention(AnnotationRetention.RUNTIME)
