@@ -43,16 +43,16 @@ class RepositoryModule {
 }
 
 @Module
-class FakeVehicleGeneratorModule {
+class FakeApiModule {
 
-    @[Provides RepositoryScope]
+    @[Provides FakeApiScope]
     fun provideFakeVehicleGenerator() = FakeVehicleGenerator("fake vehicle")
 }
 
 @Module
 class RetrofitModule { // why in fact this is not used ???
 
-    @[Provides RepositoryScope] // replace RepositoryScope with RetrofitScope later
+    @[Provides RetrofitScope] // replace RepositoryScope with RetrofitScope later
     fun provideRetrofitService(): VehiclesRetrofitNetworkService =
         Retrofit.Builder()
             .baseUrl(API_BASE_URL)
