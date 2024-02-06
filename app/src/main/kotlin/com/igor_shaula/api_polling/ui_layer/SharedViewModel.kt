@@ -4,53 +4,53 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.createSavedStateHandle
-import androidx.lifecycle.viewmodel.CreationExtras
 import com.igor_shaula.api_polling.ThisApp
 import com.igor_shaula.api_polling.data_layer.CurrentLocation
 import com.igor_shaula.api_polling.data_layer.DefaultVehiclesRepository
 import com.igor_shaula.api_polling.data_layer.VehicleRecord
 import com.igor_shaula.api_polling.data_layer.VehicleStatus
-import com.igor_shaula.api_polling.data_layer.data_sources.RepositoryProperty
+import com.igor_shaula.api_polling.data_layer.VehiclesRepository
+import com.igor_shaula.api_polling.data_layer.data_sources.di.REPOSITORY_TYPE_FAKE
+import com.igor_shaula.api_polling.data_layer.data_sources.di.REPOSITORY_TYPE_NETWORK
+import com.igor_shaula.api_polling.data_layer.data_sources.di.RepositoryQualifier
 import com.igor_shaula.api_polling.data_layer.detectVehicleStatus
+import dagger.Lazy
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import timber.log.Timber
+import javax.inject.Inject
 
 private const val ABSENT_FAILURE_EXPLANATION_MESSAGE =
     "no failure explanation from the Repository level"
 
-class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
+class SharedViewModel(/*repository: DefaultVehiclesRepository*/) : ViewModel() {
 
-    @Suppress("UNCHECKED_CAST")
-    companion object {
-        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            override fun <SharedViewModelType : ViewModel> create(
-                modelClass: Class<SharedViewModelType>,
-                extras: CreationExtras
-            ): SharedViewModelType {
-                // Get the Application object from extras
-                val application = checkNotNull(extras[APPLICATION_KEY])
-                // Create a SavedStateHandle for this ViewModel from extras
-                val savedStateHandle = extras.createSavedStateHandle()
-                return SharedViewModel(
-                    (application as ThisApp).getRepository()
-                ) as SharedViewModelType
-            }
-        }
-    }
+//    @Suppress("UNCHECKED_CAST")
+//    companion object {
+//        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+//            override fun <SharedViewModelType : ViewModel> create(
+//                modelClass: Class<SharedViewModelType>,
+//                extras: CreationExtras
+//            ): SharedViewModelType {
+//                // Get the Application object from extras
+//                val application = checkNotNull(extras[APPLICATION_KEY])
+//                // Create a SavedStateHandle for this ViewModel from extras
+//                val savedStateHandle = extras.createSavedStateHandle()
+//                return SharedViewModel(
+//                    (application as ThisApp).getRepository() // this is the problem
+//                ) as SharedViewModelType
+//            }
+//        }
+//    }
 
     // todo: use data from vehiclesMapFlow on the UI layer
-    val vehiclesMapFlow: Flow<MutableMap<String, VehicleRecord>?> = repository.vehiclesDataFlow
-        .also { Timber.v("vehiclesMapFlow updated") }
+//    val vehiclesMapFlow: Flow<MutableMap<String, VehicleRecord>?> = repository.vehiclesDataFlow
+//        .also { Timber.v("vehiclesMapFlow updated") }
 
     private val mldVehiclesMap = MutableLiveData<MutableMap<String, VehicleRecord>>()
     val vehiclesMap: LiveData<MutableMap<String, VehicleRecord>> get() = mldVehiclesMap
@@ -83,7 +83,14 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
     }
 
     private var repository: DefaultVehiclesRepository
-            by RepositoryProperty(vehiclesMapObserver, mainErrorStateInfoObserver)
+
+    @Inject
+    @RepositoryQualifier(REPOSITORY_TYPE_NETWORK)
+    lateinit var networkBasedRepository: Lazy<VehiclesRepository>
+
+    @Inject
+    @RepositoryQualifier(REPOSITORY_TYPE_FAKE)
+    lateinit var fakeBasedRepository: Lazy<VehiclesRepository>
 
     private val coroutineScope = MainScope() + CoroutineName(this.javaClass.simpleName)
 
@@ -92,11 +99,15 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
     private var firstTimeLaunched = true
 
     init {
-        coroutineScope.launch {
-            vehiclesMapFlow.collect {
-                Timber.v("vehiclesMapFlow new value = $it")
-            }
-        }
+        ThisApp.getRepositoryComponent().inject(this)
+//        coroutineScope.launch {
+//            vehiclesMapFlow.collect {
+//                Timber.v("vehiclesMapFlow new value = $it")
+//            }
+//        }
+        this@SharedViewModel.repository = networkBasedRepository.get() as DefaultVehiclesRepository
+        this@SharedViewModel.repository.mainDataStorage.observeForever(vehiclesMapObserver)
+        this@SharedViewModel.repository.mainErrorStateInfo.observeForever(mainErrorStateInfoObserver)
     }
 
     override fun onCleared() {
@@ -164,8 +175,7 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
 
     fun onReadyToUseFakeData() {
         stopGettingVehiclesDetails() // to avoid any possible resource leaks if this one still works
-        repository =
-            ThisApp.switchActiveDataSource(ThisApp.ActiveDataSource.FAKE) // must be a new value - with fake data
+        switchCurrentRepositoryTo(fakeBasedRepository.get())
         timeToAdjustForFakeData.value = Unit
     }
 
@@ -174,6 +184,14 @@ class SharedViewModel(repository: DefaultVehiclesRepository) : ViewModel() {
         timeToShowFakeDataProposal.value = false
         mldVehiclesMap.value?.clear() // hoist up to the repository level - data must be cleared there as well
         coroutineScope.cancel()
-        repository = ThisApp.switchActiveDataSource(ThisApp.ActiveDataSource.NETWORK)
+        switchCurrentRepositoryTo(networkBasedRepository.get())
+    }
+
+    private fun switchCurrentRepositoryTo(newRepository: VehiclesRepository) {
+        repository.mainDataStorage.removeObserver(vehiclesMapObserver)
+        repository.mainErrorStateInfo.removeObserver(mainErrorStateInfoObserver)
+        repository = newRepository as DefaultVehiclesRepository
+        repository.mainDataStorage.observeForever(vehiclesMapObserver)
+        repository.mainErrorStateInfo.observeForever(mainErrorStateInfoObserver)
     }
 }

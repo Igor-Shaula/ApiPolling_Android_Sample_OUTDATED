@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HomeTask_ApiPolling</string>
+    <string name="app_name">ApiPolling_Sample_Android</string>
 
     <string name="hint_vehicle_id">vehicleId</string>
     <string name="hint_live_status">liveStatus</string>

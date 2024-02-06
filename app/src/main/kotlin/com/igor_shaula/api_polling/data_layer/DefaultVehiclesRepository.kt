@@ -17,8 +17,9 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import timber.log.Timber
+import javax.inject.Inject
 
-class DefaultVehiclesRepository(
+class DefaultVehiclesRepository @Inject constructor(
     private val networkDataSource: NetworkDataSource,
     private val fakeDataSource: FakeDataSource,
     private val activeDataSource: ThisApp.ActiveDataSource,

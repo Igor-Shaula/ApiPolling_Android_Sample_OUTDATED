@@ -9,7 +9,7 @@ import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
 
-    private val viewModel: SharedViewModel by viewModels { SharedViewModel.Factory }
+    private val viewModel: SharedViewModel by viewModels()
 
     private var alertDialog: AlertDialog? = null
 

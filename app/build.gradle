@@ -1,23 +1,18 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+//    id 'com.google.dagger.hilt.android'
 }
 
 android {
     namespace 'com.igor_shaula.api_polling'
     compileSdk 34
 
-    buildFeatures {
-        buildConfig = true
-        viewBinding = true
-    }
-
     defaultConfig {
         applicationId "com.igor_shaula.api_polling"
-
         minSdk 23
         targetSdk 34
-
         versionCode 3
         versionName "0.0.3"
 
@@ -44,8 +39,16 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        buildConfig true
+        viewBinding true
+    }
 }
 
+// Allow references to generated code
+kapt {
+    correctErrorTypes true
+}
 dependencies {
     implementation project(':utilities')
 
@@ -66,8 +69,13 @@ dependencies {
 
     implementation 'com.jakewharton.timber:timber:5.0.1'
 
-    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    implementation 'com.google.dagger:dagger:2.50'
+    kapt 'com.google.dagger:dagger-compiler:2.50'
+//    implementation "com.google.dagger:hilt-android:2.50"
+//    kapt "com.google.dagger:hilt-compiler:2.50"
 }

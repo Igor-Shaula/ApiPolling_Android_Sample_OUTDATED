@@ -2,10 +2,14 @@ package com.igor_shaula.api_polling
 
 import android.app.Application
 import android.os.StrictMode
-import com.igor_shaula.api_polling.data_layer.DefaultVehiclesRepository
-import com.igor_shaula.api_polling.data_layer.data_sources.NetworkDataSource
-import com.igor_shaula.api_polling.data_layer.data_sources.FakeDataSource
-import com.igor_shaula.api_polling.data_layer.data_sources.retrofit.VehicleRetrofitNetworkServiceImpl
+import com.igor_shaula.api_polling.data_layer.data_sources.di.ContextModule
+import com.igor_shaula.api_polling.data_layer.data_sources.di.DaggerContextComponent
+import com.igor_shaula.api_polling.data_layer.data_sources.di.DaggerFakeApiComponent
+import com.igor_shaula.api_polling.data_layer.data_sources.di.DaggerFakeDSComponent
+import com.igor_shaula.api_polling.data_layer.data_sources.di.DaggerNetworkDSComponent
+import com.igor_shaula.api_polling.data_layer.data_sources.di.DaggerRepositoryComponent
+import com.igor_shaula.api_polling.data_layer.data_sources.di.DaggerRetrofitComponent
+import com.igor_shaula.api_polling.data_layer.data_sources.di.RepositoryComponent
 import timber.log.Timber
 
 //val TIME_TO_SHOW_GOTO_FAKE_DIALOG = booleanPreferencesKey("timeToShowGoToFakeDialog")
@@ -20,10 +24,32 @@ class ThisApp : Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
+        repositoryComponent = buildRepositoryComponent()
     }
 
-    fun getRepository(): DefaultVehiclesRepository = Companion.getRepository()
-
+    private fun buildRepositoryComponent(): RepositoryComponent {
+//        val fakeApiComponent = DaggerFakeApiComponent.builder()
+//            .fakeApiModule(FakeApiModule())
+//            .build()
+        val fakeDSComponent = DaggerFakeDSComponent.builder()
+            .fakeApiComponent(DaggerFakeApiComponent.create())
+            .build()
+//        val retrofitComponent = DaggerRetrofitComponent.builder()
+//            .retrofitModule(RetrofitModule())
+//            .build()
+        val networkDSComponent = DaggerNetworkDSComponent.builder()
+            .retrofitComponent(DaggerRetrofitComponent.create())
+            .build()
+        val contextComponent = DaggerContextComponent.builder()
+            .contextModule(ContextModule(this))
+            .build()
+        return DaggerRepositoryComponent.builder()
+            .fakeDSComponent(fakeDSComponent)
+            .networkDSComponent(networkDSComponent)
+            .contextComponent(contextComponent)
+//            .repositoryModule(RepositoryModule()) // not needed - works even without this line
+            .build()
+    }
 //    fun readNeedFakeDialogFromLocalPrefs(): Flow<Boolean> =
 //        dataStore.data.map { preferences ->
 //            preferences[TIME_TO_SHOW_GOTO_FAKE_DIALOG] ?: false
@@ -41,42 +67,8 @@ class ThisApp : Application() {
 
     companion object {
 
-// TODO: current solution is TEMPORARY - later move all DataSource usage logic into the Repository level
+        private lateinit var repositoryComponent: RepositoryComponent
 
-        private val networkDataRepository: DefaultVehiclesRepository by lazy {
-            DefaultVehiclesRepository(
-                NetworkDataSource(VehicleRetrofitNetworkServiceImpl()),
-                FakeDataSource(),
-                ActiveDataSource.NETWORK
-            )
-        }
-
-        private val fakeDataRepository: DefaultVehiclesRepository by lazy {
-            DefaultVehiclesRepository(
-                NetworkDataSource(VehicleRetrofitNetworkServiceImpl()),
-                FakeDataSource(),
-                ActiveDataSource.FAKE
-            )
-        }
-
-        private lateinit var currentRepository: DefaultVehiclesRepository
-
-        fun getRepository(): DefaultVehiclesRepository {
-            if (!this::currentRepository.isInitialized) {
-                currentRepository = networkDataRepository
-            }
-            return currentRepository
-        }
-
-        /**
-         * Switches the DataSource for the DefaultVehiclesRepository between Network and Fake
-         */
-        fun switchActiveDataSource(type: ActiveDataSource): DefaultVehiclesRepository {
-            currentRepository = when (type) {
-                ActiveDataSource.FAKE -> fakeDataRepository
-                ActiveDataSource.NETWORK -> networkDataRepository
-            }
-            return currentRepository
-        }
+        fun getRepositoryComponent(): RepositoryComponent = repositoryComponent
     }
 }

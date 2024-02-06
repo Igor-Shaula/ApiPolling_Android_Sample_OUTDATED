@@ -2,8 +2,9 @@ package com.igor_shaula.api_polling.data_layer.polling_engines
 
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class JavaTPEBasedPollingEngine(size: Int) : PollingEngine {
+class JavaTPEBasedPollingEngine @Inject constructor(size: Int) : PollingEngine {
 
     private var scheduledThreadPoolExecutor: ScheduledThreadPoolExecutor? = null
 
