@@ -1,11 +1,7 @@
 package com.igor_shaula.api_polling.ui_layer.list_ui
 
-import android.app.Activity
-import android.content.Context
-import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
-import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,37 +32,6 @@ class VehicleListFragment : Fragment() {
 
     // region standard lifecycle androidx.fragment.app.Fragment callbacks
 
-    @Deprecated("Deprecated in Java")
-    override fun onInflate(activity: Activity, attrs: AttributeSet, savedInstanceState: Bundle?) {
-        @Suppress("DEPRECATION")
-        super.onInflate(activity, attrs, savedInstanceState)
-        Timber.v("onInflate - 1 deprecated")
-    }
-
-    override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
-        super.onInflate(context, attrs, savedInstanceState)
-        Timber.v("onInflate - 2")
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onAttach(activity: Activity) {
-        @Suppress("DEPRECATION")
-        super.onAttach(activity)
-        Timber.v("onAttach - 3 deprecated")
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        Timber.v("onAttach - 4")
-        // java.lang.IllegalStateException: Can't access ViewModels from detached fragment
-//        viewModel = ViewModelProvider(this)[SharedViewModel::class.java]
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Timber.v("onCreate - 5")
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -80,18 +45,6 @@ class VehicleListFragment : Fragment() {
         Timber.v("onViewCreated - 7")
         showNearVehiclesNumber()
         prepareVehiclesListUI()
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        @Suppress("DEPRECATION")
-        super.onActivityCreated(savedInstanceState)
-        Timber.v("onActivityCreated - 8 deprecated")
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        Timber.v("onViewStateRestored - 9")
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -155,36 +108,7 @@ class VehicleListFragment : Fragment() {
         viewModel.clearPreviousFakeDataSelection()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        Timber.v("onSaveInstanceState - 12")
-    }
-
     // endregion standard androidx.fragment.app.Fragment callbacks
-
-    // region other standard androidx.fragment.app.Fragment callbacks
-
-    override fun onGetLayoutInflater(savedInstanceState: Bundle?): LayoutInflater {
-        Timber.v("onGetLayoutInflater - 5++")
-        return super.onGetLayoutInflater(savedInstanceState)
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        Timber.v("onConfigurationChanged")
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        Timber.v("onHiddenChanged")
-    }
-
-    override fun onPrimaryNavigationFragmentChanged(isPrimaryNavigationFragment: Boolean) {
-        super.onPrimaryNavigationFragmentChanged(isPrimaryNavigationFragment)
-        Timber.v("onPrimaryNavigationFragmentChanged")
-    }
-
-    // endregion other standard androidx.fragment.app.Fragment callbacks
 
     // region work with the List
 
@@ -206,12 +130,11 @@ class VehicleListFragment : Fragment() {
     // region work with the rest of UI
 
     private fun showNearVehiclesNumber() {
-        binding.actvHeader.text =
-            getString(
-                R.string.close_distance_counter_text_base,
-                viewModel.getNumberOfNearVehicles(),
-                viewModel.getNumberOfAllVehicles()
-            )
+        binding.actvHeader.text = getString(
+            R.string.close_distance_counter_text_base,
+            viewModel.getNumberOfNearVehicles(),
+            viewModel.getNumberOfAllVehicles()
+        )
     }
 
     private fun prepareUIForListWithDetails(list: List<Pair<String, VehicleRecord>>) {
